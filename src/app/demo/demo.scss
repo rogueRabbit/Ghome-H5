@@ -1,0 +1,206 @@
+.demo{
+    .alertdemo{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        .loadinghome{
+            padding:30px 30px;
+            padding-bottom: 30px;
+            background: rgba(255,255,255,.9);
+            border-radius: 8px;
+            -webkit-transform: scale(0.8);
+            -moz-transform: scale(0.8);
+            -ms-transform: scale(0.8);
+            transform: scale(0.8);
+            margin-top: 20%;
+            border: 5px solid rgba(0,0,0,.5);
+            position: relative;
+            .title{
+                text-align: center;
+                font-size: 1.5em;
+                font-weight: 600;
+            }
+            .inputgroup{
+                text-align: center;
+                width: 100%;
+                margin: 15px 0;
+                position: relative;
+                input{
+                    padding: 1px;
+                    height: 3em;
+                    width: calc(100% - 3em);
+                    border: 1px solid #ddd;
+                    font-size: 1em;
+                    border-radius: 5px;
+                    padding-left: 3em;
+                }
+                .keyword{
+                    position: absolute;
+                    right: 2px;
+                    top:1em;
+                }
+                .noclickColor{
+                    color:#d12228;
+                }
+                button{
+                    padding: 1px;
+                    width: 100%;
+                    height: 2.5em;
+                    border-radius: 5px;
+                    background: #d12228;
+                    border: 1px solid #ddd;
+                    color: white;
+                    font-size: 1.2em;
+                }
+            }
+            .loginmess{
+                text-align: center;
+            }
+            .close{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                img{
+                    width: 1em;
+                }
+            }
+            .back{
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                img{
+                    width: 1em;
+                }
+            }
+            .resetNext{
+                margin-top: 10em;
+            }
+            .contentPhone{
+                padding: 1em;
+                text-align: center;
+            }
+        }
+    }
+    .show3{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        .showimg{
+            position: relative;
+            padding-bottom: 30px;
+            background: rgba(255,255,255,1);
+            border-radius: 8px;
+            -webkit-transform: scale(0.8);
+            -moz-transform: scale(0.8);
+            -ms-transform: scale(0.8);
+            transform: scale(0.8);
+            margin-top: 20%;
+            border: 5px solid rgba(0,0,0,.5);
+            .login{
+                position: absolute;
+                top:1em;
+                top: 8.5em;
+                width: 100%;
+                height: 4.5em;
+                opacity: 0;
+            }
+            .user{
+                top:14.5em;
+            }
+            .read{
+                position: absolute;
+                width: 100%;
+                height: 4.5em;
+                opacity: 0;
+                bottom: 1em;
+            }
+            .close{
+                position: absolute;
+                top:1em;
+                right: 1em;
+                img{
+                    width: 1em;
+                }
+            }
+            .readSelect{
+                text-align: center;
+                color: #b3b3b3;
+            }
+        }
+        img{
+            width: 100%;
+            vertical-align: middle;
+        }
+        .readlist{
+            position: relative;
+            .title{
+                text-align: center;
+                margin-top:10px;
+            }
+            .content{
+                height: 18em;
+                overflow:auto;
+                margin:2em;
+                border: 1px solid #ddd;
+            }
+            .close{
+                position: absolute;
+                top:1em;
+                right: 1em;
+                img{
+                    width: 1em;
+                }
+            }
+        }
+        .userLogin{
+            margin-top: 45%;
+            .userAlertContent{
+                padding: 2em;
+            }
+            .buttonStyle{
+                display: flex;
+                button{
+                    padding: 1px;
+                    flex:1;
+                    height: 2.5em;
+                    border-radius: 5px;
+                    background: #d12228;
+                    border: 1px solid #d12228;
+                    color: white;
+                    font-size: 1em;
+                    margin: 0 1.5em;
+                    &:nth-child(2){
+                        background: white;
+                        color: black;
+                    }
+                }
+            }
+        }
+        
+    }
+    .selectAlert{
+        z-index: 2;
+        .showimg{
+            margin-top:40%;
+        }
+        .closeStyle{
+            margin-top:4em;
+        }
+        .selectBtn{
+            position: absolute;
+            width: 50%;
+            height: 4em;
+            bottom: 2em;
+        }
+        .reject{
+            position: absolute;
+            width: 50%;
+            height: 4em;
+            bottom: 2em;
+            right: 0;
+        }
+    }
+    .alert{
+        background: rgba(0,0,0,0.5);
+    }
+}

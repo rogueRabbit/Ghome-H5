@@ -1,5 +1,7 @@
 <template>
-    <div></div>
+    <div>
+        <button @click='sendmess'></button>
+    </div>
 </template>
 
 <script>
@@ -16,7 +18,7 @@
         },
         mounted: function () {
             console.log(this.$store.state.token);
-            if(this.$store.state.token == ''){
+            if (this.$store.state.token == '') {
                 this.$store.dispatch('PublicKey');
             }
             //this.$store.dispatch('getPhonemsAction');
@@ -32,6 +34,11 @@
             }); */
         },
         methods: {
+            sendmess() {
+                if (this.$store.state.token != '') {
+                    this.$store.dispatch('getPhonemsAction');
+                }
+            }
         }
     };
 </script>

@@ -2,6 +2,7 @@ import { ghhttp, getPhonems, getToken, APIfun } from '@/api/ghhttp.js'
 import JSEncrypt from 'JSEncrypt'
 import { tripleDESToolEncrypt,tripleDESToolDecrypt } from "@/utils/randomUtil.js"
 
+let randomKey='';
 //登录加密操作
 export const PublicKey = ({commit,state}) => {
   ghhttp((handShakePostStr, res, key) => {
@@ -9,6 +10,7 @@ export const PublicKey = ({commit,state}) => {
       'X-APP-ID': 100112,
       'X-TOKEN':state.token
     };
+    randomKey=key;
     let encrypt = new JSEncrypt();
     let rsaPublic = res.data.data.key;
     encrypt.setPublicKey(rsaPublic);
@@ -34,14 +36,15 @@ export const PublicKey = ({commit,state}) => {
   });
 }
 
-export const getPhonemsAction = (context) => {
+export const getPhonemsAction = ({commit,state}) => {
   let data = {
     voiceMsg: 0,
     supportPic: 2,
     phone: '+86-18717778365',
     type: 4
   };
-  getPhonems(data, (res) => {
+  let string="voiceMsg=0&supportPic=2&phone=+86-18717778365&type=4";
+  getPhonems(setHeaders(state),tripleDESToolEncrypt(randomKey,string), (res) => {
   });
 }
 
@@ -58,5 +61,11 @@ function byteArrayToString(byteArray) {
     str += escape(String.fromCharCode(byteArray[i]));
   }
   return str;
+}
+function setHeaders(state){
+  return {
+    'X-APP-ID': 100112,
+    'X-TOKEN':state.token
+  }
 }
 

@@ -39,13 +39,11 @@ const ghhttp = (callback) => {
     });
 }
 
-const getPhonems=(params,callback)=>{
+const getPhonems=(header,params,callback,errback)=>{
     $http({
         url: smssend(),
         method: 'post',
-        headers: {
-            'X-TOKEN': config.token
-        },
+        headers: header,
         data: params
     }).then((res)=>{
         callback(res)
