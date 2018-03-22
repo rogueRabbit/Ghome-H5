@@ -1,10 +1,11 @@
 import { RandomUtil } from "@/utils/randomUtil.js"
 import tripledes from 'crypto-js/tripledes.js'
-import { getPublickeyUrl ,smssend} from './requestUrl'
+import { getPublickeyUrl ,smssend ,getHandShakeUrl,APIs} from './requestUrl'
 import JSEncrypt from 'JSEncrypt'
 let config = {
     TOKEN: 1
 }
+let APIfun=APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
 const ghhttp = (callback) => {
     let key = RandomUtil();
@@ -19,6 +20,7 @@ const ghhttp = (callback) => {
     //handShakePostStr+='&deviceid='+encodeURI(deviceidStr);
     handShakePostStr += deviceidStr;
     handShakePostStr += '&reason=1';
+    document.write(handShakePostStr+'<br/>');
     $http({
         url: getPublickeyUrl(),
         method: 'post',
@@ -31,12 +33,9 @@ const ghhttp = (callback) => {
         let encrypt = new JSEncrypt();
         let rsaPublic=res.data.data.key;
         encrypt.setPublicKey(rsaPublic);
-        let rsaStr = encrypt.encrypt(handShakePostStr);
-        document.write(rsaStr);
         if(callback){
-            callback(res);
+            callback(handShakePostStr,res,key);
         }
-        console.log(rsaPublic);
     });
 }
 
@@ -48,11 +47,27 @@ const getPhonems=(params,callback)=>{
             'X-TOKEN': config.token
         },
         data: params
-    })
+    }).then((res)=>{
+        callback(res)
+    });
+}
+
+const getToken=(header,params,callback,errback)=>{
+    $http({
+        url: getHandShakeUrl(),
+        method: 'post',
+        headers: header,
+        data: params
+    }).then((res)=>{
+        callback(res)
+    }).catch((err)=>{
+        errback();
+        console.log(err);
+    });
 }
 function getRequestCommonHeader() {
     return {
         'X-APP-ID': config.TOKEN
     }
 }
-export { ghhttp ,getPhonems }
+export { ghhttp ,getPhonems ,getToken,APIfun}

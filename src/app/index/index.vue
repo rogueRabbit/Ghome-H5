@@ -19,7 +19,7 @@
         },
         mounted: function () {
             this.$store.dispatch('PublicKey');
-            this.$store.dispatch('getPhonemsAction');
+            //this.$store.dispatch('getPhonemsAction');
             /* this.$http({
                 method: 'post',
                 url: 'http://www.baidu.com',

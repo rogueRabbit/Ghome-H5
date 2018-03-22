@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/v1':{
-        target:'http://mgame.sdo.com',
+        target:'http://api.mygm.sdo.com',
         changeOrigin:true,
         pathRewrite:{
           '^/v1':'/v1'
