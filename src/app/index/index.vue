@@ -9,16 +9,16 @@
         name: "HomePage",
         data() {
             return {
-                msg: "Welcome to Your Vue.js App",
-                scrolled: false,
-                skPlayer1: ""
             };
         },
         created: function () { },
         ready() {
         },
         mounted: function () {
-            this.$store.dispatch('PublicKey');
+            console.log(this.$store.state.token);
+            if(this.$store.state.token == ''){
+                this.$store.dispatch('PublicKey');
+            }
             //this.$store.dispatch('getPhonemsAction');
             /* this.$http({
                 method: 'post',

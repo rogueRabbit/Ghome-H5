@@ -42,9 +42,28 @@ const clearCookie = function () {
             document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
     }
 }
-export { 
+
+const tripleDESToolEncrypt = function (randomKey, message) {
+    let keyHex = CryptoJS.enc.Utf8.parse(randomKey);
+    let encrypted = CryptoJS.TripleDES.encrypt(CryptoJS.enc.Utf8.parse(message), keyHex, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return encrypted.toString();
+}
+const tripleDESToolDecrypt = function (randomKey, message) {
+    let test2 = CryptoJS.enc.Utf8.parse(randomKey);
+    let return_code = CryptoJS.TripleDES.decrypt({ ciphertext: CryptoJS.enc.Base64.parse(message) }, test2, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return return_code.toString(CryptoJS.enc.Utf8);
+}
+export {
     RandomUtil,
     getCookie,
     setCookie,
-    removeCookie
+    removeCookie,
+    tripleDESToolEncrypt,
+    tripleDESToolDecrypt
 }
