@@ -10,6 +10,7 @@
                     <input type="text" placeholder="请输入短信验证码">
                     <div class="keyword noclickColor">获取验证码</div>
                 </div>
+                <div class="noNumber" @click="showNumberDetail">收不到验证码？</div>
                 <div class="inputgroup">
                     <button>进入游戏</button>
                 </div>
@@ -80,6 +81,15 @@
                 </div>
             </div>
         </div>
+
+        <div class="show3 backAlert" v-if="showNumber">
+            <div class="showimg numberStyle">
+                <img src="static/img/demo/number.png" alt="">
+                <div class="close">
+                    <img src="static/img/demo/close.png" alt="" @click="closeAlert">
+                </div>
+            </div>
+        </div>
         <div class="show3" v-if="showlist==2">
             <div class="showimg">
                 <img src="static/img/demo/demo1.png" alt="">
@@ -108,19 +118,19 @@
             </div>
         </div>
         <div class="show3 alert" v-if="unserLogin">
-                <div class="showimg readlist userLogin">
-                    <div class="userAlertContent">
-                        当前为游客账号，为了您游戏便捷及账号安全，请尽快绑定为正式游戏账号
-                    </div>
-                    <div class="close">
-                        <img src="static/img/demo/close.png" alt="" @click="closeUserAlert">
-                    </div>
-                    <div class="buttonStyle">
-                        <button>进入游戏</button>
-                        <button>立即绑定</button>
-                    </div>
+            <div class="showimg readlist userLogin">
+                <div class="userAlertContent">
+                    当前为游客账号，为了您游戏便捷及账号安全，请尽快绑定为正式游戏账号
+                </div>
+                <div class="close">
+                    <img src="static/img/demo/close.png" alt="" @click="closeUserAlert">
+                </div>
+                <div class="buttonStyle">
+                    <button>进入游戏</button>
+                    <button>立即绑定</button>
                 </div>
             </div>
+        </div>
         <div class="show3 alert selectAlert" v-if="noSelect==1">
             <div class="showimg readlist">
                 <img src="static/img/demo/select.png" alt="" class="closeStyle">
@@ -148,7 +158,8 @@
                 title: '短信登录',
                 titleBottom: '账号登录',
                 phone: '',
-                unserLogin:0
+                unserLogin: 0,
+                showNumber: 0
             };
         },
         created: function () { },
@@ -165,14 +176,14 @@
                     this.noSelect = 1;
                 }
             },
-            goUserLogin(){
+            goUserLogin() {
                 if (this.select == 1) {
                     this.unserLogin = 1;
                 } else {
                     this.noSelect = 1;
                 }
             },
-            closeUserAlert(){
+            closeUserAlert() {
                 this.unserLogin = 0;
             },
             read() {
@@ -180,6 +191,7 @@
             },
             closeAlert() {
                 this.userread = 0;
+                this.showNumber = 0;
             },
             closeselectAlert() {
                 this.noSelect = 0;
@@ -219,6 +231,10 @@
                 if (index == 1) {
                     this.showlist = 5;
                 }
+            },
+            showNumberDetail() {
+                //显示语音验证码
+                this.showNumber = 1;
             }
         }
     };

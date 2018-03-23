@@ -53,6 +53,9 @@
                     font-size: 1.2em;
                 }
             }
+            .noNumber{
+                text-align: right;
+            }
             .loginmess{
                 text-align: center;
             }
@@ -85,6 +88,9 @@
         position: fixed;
         height: 100%;
         width: 100%;
+        &.backAlert{
+            background: rgba(0,0,0,0.5);
+        }
         .showimg{
             position: relative;
             padding-bottom: 30px;
@@ -126,6 +132,10 @@
                 text-align: center;
                 color: #b3b3b3;
             }
+        }
+        .numberStyle{
+            padding: 2.5em 1em;
+            margin-top: 27%;
         }
         img{
             width: 100%;
