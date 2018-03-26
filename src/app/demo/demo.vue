@@ -239,3 +239,9 @@
         }
     };
 </script>
+<style lang="scss">
+body{
+    background-color:#000;
+    font-size:30px;
+}
+</style>

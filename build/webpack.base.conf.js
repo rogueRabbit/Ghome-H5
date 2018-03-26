@@ -78,7 +78,10 @@ module.exports = {
         test:/\.sass$/,  
         loader:'style-loader!css-loader!sass-loader'  
       }
+
     ]
   },
-  plugins: [ new webpack.optimize.CommonsChunkPlugin('common.js'), new webpack.ProvidePlugin({ jQuery: "jquery", $: "jquery" }) ]
+  plugins: [ 
+   new webpack.optimize.CommonsChunkPlugin('common'),
+   new webpack.ProvidePlugin({ jQuery: "jquery", $: "jquery" }) ]
 }

@@ -20,13 +20,18 @@ exports.cssLoaders = function (options) {
       sourceMap: options.sourceMap
     }
   }
-
   var postcssLoader = {
     loader: 'postcss-loader',
     options: {
-      sourceMap: options.sourceMap
+      sourceMap: options.sourceMap,
+      plugins: [
+        require('autoprefixer'),
+        require('postcss-px2rem')({remUnit: 100,
+          baseDpr: 2})
+      ]
     }
   }
+
 
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
@@ -51,7 +56,6 @@ exports.cssLoaders = function (options) {
       return ['vue-style-loader'].concat(loaders)
     }
   }
-
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
