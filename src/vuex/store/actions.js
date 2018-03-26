@@ -1,4 +1,4 @@
-import { ghhttp, getPhonems, getToken, APIfun, PostRequest } from '@/api/ghhttp.js'
+import { ghhttp,  PostRequest } from '@/api/ghhttp.js'
 import JSEncrypt from 'JSEncrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt } from "@/utils/randomUtil.js"
 import { APIs } from '@/api/requestUrl'
@@ -25,8 +25,7 @@ export const PublicKey = ({ commit, state }, callback) => {
       'signature': rsaStr,
       'timestamp': new Date().getTime()
     };
-    var base = new Base64();
-    getToken(headers, rsaStr, (res) => {
+    PostRequest(APIs.getHandShakeUrl(),headers, rsaStr, (res) => {
       if (res.data.code != null && res.data.code == 0) {
         let returnData = tripleDESToolDecrypt(key, res.data.data);
         commit('getToken', JSON.parse(returnData), callback);
@@ -57,20 +56,6 @@ export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
   });
 }
 
-export const getTokenUrl = () => {
-  getToken({}, (res) => {
-  })
-}
-export const increment1 = (context) => {
-  console.log(2222);
-}
-function byteArrayToString(byteArray) {
-  var str = "", i;
-  for (i = 0; i < byteArray.length; ++i) {
-    str += escape(String.fromCharCode(byteArray[i]));
-  }
-  return str;
-}
 function setHeaders(state, singnResult) {
   //设置请求头配置，用来传递签名
   return {
@@ -79,7 +64,6 @@ function setHeaders(state, singnResult) {
     'X-SIGNATURE': singnResult
   }
 }
-
 
 function sign(random, params) {//数据签名加入X-token
   let mapList = '';

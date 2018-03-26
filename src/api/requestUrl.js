@@ -15,6 +15,9 @@ const getHandShakeUrl = () => {
 }
 
 const APIs = {
+    getHandShakeUrl () {
+        return domin + '/v1/basic/handshake'
+    },
     getRequestSmsCodeUrl() {
         return domin + "/v1/basic/smssend";
     },

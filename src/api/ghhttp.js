@@ -9,7 +9,8 @@ let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
 const ghhttp = (callback) => {
     let key = RandomUtil();
-    let deviceidStr = '&deviceid=' + encodeURI('unknown-device');;
+    console.log(encodeURI(key));
+    let deviceidStr = '&deviceid=' + encodeURI('unknown-device');
     let handShakePostStr = 'randkey=' + encodeURI(key);
     mb.map((item) => {
         if (su.indexOf(item) > 0) {
@@ -20,7 +21,7 @@ const ghhttp = (callback) => {
     //handShakePostStr+='&deviceid='+encodeURI(deviceidStr);
     handShakePostStr += deviceidStr;
     handShakePostStr += '&reason=1';
-    document.write(handShakePostStr + '<br/>');
+    console.log(handShakePostStr);
     $http({
         url: getPublickeyUrl(),
         method: 'post',
@@ -30,37 +31,11 @@ const ghhttp = (callback) => {
         data: {
         }
     }).then((res) => {
-        let encrypt = new JSEncrypt();
-        let rsaPublic = res.data.data.key;
-        encrypt.setPublicKey(rsaPublic);
+        console.log(res.data.data);
         if (callback) {
+            console.log(key);
             callback(handShakePostStr, res, key);
         }
-    });
-}
-
-const getPhonems = (header, params, callback, errback) => {
-    $http({
-        url: smssend(),
-        method: 'post',
-        headers: header,
-        data: params
-    }).then((res) => {
-        callback(res)
-    });
-}
-
-const getToken = (header, params, callback, errback) => {
-    $http({
-        url: getHandShakeUrl(),
-        method: 'post',
-        headers: header,
-        data: params
-    }).then((res) => {
-        callback(res)
-    }).catch((err) => {
-        errback();
-        console.log(err);
     });
 }
 

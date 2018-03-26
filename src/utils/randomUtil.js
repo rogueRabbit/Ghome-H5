@@ -1,5 +1,5 @@
 const RandomUtil = () => {
-    let RANDOM_RULES = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()";
+    let RANDOM_RULES = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^*()";
     let RANDOM_SIZE = 32;
     let rpoint = RANDOM_RULES.length;
     let generateRandStr = '';
