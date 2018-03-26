@@ -45,10 +45,11 @@ const clearCookie = function () {
 
 const tripleDESToolEncrypt = function (randomKey, message) {
     let keyHex = CryptoJS.enc.Utf8.parse(randomKey);
-    let encrypted = CryptoJS.TripleDES.encrypt(CryptoJS.enc.Utf8.parse(message), keyHex, {
+    let encrypted = CryptoJS.TripleDES.encrypt(message, keyHex, {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
     });
+    console.log("msg:"+encrypted.toString());
     return encrypted.toString();
 }
 const tripleDESToolDecrypt = function (randomKey, message) {
