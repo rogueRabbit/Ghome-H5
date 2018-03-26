@@ -1,16 +1,18 @@
-import { ghhttp, getPhonems, getToken, APIfun } from '@/api/ghhttp.js'
+import { ghhttp,  PostRequest } from '@/api/ghhttp.js'
 import JSEncrypt from 'JSEncrypt'
-import { tripleDESToolEncrypt,tripleDESToolDecrypt } from "@/utils/randomUtil.js"
+import { tripleDESToolEncrypt, tripleDESToolDecrypt } from "@/utils/randomUtil.js"
+import { APIs } from '@/api/requestUrl'
 
-let randomKey='';
+let randomKey = '';
+let resetkey_count = 0;
 //登录加密操作
-export const PublicKey = ({commit,state}) => {
+export const PublicKey = ({ commit, state }, callback) => {
   ghhttp((handShakePostStr, res, key) => {
     let headers = {
       'X-APP-ID': 100112,
-      'X-TOKEN':state.token
+      'X-TOKEN': state.token
     };
-    randomKey=key;
+    randomKey = key;
     let encrypt = new JSEncrypt();
     let rsaPublic = res.data.data.key;
     encrypt.setPublicKey(rsaPublic);
@@ -23,11 +25,10 @@ export const PublicKey = ({commit,state}) => {
       'signature': rsaStr,
       'timestamp': new Date().getTime()
     };
-    var base = new Base64();
-    getToken(headers, rsaStr, (res) => {
+    PostRequest(APIs.getHandShakeUrl(),headers, rsaStr, (res) => {
       if (res.data.code != null && res.data.code == 0) {
-        let returnData=tripleDESToolDecrypt(key,res.data.data);
-        commit('getToken',JSON.parse(returnData));
+        let returnData = tripleDESToolDecrypt(key, res.data.data);
+        commit('getToken', JSON.parse(returnData), callback);
       }
       //console.log(res);
     }, (err) => {
@@ -36,36 +37,54 @@ export const PublicKey = ({commit,state}) => {
   });
 }
 
-export const getPhonemsAction = ({commit,state}) => {
+//获取短信验证码
+export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
   let data = {
-    voiceMsg: 0,
+    phone: '+86-17621933537',
     supportPic: 2,
-    phone: '+86-18717778365',
-    type: 4
+    type: 4,
+    voiceMsg: 0
   };
-  let string="voiceMsg=0&supportPic=2&phone=+86-18717778365&type=4";
-  getPhonems(setHeaders(state),tripleDESToolEncrypt(randomKey,string), (res) => {
+  PostRequest(APIs.getRequestSmsCodeUrl(), setHeaders(state, sign(randomKey, data)), tripleDESToolEncrypt(randomKey, postDataStr(data)), (res) => {
+    if (dataBack) {
+      dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+    }
+  }, (err) => {
+    if (errBack) {
+      errBack(err);
+    }
   });
 }
 
-export const getTokenUrl = () => {
-  getToken({}, (res) => {
-  })
-}
-export const increment1 = (context) => {
-  console.log(2222);
-}
-function byteArrayToString(byteArray) {
-  var str = "", i;
-  for (i = 0; i < byteArray.length; ++i) {
-    str += escape(String.fromCharCode(byteArray[i]));
-  }
-  return str;
-}
-function setHeaders(state){
+function setHeaders(state, singnResult) {
+  //设置请求头配置，用来传递签名
   return {
     'X-APP-ID': 100112,
-    'X-TOKEN':state.token
+    'X-TOKEN': state.token,
+    'X-SIGNATURE': singnResult
   }
+}
+
+function sign(random, params) {//数据签名加入X-token
+  let mapList = '';
+  for (let key in params) {
+    mapList = mapList + key + '=' + params[key] + '&';
+  }
+  if (mapList.length > 0) {
+    mapList = mapList.substring(0, mapList.length - 1);
+  }
+  mapList = (mapList + random).toLowerCase();
+  return CryptoJS.MD5(mapList).toString().toUpperCase();
+}
+
+function postDataStr(params) {
+  let mapList = '';
+  for (let key in params) {
+    mapList = mapList + key + '=' + params[key] + '&';
+  }
+  if (mapList.length > 0) {
+    mapList = mapList.substring(0, mapList.length - 1);
+  }
+  return encodeURI(mapList).replace(/\+/g, '%2B')
 }
 

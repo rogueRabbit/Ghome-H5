@@ -17,7 +17,6 @@
         ready() {
         },
         mounted: function () {
-            console.log(this.$store.state.token);
             if (this.$store.state.token == '') {
                 this.$store.dispatch('PublicKey');
             }
@@ -36,7 +35,9 @@
         methods: {
             sendmess() {
                 if (this.$store.state.token != '') {
-                    this.$store.dispatch('getPhonemsAction');
+                    this.$store.dispatch('getPhonemsAction',(data)=>{
+                        console.log(data);
+                    });
                 }
             }
         }
