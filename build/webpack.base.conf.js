@@ -51,7 +51,7 @@ module.exports = {
         include: [resolve('src'), resolve('test')]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpeg|gif|svg|jpg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
@@ -74,14 +74,14 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       },
-      {  
-        test:/\.sass$/,  
-        loader:'style-loader!css-loader!sass-loader'  
+      {
+        test:/\.sass$/,
+        loader:'style-loader!css-loader!sass-loader'
       }
 
     ]
   },
-  plugins: [ 
+  plugins: [
    new webpack.optimize.CommonsChunkPlugin('common'),
    new webpack.ProvidePlugin({ jQuery: "jquery", $: "jquery" }) ]
 }

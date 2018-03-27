@@ -12,7 +12,7 @@
                         <a class="btn">账号登录</a>
                         <a class="btn btn_border">游客登录</a>
                     </div>
-                </div> 
+                </div>
                 <ul class="third_type">
                     <li class="cur">
                         <i class="dy"></i><p>叨鱼</p>
@@ -29,7 +29,7 @@
                     <input type="checkbox"><b></b>我同意服务条款及隐私政策
                 </div>
             </div>
-            
+
             <!-- 密码登录 -->
             <div class="login_form">
                 <h3>短信登录</h3>
@@ -50,14 +50,17 @@
                 </div>
             </div>
         </div>
-        
+
+        <!--风控组件-->
+        <risk-management ></risk-management>
     </div>
-    
-    
+
+
 </template>
 
 <script>
     import "./index.scss";
+    import riskManagement from '../../components/risk-management/risk-management';
     /* eslint-disable */
     export default {
         name: "HomePage",
@@ -87,6 +90,9 @@
                     });
                 }
             }
+        },
+        components: {
+          riskManagement: riskManagement
         }
     };
 </script>
