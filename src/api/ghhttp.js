@@ -9,19 +9,16 @@ let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
 const ghhttp = (callback) => {
     let key = RandomUtil();
-    console.log(encodeURI(key));
     let deviceidStr = '&deviceid=' + encodeURI('unknown-device');
     let handShakePostStr = 'randkey=' + encodeURI(key);
     mb.map((item) => {
         if (su.indexOf(item) > 0) {
-            console.log(item);
             deviceidStr = '&deviceid=' + encodeURI(item);
         }
     })
     //handShakePostStr+='&deviceid='+encodeURI(deviceidStr);
     handShakePostStr += deviceidStr;
     handShakePostStr += '&reason=1';
-    console.log(handShakePostStr);
     $http({
         url: getPublickeyUrl(),
         method: 'post',
@@ -31,9 +28,7 @@ const ghhttp = (callback) => {
         data: {
         }
     }).then((res) => {
-        console.log(res.data.data);
         if (callback) {
-            console.log(key);
             callback(handShakePostStr, res, key);
         }
     });
@@ -58,4 +53,4 @@ function getRequestCommonHeader() {
         'X-APP-ID': config.TOKEN
     }
 }
-export { ghhttp, getPhonems, getToken, APIfun, PostRequest }
+export { ghhttp, APIfun, PostRequest }

@@ -18,19 +18,13 @@
         },
         mounted: function () {
             if (this.$store.state.token == '') {
-                this.$store.dispatch('PublicKey');
+                this.$store.dispatch('PublicKey',()=>{
+                    this.$store.dispatch('getAppConfigure',(data)=>{
+                        //获取用户配置
+                        console.log(data);
+                    });
+                });
             }
-            //this.$store.dispatch('getPhonemsAction');
-            /* this.$http({
-                method: 'post',
-                url: 'http://www.baidu.com',
-                data: {
-                    name: 'xiaoming',
-                    info: '12'
-                }
-            }).catch((err)=>{
-                console.log(err);
-            }); */
         },
         methods: {
             sendmess() {

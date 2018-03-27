@@ -49,7 +49,6 @@ const tripleDESToolEncrypt = function (randomKey, message) {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
     });
-    console.log("msg:"+encrypted.toString());
     return encrypted.toString();
 }
 const tripleDESToolDecrypt = function (randomKey, message) {
