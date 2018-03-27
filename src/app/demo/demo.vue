@@ -84,7 +84,7 @@
 
         <div class="show3 backAlert" v-if="showNumber">
             <div class="showimg numberStyle">
-                <img src="static/img/demo/number.png" alt="">
+                <img src="static/img/demo/number.png" alt="" @click="getMsg(1)">
                 <div class="close">
                     <img src="static/img/demo/close.png" alt="" @click="closeAlert">
                 </div>
@@ -177,13 +177,16 @@
             }
         },
         methods: {
-            getMsg() {
+            getMsg(index) {
                 let params = {
-                    phone: '+86-13917786428',
+                    phone: '+86-13162727190',
                     supportPic: 2,
                     type: 4,
                     voiceMsg: 0
                 };
+                if(index){
+                    params.voiceMsg=1;
+                }
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                     console.log(data);
                 });
