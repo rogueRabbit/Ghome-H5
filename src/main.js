@@ -6,6 +6,7 @@ import router from './router'
 import Vuex from 'vuex';
 import store from '@/vuex/store/store'
 require('./assets/js/adapter.js')
+require('./scss/app.scss')
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
