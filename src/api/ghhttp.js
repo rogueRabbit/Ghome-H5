@@ -53,4 +53,4 @@ function getRequestCommonHeader() {
         'X-APP-ID': config.TOKEN
     }
 }
-export { ghhttp, getPhonems, getToken, APIfun, PostRequest }
+export { ghhttp, APIfun, PostRequest }
