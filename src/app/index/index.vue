@@ -20,6 +20,7 @@
             if (this.$store.state.token == '') {
                 this.$store.dispatch('PublicKey',()=>{
                     this.$store.dispatch('getAppConfigure',(data)=>{
+                        //获取用户配置
                         console.log(data);
                     });
                 });
