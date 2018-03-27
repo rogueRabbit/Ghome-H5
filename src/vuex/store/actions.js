@@ -28,7 +28,10 @@ export const PublicKey = ({ commit, state }, callback) => {
     PostRequest(APIs.getHandShakeUrl(),headers, rsaStr, (res) => {
       if (res.data.code != null && res.data.code == 0) {
         let returnData = tripleDESToolDecrypt(key, res.data.data);
-        commit('getToken', JSON.parse(returnData), callback);
+        commit('getToken', JSON.parse(returnData));
+        if(callback){
+          callback();
+        }
       }
       //console.log(res);
     }, (err) => {
@@ -37,6 +40,28 @@ export const PublicKey = ({ commit, state }, callback) => {
   });
 }
 
+//获取用户配置
+export const getAppConfigure = ({ commit, state }, dataBack, errBack) => {
+  let data = {
+    deviceid: '1000'
+  };
+  let headersUpdate={
+    'X-APP-VERSION':'7.02.0',
+    'X_CHANNEL':'A1',
+    'X-PLATFORM':2,
+    'X-AREA':'231',
+    'X-SDK-VERSION':'2.2.0'
+  };
+  PostRequest(APIs.getAppConfigurationUrl(), setHeaders(state, sign(randomKey, data),headersUpdate), tripleDESToolEncrypt(randomKey, postDataStr(data)), (res) => {
+    if (dataBack) {
+      dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+    }
+  }, (err) => {
+    if (errBack) {
+      errBack(err);
+    }
+  });
+}
 //获取短信验证码
 export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
   let data = {
@@ -56,13 +81,24 @@ export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
   });
 }
 
-function setHeaders(state, singnResult) {
+function setHeaders(state, singnResult,moreHeader) {
   //设置请求头配置，用来传递签名
-  return {
-    'X-APP-ID': 100112,
+  let headersSet={
+    'X-APP-ID': 1000,
     'X-TOKEN': state.token,
-    'X-SIGNATURE': singnResult
+    'X-SIGNATURE': singnResult,
+    'X-HTTP-ENGINE':'android',
+    'X-PROMOTERID':'android',
+    'X-CHANNEL-INFO':'',
+    'X-DEVICEID':1000
+  };
+  if(moreHeader){
+    for(let i in moreHeader){
+      headersSet[i] = moreHeader[i];
+    }
   }
+  console.log(headersSet);
+  return headersSet;
 }
 
 function sign(random, params) {//数据签名加入X-token
