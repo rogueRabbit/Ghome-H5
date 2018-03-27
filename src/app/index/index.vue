@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click='sendmess'></button>
+        <button @click='sendmess'>获取验证码</button>
     </div>
 </template>
 

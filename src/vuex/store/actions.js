@@ -65,7 +65,7 @@ export const getAppConfigure = ({ commit, state }, dataBack, errBack) => {
 //获取短信验证码
 export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
   let data = {
-    phone: '+86-17621933537',
+    phone: '+86-15172054835',
     supportPic: 2,
     type: 4,
     voiceMsg: 0
@@ -80,6 +80,22 @@ export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
     }
   });
 }
+
+
+//验证风控验证码
+export const picCheckSmsSend2 =  ({ commit, state }, data, dataBack, errBack) => {
+
+  PostRequest(APIs.getCheckCodeSendSmsUrl(), setHeaders(state, sign(randomKey, data)), tripleDESToolEncrypt(randomKey, postDataStr(data)), (res) => {
+    if (dataBack) {
+      dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+    }
+  }, (err) => {
+    if (errBack) {
+      errBack(err);
+    }
+  });
+};
+
 
 function setHeaders(state, singnResult,moreHeader) {
   //设置请求头配置，用来传递签名
