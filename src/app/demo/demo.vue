@@ -8,7 +8,7 @@
                 </div>
                 <div class="inputgroup">
                     <input type="text" placeholder="请输入短信验证码">
-                    <div class="keyword noclickColor">获取验证码</div>
+                    <div class="keyword noclickColor" @click="getMsg">获取验证码</div>
                 </div>
                 <div class="noNumber" @click="showNumberDetail">收不到验证码？</div>
                 <div class="inputgroup">
@@ -146,6 +146,8 @@
 
 <script>
     import "./demo.scss";
+    import { APIs } from '@/api/requestUrl'
+    import { getPostData } from '@/api/ghhttp.js'
     /* eslint-disable */
     export default {
         name: "Demo",
@@ -166,9 +168,26 @@
         ready() {
         },
         mounted: function () {
-
+            if (this.$store.state.token == '') {
+                this.$store.dispatch('PublicKey', () => {
+                    this.$store.dispatch('getAppConfigure', (data) => {
+                        //获取用户配置
+                    });
+                });
+            }
         },
         methods: {
+            getMsg() {
+                let params = {
+                    phone: '+86-13917786428',
+                    supportPic: 2,
+                    type: 4,
+                    voiceMsg: 0
+                };
+                getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
+                    console.log(data);
+                });
+            },
             goLogin() {
                 if (this.select == 1) {
                     this.showlist = 1;
