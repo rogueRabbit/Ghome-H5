@@ -7,7 +7,8 @@ import Vuex from 'vuex';
 import store from '@/vuex/store/store'
 require('./assets/js/adapter.js')
 require('./scss/app.scss')
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+window.mockData = 0;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
