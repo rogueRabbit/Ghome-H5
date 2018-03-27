@@ -5,7 +5,7 @@
                 <a class="back"><i class="icon_back"></i></a>
                 <a class="close"><i class="icon_close"></i></a>
             </div>
-            <div class="index_login"  style="display:none;">
+            <div class="index_login"  v-if="showNumber==-1">
                 <div class="index_act">
                     <div class="logo"></div>
                     <div class="btns">
@@ -31,7 +31,7 @@
             </div>
             
             <!-- 密码登录 -->
-            <div class="login_form">
+            <div class="login_form" v-if="showNumber==0">
                 <h3>短信登录</h3>
                 <div class="item">
                     <label class="country">+86 <span class="down"></span></label>
@@ -49,6 +49,7 @@
                     <a class="link">密码登录</a>
                 </div>
             </div>
+            <PwdLogin  v-if="showNumber==1"></PwdLogin>
         </div>
         
     </div>
@@ -58,13 +59,16 @@
 
 <script>
     import "./index.scss";
+    import PwdLogin from "../pwdLogin/pwdLogin"
     /* eslint-disable */
     export default {
         name: "HomePage",
         data() {
             return {
+                showNumber:1
             };
         },
+        components:{PwdLogin},
         created: function () { },
         ready() {
         },
