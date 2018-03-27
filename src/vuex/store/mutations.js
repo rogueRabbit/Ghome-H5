@@ -4,9 +4,6 @@ const getMsg = (state, payload) => {
 const getToken=(state,msg,callback)=>{
   //获取token值
   state.token=msg.token;
-  if(callback){
-    callback();
-  }
 }
 export {
   getMsg,
