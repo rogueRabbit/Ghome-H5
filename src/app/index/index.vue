@@ -34,7 +34,7 @@
             <div class="login_form">
                 <h3>短信登录</h3>
                 <div class="item">
-                    <label class="country">+86</label>
+                    <label class="country">+86 <span class="down"></span></label>
                     <input type="text" placeholder="请输入手机号码" class="phone">
                 </div>
                 <div class="item">
