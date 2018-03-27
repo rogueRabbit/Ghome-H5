@@ -5,7 +5,13 @@ const getToken=(state,msg,callback)=>{
   //获取token值
   state.token=msg.token;
 }
+const randomKey=(state,data)=>{
+  state.randomKey = data;
+  console.log(data);
+  //state.randomKey=msg
+}
 export {
   getMsg,
-  getToken
+  getToken,
+  randomKey
 }
