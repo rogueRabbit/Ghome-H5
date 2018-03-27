@@ -3,7 +3,8 @@ import JSEncrypt from 'JSEncrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt } from "@/utils/randomUtil.js"
 import { APIs } from '@/api/requestUrl'
 
-let randomKey = '';
+window.randomKey = '';
+window.token = '';
 let resetkey_count = 0;
 //登录加密操作
 export const PublicKey = ({ commit, state }, callback) => {
@@ -28,6 +29,8 @@ export const PublicKey = ({ commit, state }, callback) => {
     PostRequest(APIs.getHandShakeUrl(),headers, rsaStr, (res) => {
       if (res.data.code != null && res.data.code == 0) {
         let returnData = tripleDESToolDecrypt(key, res.data.data);
+        window.token=JSON.parse(returnData).token;
+        console.log();
         commit('getToken', JSON.parse(returnData));
         if(callback){
           callback();
@@ -47,7 +50,7 @@ export const getAppConfigure = ({ commit, state }, dataBack, errBack) => {
   };
   let headersUpdate={
     'X-APP-VERSION':'7.02.0',
-    'X_CHANNEL':'A1',
+    'X-CHANNEL':'A1',
     'X-PLATFORM':2,
     'X-AREA':'231',
     'X-SDK-VERSION':'2.2.0'
@@ -113,7 +116,6 @@ function setHeaders(state, singnResult,moreHeader) {
       headersSet[i] = moreHeader[i];
     }
   }
-  console.log(headersSet);
   return headersSet;
 }
 

@@ -18,8 +18,10 @@
         },
         mounted: function () {
             if (this.$store.state.token == '') {
+                console.log(this.$store);
                 this.$store.dispatch('PublicKey',()=>{
                     this.$store.dispatch('getAppConfigure',(data)=>{
+                        //获取用户配置
                         console.log(data);
                     });
                 });
