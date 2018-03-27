@@ -64,6 +64,8 @@
             <PwdLogin v-if="showNumber==1"></PwdLogin>
         </div>
 
+        <!--风控组件-->
+        <risk-management ></risk-management>
     </div>
 
 
@@ -71,6 +73,7 @@
 
 <script>
     import "./index.scss";
+    import riskManagement from '../../components/risk-management/risk-management';
     import PwdLogin from "../pwdLogin/pwdLogin"
     /* eslint-disable */
     export default {
@@ -139,6 +142,9 @@
                         this.showNumber = -1;
                 }
             }
+        },
+        components: {
+          riskManagement: riskManagement
         }
     };
 </script>

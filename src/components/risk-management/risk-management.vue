@@ -1,5 +1,23 @@
 <template>
   <div>
+    <div class="risk-wrap" v-show="is_show">
+      <div class="container">
+        <div class="header">
+          <a class="close" @click="closeRiskDialog()"><i class="icon_close"></i></a>
+        </div>
+        <div class="main-content">
+          <p class="title">请输入下面的图形验证码</p>
+          <div class="code-image">
+            <img src="http://ada.sdo.com/tmp/studio/1/game_studio_logo.jpg" class="ordinary-risk-image" @click="refreshImage()"/>
+          </div>
+          <div class="input-area">
+            <input type="text" class="code-input" placeholder="请输入正确的验证码" maxlength="6"/>
+          </div>
+          <button class="confirm-button">确定</button>
+        </div>
+      </div>
+    </div>
+    <div class="risk-mask" v-show="is_show"></div>
     <!--阿里验证码-->
     <div id="_umfp" style="display:inline;width:1px;height:1px;overflow:hidden"></div>
     <!--/.阿里验证码-->
@@ -7,18 +25,26 @@
 </template>
 
 <script>
-    import '../assets/css/nc/nc.css';
-    import '../assets/js/nc';
+    // import '../assets/css/nc/nc.css';
+    import './risk-management.scss';
+    import '../../assets/js/nc';
+    import { getPostData } from '../../api/ghhttp';
+    import { APIs } from '../../api/requestUrl';
     export default {
-        name: "risk-management",
-        props: {
-          imagecodeType: {
-            type: Number,
-            required: true
-          },
-          checkCodeUrl: {
-            type: String,
-            required: true
+        name: "riskManagement",
+        // props: {
+        //   imagecodeType: {
+        //     type: Number,
+        //     required: true
+        //   },
+        //   checkCodeUrl: {
+        //     type: String,
+        //     required: true
+        //   }
+        // },
+        data(){
+          return {
+            is_show: false
           }
         },
         ready() {
@@ -28,19 +54,13 @@
 
 
         },
-        mounted: {
 
-
-
-
-
-        },
         methods: {
 
           //验证风控验证码
           VerificationCode(){
 
-            let data = {
+            let param = {
               checkCodeGuid: 1,
               checkCode: 1,
               phone: '+86-17621933537',
@@ -51,11 +71,11 @@
               sms_new: 1
             };
 
-            if (this.$store.state.token != '') {
-              this.$store.dispatch('picCheckSmsSend2', data, (data)=>{
-
-              });
-            }
+            // if (this.$store.state.token != '') {
+            //   this.getPostData(this.APIs.getCheckCodeSendSmsUrl, param, (data) => {
+            //
+            //   })
+            // }
           },
 
           //注入阿里验证的方法
@@ -83,8 +103,20 @@
               }
             };
 
-          }
+          },
 
+          //点击图片进行刷新
+          refreshImage(){
+
+
+
+          },
+          //点击左上角的关闭
+          closeRiskDialog(){
+
+
+
+          }
         }
     }
 </script>

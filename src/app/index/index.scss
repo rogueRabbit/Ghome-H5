@@ -51,7 +51,7 @@ body{
                 background-size: 303px auto;
                 display: inline-block;
             }
-            
+
         }
         .other_type{
             width:297px;
@@ -103,12 +103,11 @@ body{
             bottom:40px;
             color: #999;
             width:100%;
+            left: 0;
             font-size: $font_m;
         }
-        
-
     }
-    
+
 }
 .header_bar{
     position: absolute;
@@ -182,7 +181,7 @@ body{
             text-indent: 20px;
             padding:0;
             &.phone{
-                
+
                 width: 380px;
             }
         }
