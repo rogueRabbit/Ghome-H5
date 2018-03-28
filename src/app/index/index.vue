@@ -15,7 +15,7 @@
                     <div class="logo"></div>
                     <div class="btns">
                         <a class="btn" @click="goToMsgLogin">账号登录</a>
-                        <a class="btn btn_border" v-if="userType.guest_enable==1">游客登录</a>
+                        <a class="btn btn_border" v-if="userType.guest_enable==1" @click="visitorLogin">游客登录</a>
                     </div>
                 </div>
                 <ul class="third_type" v-if="userType.display_thirdaccout&&showThree==1">
@@ -51,6 +51,10 @@
         <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:sendmess="sendmess" v-on:closeRiskDialog="closeRiskDialog"></risk-management>
         <!--/.风控组件-->
 
+        <!--游客登录的入口-->
+        <visitor-login-entry v-if="showVisitor" v-on:closeVisitorDialog="closeVisitorDialog"></visitor-login-entry>
+        <!--/.游客登录的入口-->
+
     </div>
 
 
@@ -63,7 +67,8 @@
     import { APIs } from '@/api/requestUrl'
     import UserProtocol from '@/components/userProtocol/userProtocol'
     import UserIsSelect from '@/components/userIsSelect/userIsSelect'
-    import { getPostData } from '@/api/ghhttp.js'
+    import { getPostData } from '@/api/ghhttp.js';
+    import visitorLoginEntry from '../visitor-login-entry/visitor-login-entry'
     /* eslint-disable */
     export default {
         name: "HomePage",
@@ -84,10 +89,11 @@
                     phone: ''
                 },
                 select: 1,//默认选择用户条款
-                showUserPro: 0
+                showUserPro: 0,
+                showVisitor: false,
             };
         },
-        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect },
+        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect,visitorLoginEntry },
         created: function () { },
         ready() {
         },
@@ -191,7 +197,19 @@
             switchPhoneLogin(){
               this.showNumber = 0;
               this.showUserPro = 0;
-            }
+            },
+
+            visitorLogin(){
+
+              this.showVisitor = true;
+            },
+
+            closeVisitorDialog(){
+
+              this.showVisitor = false;
+
+            },
+
 
         }
     };

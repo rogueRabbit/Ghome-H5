@@ -37,6 +37,10 @@
         <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:sendmess="sendmess" v-on:closeRiskDialog="closeRiskDialog"></risk-management>
         <!--/.风控组件-->
 
+        <!--语音验证码-->
+        <voice-code v-if="showVoice" v-on:closeVoiceDialog="closeVoiceDialog"></voice-code>
+        <!--/.语音验证码-->
+
     </div>
 
 
@@ -46,7 +50,8 @@
     import riskManagement from '../../components/risk-management/risk-management';
     import PwdLogin from "../pwdLogin/pwdLogin"
     import { APIs } from '@/api/requestUrl'
-    import { getPostData } from '@/api/ghhttp.js'
+    import { getPostData } from '@/api/ghhttp.js';
+    import voiceCode from '../../components/voice-code/voice-code';
     /* eslint-disable */
     export default {
         name: "MsgLogin",
@@ -67,10 +72,11 @@
                   phone: ''
                 },
               select:1,//默认选择用户条款
-              showUserPro:0
+              showUserPro:0,
+              showVoice: false,  //是否显示语音验证码的风控
             };
         },
-        components: { PwdLogin ,riskManagement},
+        components: { PwdLogin ,riskManagement, voiceCode},
         created: function () { },
         ready() {
         },
@@ -140,7 +146,12 @@
             },
             hideUserAlert() {
               this.showUserPro = 0;
-            }
+            },
+            closeVoiceDialog(){
+
+              this.showVoice = false;
+
+            },
 
         }
     };
