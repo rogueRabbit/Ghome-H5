@@ -199,7 +199,7 @@ body{
       padding:0;
       &.phone{
 
-        width: 380px;
+        width: 360px;
       }
       &.password-input {
         text-indent: 80px;
@@ -210,7 +210,7 @@ body{
       display: inline-block;
       line-height: 76px;
       text-align: center;
-      width:100px;
+      width:120px;
     }
     span.get_yzm{
       position: absolute;
@@ -258,3 +258,34 @@ body{
   }
 }
 
+.area_code{
+    .title{
+        margin-top: 35px;
+    }
+    .content{
+        text-align: left;
+        border:1px solid #DBDBDB;
+        margin: 20px 30px;
+        border-radius:10px;
+        padding:0 25px;
+        height: calc(100% - 140px);
+        overflow: auto;
+        p{
+            margin: 20px 0;
+        }
+        .showList{
+            .conuntryTitle{
+                padding: 15px 0;
+                color:#D12328;
+                border-bottom: 1px solid #DBDBDB;
+            }
+            .showCountryList{
+                padding: 10px 0;
+                border-bottom: 1px solid #DBDBDB;
+                span{
+                    float:right;
+                }
+            }
+        }
+    } 
+}
