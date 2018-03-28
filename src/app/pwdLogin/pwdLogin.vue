@@ -1,6 +1,6 @@
 <template>
     <div class="pwdLogin">
-        
+        密码登陆
     </div>
 </template>
 

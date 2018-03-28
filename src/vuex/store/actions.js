@@ -1,6 +1,6 @@
 import { ghhttp,  PostRequest } from '@/api/ghhttp.js'
 import JSEncrypt from 'JSEncrypt'
-import { tripleDESToolEncrypt, tripleDESToolDecrypt } from "@/utils/randomUtil.js"
+import { tripleDESToolEncrypt, tripleDESToolDecrypt,setCookie } from "@/utils/randomUtil.js"
 import { APIs } from '@/api/requestUrl'
 
 window.randomKey = '';
@@ -30,6 +30,7 @@ export const PublicKey = ({ commit, state }, callback) => {
       if (res.data.code != null && res.data.code == 0) {
         let returnData = tripleDESToolDecrypt(key, res.data.data);
         window.token=JSON.parse(returnData).token;
+        setCookie('token',JSON.parse(returnData).token);
         console.log();
         commit('getToken', JSON.parse(returnData));
         if(callback){
@@ -86,9 +87,18 @@ export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
 
 
 //验证风控验证码
-export const picCheckSmsSend2 =  ({ commit, state }, data, dataBack, errBack) => {
-
-  PostRequest(APIs.getCheckCodeSendSmsUrl(), setHeaders(state, sign(randomKey, data)), tripleDESToolEncrypt(randomKey, postDataStr(data)), (res) => {
+export const picCheckSmsSend2 =  ({ commit, state }, dataBack, errBack) => {
+  let param = {
+    checkCodeGuid: '5F109FE16273443EA6E7CA7CE8EB9EC8',
+    checkCode: '5Yf46x',
+    phone: '+86-'+'17621933537',
+    type: 4,
+    voiceMsg: 0,
+    supportPic: 0,
+    outInfo: 0,
+    sms_new: 0
+  };
+  PostRequest(APIs.getCheckCodeSendSmsUrl(), setHeaders(state, sign(randomKey, param)), tripleDESToolEncrypt(randomKey, postDataStr(param)), (res) => {
     if (dataBack) {
       dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
     }

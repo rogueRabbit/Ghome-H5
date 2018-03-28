@@ -1,0 +1,223 @@
+@import '../index/reset.scss';
+body{
+    font-size: $font_b;
+}
+.btn,.btn_border{
+    width: 100%;
+    height:80px;
+    line-height:80px;
+    background-color: $red;
+    text-align: center;
+    font-size: $font_b;
+    color: $white;
+    border-radius: 8px;
+    display:block;
+    margin-bottom: 28px;
+}
+.btn_border{
+    border:1px solid $red;/*no*/
+    color: $black;
+    background-color: $white;
+}
+.index_wrap{
+    font-size: $font_b;
+    width: $width;
+    height: $height;
+    position: absolute;
+    left: 50%;
+    top:50%;
+    margin-top:-$height/2;
+    margin-left:-$width/2;
+    background-color: $white_opa;
+    text-align: center;
+    border-radius:24px;
+    .index_main{
+        border: 6px solid hsla(0,0%,90%,.5);
+        background-clip: padding-box;
+        background-color: $white;
+        width:100%;
+        height:100%;
+        border-radius:30px;
+        .btns{
+            margin-top: 46px;
+        }
+        .index_act{
+            padding:40px 40px 20px;
+            text-align: center;
+            .logo{
+                width: 303px;
+                height: 78px;
+                background: url(../../../static/img/index/logo.png);
+                background-size: 303px auto;
+                display: inline-block;
+            }
+
+        }
+        .other_type{
+            width:297px;
+            height:25px;
+            background: url(../../../static/img/index/other.png) no-repeat;
+            background-size: 297px auto;
+            display: inline-block;
+
+        }
+        .third_type{
+            li{
+                display:inline-block;
+                border-right:1px solid #eee;/*no*/
+                text-align: center;
+                padding: 0 44px;
+                &:last-child{
+                    border-right:none;
+                }
+                &.cur{
+                    p{
+                        color: $ora;
+                    }
+                }
+                i{
+                    display: block;
+                    width: 43px;
+                    height:40px;
+                    background: url(../../../static/img/index/dy.png) no-repeat;
+                    background-size: 43px auto;
+                    &.wb{
+                        background: url(../../../static/img/index/wb.png) no-repeat;
+                        background-size: 43px auto;
+                    }
+                    &.wx{
+                        background: url(../../../static/img/index/wx.png) no-repeat;
+                        background-size: 43px auto;
+                    }
+                }
+                p{
+                    color: $gray;
+                    font-size: $font_s;
+                    margin-top:8px;
+                }
+            }
+        }
+        .bottom_box{
+            position: absolute;
+            margin:0 auto;
+            bottom:40px;
+            color: #999;
+            width:100%;
+            left: 0;
+            font-size: $font_m;
+            .selectInput{
+                width: 25px;
+                height: 25px;
+                position: relative;
+                left: 25px;
+            }
+            .selectLogo{
+                width: 25px;
+                height: 25px;
+                vertical-align: text-top;
+            }
+        }
+    }
+
+}
+.header_bar{
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 70px;
+    .close,.back{
+        position: absolute;
+        width:70px;
+        height:70px;
+        top:0;
+        &.close{
+            right:0;
+        }
+        &.back{
+            left:0;
+        }
+        .icon_close,.icon_back{
+            display: block;
+            width:36px;
+            height:36px;
+            background: url(../../../static/img/index/icon_close1.png) no-repeat;
+            background-size: 36px auto;
+            margin:30px 10px 0 0;
+            &.icon_back{
+                background: url(../../../static/img/index/icon_back.png) no-repeat;
+                background-size: 36px auto;
+                margin:30px 0 0 20px;
+            }
+        }
+    }
+}
+.login_form{
+    padding: 40px;
+    input::-webkit-input-placeholder{
+        font-size:24px;
+        color: #ddd;
+
+    }
+    h3{
+        text-align: center;
+        font-size: $font_b;
+        height: 80px;
+        line-height: 46px;
+        font-weight: bold;
+        font-size: 36px;
+    }
+    .item{
+        border:1px solid #ddd;/*no*/
+        height: 76px;
+        margin-bottom: 30px;
+        text-align: left;
+        position: relative;
+        border-radius:6px;
+        .down{
+            display: inline-block;
+            vertical-align: -6px;
+            width: 0px;
+            height: 10px;
+            border: 10px solid;
+            border-color:$black transparent transparent transparent;
+        }
+        input{
+            font-size: 32px;
+            border:none;
+            background: transparent;
+            width: 100%;
+            height: 76px;
+            vertical-align: middle;
+            text-indent: 20px;
+            padding:0;
+            &.phone{
+
+                width: 380px;
+            }
+        }
+        label{
+            float: left;
+            display: inline-block;
+            line-height: 76px;
+            text-align: center;
+            width:100px;
+        }
+        span.get_yzm{
+            position: absolute;
+            right:0;
+            top:0;
+            width: 164px;
+            height: 76px;
+            line-height: 76px;
+            color: $red;
+            text-align: center;
+            font-size: $font_m;
+        }
+    }
+    .no_yzm{
+        text-align: right;
+        color: $gray;
+        font-size: $font_m;
+    }
+}

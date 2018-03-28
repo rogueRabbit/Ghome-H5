@@ -1,7 +1,7 @@
-import { RandomUtil } from "@/utils/randomUtil.js"
+import { RandomUtil,setCookie } from "@/utils/randomUtil.js"
 import { getPublickeyUrl, APIs } from './requestUrl'
 import JSEncrypt from 'JSEncrypt'
-import { tripleDESToolEncrypt, tripleDESToolDecrypt } from "@/utils/randomUtil.js"
+import { tripleDESToolEncrypt, tripleDESToolDecrypt ,getCookie} from "@/utils/randomUtil.js"
 let config = {
     TOKEN: 1
 }
@@ -16,6 +16,7 @@ const ghhttp = (callback) => {
             deviceidStr = '&deviceid=' + encodeURI(item);
         }
     })
+    setCookie('randomKey',key);
     //handShakePostStr+='&deviceid='+encodeURI(deviceidStr);
     handShakePostStr += deviceidStr;
     handShakePostStr += '&reason=1';
@@ -50,7 +51,9 @@ const PostRequest = (url, header, params, callback, errback) => {
 }
 
 const getPostData = (url ,params,dataBack, errBack) => {
-    PostRequest(url, setHeaders(window.token, sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
+    console.log(randomKey);
+    let randomKey=getCookie('randomKey');
+    PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
         if (dataBack) {
             dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
         }
@@ -72,7 +75,7 @@ function setHeaders(token, singnResult, moreHeader) {
     //设置请求头配置，用来传递签名
     let headersSet = {
         'X-APP-ID': 1000,
-        'X-TOKEN': token,
+        'X-TOKEN': getCookie('token'),
         'X-SIGNATURE': singnResult,
         'X-HTTP-ENGINE': 'android',
         'X-PROMOTERID': 'android',
@@ -83,7 +86,8 @@ function setHeaders(token, singnResult, moreHeader) {
         'X-PLATFORM':2,
         'X-AREA':'231',
         'X-SDK-VERSION':'2.2.0',
-        'HTTP_X_FLOW_ID': '1'
+        'X-FLOW-ID': '1',
+        'Charsert':'UTF-8'
     };
     if (moreHeader) {
         for (let i in moreHeader) {
@@ -94,16 +98,18 @@ function setHeaders(token, singnResult, moreHeader) {
 }
 
 function sign(random, params) {//数据签名加入X-token
-    // console.log(params);
+    console.log(random);
     let mapList = '';
     for (let key in params) {
         mapList = mapList + key + '=' + params[key] + '&';
     }
-    if (mapList.length > 0) {
-        mapList = mapList.substring(0, mapList.length - 1);
+    let md5String1 = mapList.toString();
+    if (md5String1.length > 0) {
+        md5String1 = md5String1.substring(0, md5String1.length - 1);
     }
-    mapList = (mapList + random).toLowerCase();
-    return CryptoJS.MD5(mapList).toString().toUpperCase();
+    md5String1 = (md5String1 + random).toLowerCase();
+    console.log(md5String1);
+    return CryptoJS.MD5(md5String1).toString().toUpperCase();
 }
 
 function postDataStr(params) {
@@ -114,6 +120,8 @@ function postDataStr(params) {
     if (mapList.length > 0) {
         mapList = mapList.substring(0, mapList.length - 1);
     }
+    console.log(mapList);
+    console.log(encodeURI(mapList));
     return encodeURI(mapList).replace(/\+/g, '%2B')
 }
 export {

@@ -173,6 +173,9 @@
                     this.$store.dispatch('getAppConfigure', (data) => {
                         //获取用户配置
                     });
+                    this.$store.dispatch('picCheckSmsSend2', (data) => {
+                        //获取用户配置
+                    });
                 });
             }
         },

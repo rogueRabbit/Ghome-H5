@@ -72,7 +72,7 @@
             let param = {
               checkCodeGuid: this.riskData.checkCodeGuid,
               checkCode: this.checkCode,
-              phone: this.riskData.phone,
+              phone: '+86-'+this.riskData.phone,
               type: 4,
               voiceMsg: 0,
               supportPic: 0,
@@ -81,7 +81,7 @@
             };
 
             console.log('---'+JSON.stringify(param));
-
+            console.log(param);
             if (this.$store.state.token != '') {
               getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data) => {
 
