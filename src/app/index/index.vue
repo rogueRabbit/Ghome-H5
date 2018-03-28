@@ -49,7 +49,7 @@
                 </div>
                 <div class="item">
                     <input type="text" placeholder="请输入短信验证码">
-                    <span class="get_yzm">获取验证码</span>
+                    <span class="get_yzm" @click="sendmess()">获取验证码</span>
                 </div>
                 <p class="no_yzm">收不到验证码?</p>
                 <div class="btns">
@@ -66,6 +66,7 @@
 
         <!--风控组件-->
         <risk-management ></risk-management>
+        <!--/.风控组件-->
     </div>
 
 
@@ -83,7 +84,8 @@
                 showNumber: -1,//-1显示登录首页，0表示短信登录页面，1密码登录页面
                 userType: '',
                 showThree: 0,
-                showOther:1
+                showOther:1,
+                is_show_risk: '0'
             };
         },
         components: { PwdLogin },
