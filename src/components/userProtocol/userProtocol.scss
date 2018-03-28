@@ -29,6 +29,9 @@
         border-radius:10px;
         padding:0 10px;
         height: calc(100% - 120px);
-        overflow: auto
+        overflow: auto;
+        p{
+            margin: 20px 0;
+        }
     }
 }

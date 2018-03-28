@@ -69,6 +69,7 @@
 
         <!-- 用户协议start -->
         <UserProtocol v-if="showUserPro" @hideUserAlert="hideUserAlert"></UserProtocol>
+        <UserIsSelect v-if="0"></UserIsSelect>
         <!-- 用户协议end -->
 
         <!--风控组件-->
@@ -86,6 +87,7 @@
     import PwdLogin from "../pwdLogin/pwdLogin"
     import { APIs } from '@/api/requestUrl'
     import UserProtocol from '@/components/userProtocol/userProtocol'
+    import UserIsSelect from '@/components/userIsSelect/userIsSelect'
     import { getPostData } from '@/api/ghhttp.js'
     /* eslint-disable */
     export default {
@@ -102,7 +104,7 @@
                 showUserPro:0
             };
         },
-        components: { PwdLogin ,riskManagement, UserProtocol},
+        components: { PwdLogin ,riskManagement, UserProtocol,UserIsSelect},
         created: function () { },
         ready() {
         },
