@@ -46,7 +46,7 @@
                     <label class="country">+86
                         <span class="down"></span>
                     </label>
-                    <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone">
+                    <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone" autocomplete="off">
                 </div>
                 <div class="item">
                     <input type="text" placeholder="请输入短信验证码">
@@ -66,7 +66,7 @@
         </div>
 
         <!--风控组件-->
-        <risk-management ></risk-management>
+        <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:sendmess="sendmess" v-on:closeRiskDialog="closeRiskDialog"></risk-management>
         <!--/.风控组件-->
 
     </div>
@@ -90,10 +90,18 @@
                 showThree: 0,
                 showOther: 1,
                 phone: '',
-                is_show_risk: '0'
+                is_show_risk: 0,   //0--表示无下一步， 8 表示下一步需要进行图形验证码,
+                riskData:{
+                  checkCodeGuid: '',
+                  checkCodeUrl:'',
+                  imagecodeType: '',
+                  sdg_height: 0,
+                  sdg_width: 0,
+                  phone: ''
+                }
             };
         },
-        components: { PwdLogin },
+        components: { PwdLogin, riskManagement },
         created: function () { },
         ready() {
         },
@@ -141,6 +149,13 @@
                 }
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                     console.log(data);
+                    this.is_show_risk = data.nextAction;
+                    this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+                    this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+                    this.riskData['imagecodeType'] = data.imagecodeType;
+                    this.riskData['sdg_height'] = data.sdg_height;
+                    this.riskData['sdg_width'] = data.sdg_width;
+                    this.riskData['phone'] = this.phone;
                 });
             },
             showThreeLogo() {
@@ -171,10 +186,12 @@
                 } else {
                     return true;
                 }
+            },
+            closeRiskDialog(){
+
+              this.is_show_risk = -1;
+
             }
         },
-        components: {
-            riskManagement: riskManagement
-        }
     };
 </script>

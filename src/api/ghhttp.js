@@ -76,8 +76,14 @@ function setHeaders(token, singnResult, moreHeader) {
         'X-SIGNATURE': singnResult,
         'X-HTTP-ENGINE': 'android',
         'X-PROMOTERID': 'android',
+        'X-CHANNEL': 'A1',
         'X-CHANNEL-INFO': '',
-        'X-DEVICEID': 1000
+        'X-DEVICEID': 1000,
+        'X-APP-VERSION':'7.02.0',
+        'X-PLATFORM':2,
+        'X-AREA':'231',
+        'X-SDK-VERSION':'2.2.0',
+        'HTTP_X_FLOW_ID': '1'
     };
     if (moreHeader) {
         for (let i in moreHeader) {
@@ -88,6 +94,7 @@ function setHeaders(token, singnResult, moreHeader) {
 }
 
 function sign(random, params) {//数据签名加入X-token
+    // console.log(params);
     let mapList = '';
     for (let key in params) {
         mapList = mapList + key + '=' + params[key] + '&';

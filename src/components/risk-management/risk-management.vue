@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="risk-wrap" v-show="is_show">
+    <div class="risk-wrap">
       <div class="container">
         <div class="header">
           <a class="close" @click="closeRiskDialog()"><i class="icon_close"></i></a>
@@ -8,16 +8,16 @@
         <div class="main-content">
           <p class="title">请输入下面的图形验证码</p>
           <div class="code-image">
-            <img src="http://ada.sdo.com/tmp/studio/1/game_studio_logo.jpg" class="ordinary-risk-image" @click="refreshImage()"/>
+            <img :src="riskData.checkCodeUrl" class="ordinary-risk-image" @click="refreshImage()"/>
           </div>
           <div class="input-area">
-            <input type="text" class="code-input" placeholder="请输入正确的验证码" maxlength="6"/>
+            <input type="text" class="code-input" placeholder="请输入正确的验证码" v-model="checkCode"  maxlength="6"/>
           </div>
-          <button class="confirm-button">确定</button>
+          <button class="confirm-button" @click="VerificationCode()">确定</button>
         </div>
       </div>
     </div>
-    <div class="risk-mask" v-show="is_show"></div>
+    <div class="risk-mask"></div>
     <!--阿里验证码-->
     <div id="_umfp" style="display:inline;width:1px;height:1px;overflow:hidden"></div>
     <!--/.阿里验证码-->
@@ -28,27 +28,29 @@
     // import '../assets/css/nc/nc.css';
     import './risk-management.scss';
     import '../../assets/js/nc';
-    import { getPostData } from '../../api/ghhttp';
-    import { APIs } from '../../api/requestUrl';
+    import { getPostData } from '@/api/ghhttp.js'
+    import { APIs } from '@/api/requestUrl'
     export default {
         name: "riskManagement",
-        // props: {
-        //   imagecodeType: {
-        //     type: Number,
-        //     required: true
-        //   },
-        //   checkCodeUrl: {
-        //     type: String,
-        //     required: true
-        //   }
-        // },
+        props: {
+          riskData: {
+            type: Object,
+            required: true
+          }
+        },
         data(){
           return {
-            is_show: false
+            //风控验证码的图片尺寸
+            imageCodeStyle: {
+              width: this.riskData.sdg_width+'px',
+              height: this.riskData.sdg_height+'px',
+            },
+            checkCode: ''
           }
         },
         ready() {
 
+            console.log('***'+this.riskData);
             //注入阿里验证的方法
             this.injectionAliVerification();
 
@@ -57,25 +59,36 @@
 
         methods: {
 
+          //点击图片进行刷新
+          refreshImage(){
+
+            this.$emit('sendmess');
+
+          },
+
           //验证风控验证码
           VerificationCode(){
 
             let param = {
-              checkCodeGuid: 1,
-              checkCode: 1,
-              phone: '+86-17621933537',
+              checkCodeGuid: this.riskData.checkCodeGuid,
+              checkCode: this.checkCode,
+              phone: this.riskData.phone,
               type: 4,
               voiceMsg: 0,
-              supportPic: 1,
-              outInfo: 1,
-              sms_new: 1
+              supportPic: 0,
+              outInfo: 0,
+              sms_new: 0
             };
 
-            // if (this.$store.state.token != '') {
-            //   this.getPostData(this.APIs.getCheckCodeSendSmsUrl, param, (data) => {
-            //
-            //   })
-            // }
+            console.log('---'+JSON.stringify(param));
+
+            if (this.$store.state.token != '') {
+              getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data) => {
+
+              }, (err)=> {
+                //this.$emit('sendmess');
+              })
+            }
           },
 
           //注入阿里验证的方法
@@ -105,16 +118,10 @@
 
           },
 
-          //点击图片进行刷新
-          refreshImage(){
-
-
-
-          },
           //点击左上角的关闭
           closeRiskDialog(){
 
-
+            this.$emit('closeRiskDialog');
 
           }
         }
