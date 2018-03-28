@@ -40,31 +40,6 @@
                     <span @click="showUserAlert">我同意服务条款及隐私政策</span>
                 </div>
             </div>
-
-            <!-- 短信登录 -->
-            <div class="login_form" v-if="showNumber==0">
-                <h3>短信登录</h3>
-                <div class="item">
-                    <label class="country">+86
-                        <span class="down"></span>
-                    </label>
-                    <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone" autocomplete="off">
-                </div>
-                <div class="item">
-                    <input type="text" placeholder="请输入短信验证码">
-                    <span class="get_yzm" @click="getSmsCode">获取验证码</span>
-                </div>
-                <p class="no_yzm">收不到验证码?</p>
-                <div class="btns">
-                    <a class="btn">进入游戏</a>
-                </div>
-                <div class="bottom_box">
-                    <a class="link" @click="switchPwdLogin()">密码登录</a>
-                </div>
-            </div>
-
-            <!-- 密码登录 -->
-            <PwdLogin v-if="showNumber==1" v-on:switchPhoneLogin="switchPhoneLogin"></PwdLogin>
         </div>
 
         <!-- 用户协议start -->
@@ -100,63 +75,61 @@
                 showOther: 1,
                 phone: '',
                 is_show_risk: 0,   //0--表示无下一步， 8 表示下一步需要进行图形验证码,
-                riskData:{
-                  checkCodeGuid: '',
-                  checkCodeUrl:'',
-                  imagecodeType: '',
-                  sdg_height: 0,
-                  sdg_width: 0,
-                  phone: ''
+                riskData: {
+                    checkCodeGuid: '',
+                    checkCodeUrl: '',
+                    imagecodeType: '',
+                    sdg_height: 0,
+                    sdg_width: 0,
+                    phone: ''
                 },
-              select:1,//默认选择用户条款
-              showUserPro:0
+                select: 1,//默认选择用户条款
+                showUserPro: 0
             };
         },
-        components: { PwdLogin ,riskManagement, UserProtocol,UserIsSelect},
+        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect },
         created: function () { },
         ready() {
         },
         mounted: function () {
-            if (this.$store.state.token == '') {
-                console.log(this.$store);
-                this.$store.dispatch('PublicKey', () => {
-                    this.$store.dispatch('getAppConfigure', (data) => {
-                        //获取用户配置
-                        let mock = ''
-                        mockData ? mock : mock = {
-                            daoyu_enable: 1,
-                            device_feature: "",
-                            display_thirdaccout: 0,
-                            greport_log_level: "all",
-                            guest_enable: 0,
-                            log_level: "all",
-                            show_guest_confirm: 1,
-                            weibo_appKey: "4115557623",
-                            weibo_enable: 1,
-                            weibo_redirectUrl: "https://www.sdo.com",
-                            weixin_appId: "wx4b5f6da6126099ec",
-                            weixin_enable: 1,
-                            weixin_key: "3f31750780dda7daff947cbd695cefd3"
-                        };
-                        this.userType = mock ? mock : data;
-                        if (this.userType.display_thirdaccout == 0 && this.userType.guest_enable == 0) {
-                            this.showNumber = 0;
-                        }
-                        console.log(data);
-                    });
+
+            this.$store.dispatch('PublicKey', () => {
+                this.$store.dispatch('getAppConfigure', (data) => {
+                    //获取用户配置
+                    let mock = ''
+                    mockData ? mock : mock = {
+                        daoyu_enable: 1,
+                        device_feature: "",
+                        display_thirdaccout: 0,
+                        greport_log_level: "all",
+                        guest_enable: 0,
+                        log_level: "all",
+                        show_guest_confirm: 1,
+                        weibo_appKey: "4115557623",
+                        weibo_enable: 1,
+                        weibo_redirectUrl: "https://www.sdo.com",
+                        weixin_appId: "wx4b5f6da6126099ec",
+                        weixin_enable: 1,
+                        weixin_key: "3f31750780dda7daff947cbd695cefd3"
+                    };
+                    this.userType = mock ? mock : data;
+                    if (this.userType.display_thirdaccout == 0 && this.userType.guest_enable == 0) {
+                        this.showNumber = 0;
+                    }
+                    console.log(data);
                 });
-            }
+            });
         },
         methods: {
             sendmess(index) {
                 let params = {
-                    phone: this.phone,
+                    phone: '+86-' + this.phone,
                     supportPic: 2,
                     type: 4,
                     voiceMsg: 0
                 };
-                if(index){
-                    params.voiceMsg=1;
+                if (index) {
+                    params.voiceMsg = 1;
                 }
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                     console.log(data);
@@ -174,7 +147,8 @@
                 this.showOther = 0;
             },
             goToMsgLogin() {
-                this.showNumber = 0;
+                this.$router.push({ name: 'msgLogin', params: { userId: 123 } })
+                //this.showNumber = 0;
             },
             goBack() {
                 switch (this.showNumber) {
@@ -184,9 +158,9 @@
             },
             getSmsCode() {
                 //获取短信验证码
-                if(this.isPoneAvailable(this.phone)){
+                if (this.isPoneAvailable(this.phone)) {
                     this.sendmess();
-                }else{
+                } else {
                     alert('请输入正确手机号');
                 }
             },
@@ -198,13 +172,13 @@
                     return true;
                 }
             },
-            closeRiskDialog(){
+            closeRiskDialog() {
 
-              this.is_show_risk = -1;
+                this.is_show_risk = -1;
 
             },
-            showUserAlert(){
-              this.showUserPro = 1;
+            showUserAlert() {
+                this.showUserPro = 1;
             },
             hideUserAlert() {
               this.showUserPro = 0;
@@ -216,6 +190,7 @@
             },
             switchPhoneLogin(){
               this.showNumber = 0;
+              this.showUserPro = 0;
             }
 
         }

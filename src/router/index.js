@@ -2,10 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* import HelloWorld from '@/components/HelloWorld' */
 import HomePage from '@/app/index'
+import MsgLogin from '@/app/msgLogin'
 import Demo from '@/app/demo/demo'
 import ForgetPasswordOne from '@/app/forget-password/forget-password-one';
 import ForgetPasswordSecond from '@/app/forget-password/forget-password-second';
 import ForgetPasswordThird from '@/app/forget-password/forget-password-third';
+import PwdLogin from '@/app/pwdLogin/pwdLogin'
 
 Vue.use(Router)
 
@@ -35,6 +37,16 @@ export default new Router({
       path: '/forgetPasswordThird',
       name: 'forgetPasswordThird',
       component: ForgetPasswordThird
+    },
+    {
+      path:'/pwdLogin',
+      name: 'pwdLogin',
+      component: PwdLogin
+    },
+    {
+      path:'/msgLogin',
+      name: 'msgLogin',
+      component: MsgLogin
     }
   ]
 })
