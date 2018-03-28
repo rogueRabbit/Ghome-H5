@@ -9,6 +9,7 @@
                     <i class="icon_close"></i>
                 </a>
             </div>
+            <!-- 登录首页 -->
             <div class="index_login" v-if="showNumber==-1&&userType!=''">
                 <div class="index_act">
                     <div class="logo"></div>
@@ -45,11 +46,11 @@
                     <label class="country">+86
                         <span class="down"></span>
                     </label>
-                    <input type="text" placeholder="请输入手机号码" class="phone">
+                    <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone">
                 </div>
                 <div class="item">
                     <input type="text" placeholder="请输入短信验证码">
-                    <span class="get_yzm" @click="sendmess()">获取验证码</span>
+                    <span class="get_yzm" @click="getSmsCode">获取验证码</span>
                 </div>
                 <p class="no_yzm">收不到验证码?</p>
                 <div class="btns">
@@ -67,6 +68,7 @@
         <!--风控组件-->
         <risk-management ></risk-management>
         <!--/.风控组件-->
+
     </div>
 
 
@@ -76,6 +78,8 @@
     import "./index.scss";
     import riskManagement from '../../components/risk-management/risk-management';
     import PwdLogin from "../pwdLogin/pwdLogin"
+    import { APIs } from '@/api/requestUrl'
+    import { getPostData } from '@/api/ghhttp.js'
     /* eslint-disable */
     export default {
         name: "HomePage",
@@ -84,7 +88,8 @@
                 showNumber: -1,//-1显示登录首页，0表示短信登录页面，1密码登录页面
                 userType: '',
                 showThree: 0,
-                showOther:1,
+                showOther: 1,
+                phone: '',
                 is_show_risk: '0'
             };
         },
@@ -98,8 +103,8 @@
                 this.$store.dispatch('PublicKey', () => {
                     this.$store.dispatch('getAppConfigure', (data) => {
                         //获取用户配置
-                        let mock=''
-                        mockData?mock:mock = {
+                        let mock = ''
+                        mockData ? mock : mock = {
                             daoyu_enable: 1,
                             device_feature: "",
                             display_thirdaccout: 0,
@@ -114,8 +119,8 @@
                             weixin_enable: 1,
                             weixin_key: "3f31750780dda7daff947cbd695cefd3"
                         };
-                        this.userType = mock?mock:data;
-                        if(this.userType.display_thirdaccout == 0&&this.userType.guest_enable == 0){
+                        this.userType = mock ? mock : data;
+                        if (this.userType.display_thirdaccout == 0 && this.userType.guest_enable == 0) {
                             this.showNumber = 0;
                         }
                         console.log(data);
@@ -124,29 +129,52 @@
             }
         },
         methods: {
-            sendmess() {
-                if (this.$store.state.token != '') {
-                    this.$store.dispatch('getPhonemsAction', (data) => {
-                        console.log(data);
-                    });
+            sendmess(index) {
+                let params = {
+                    phone: this.phone,
+                    supportPic: 2,
+                    type: 4,
+                    voiceMsg: 0
+                };
+                if(index){
+                    params.voiceMsg=1;
                 }
+                getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
+                    console.log(data);
+                });
             },
             showThreeLogo() {
                 this.showThree = 1;
                 this.showOther = 0;
             },
-            goToMsgLogin(){
+            goToMsgLogin() {
                 this.showNumber = 0;
             },
-            goBack(){
-                switch(this.showNumber){
+            goBack() {
+                switch (this.showNumber) {
                     case 0:
                         this.showNumber = -1;
+                }
+            },
+            getSmsCode() {
+                //获取短信验证码
+                if(this.isPoneAvailable(this.phone)){
+                    this.sendmess();
+                }else{
+                    alert('请输入正确手机号');
+                }
+            },
+            isPoneAvailable(str) {
+                let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+                if (!myreg.test(str)) {
+                    return false;
+                } else {
+                    return true;
                 }
             }
         },
         components: {
-          riskManagement: riskManagement
+            riskManagement: riskManagement
         }
     };
 </script>
