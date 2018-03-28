@@ -1,4 +1,4 @@
-@import './reset.scss';
+@import './reset';
 body{
     font-size: $font_b;
 }
@@ -40,6 +40,11 @@ body{
         border-radius:30px;
         .btns{
             margin-top: 46px;
+            &.next-action {
+              position: absolute;
+              width: 490px;
+              bottom: 10px;
+            }
         }
         .index_act{
             padding:40px 40px 20px;
@@ -152,72 +157,104 @@ body{
         }
     }
 }
+
 .login_form{
-    padding: 40px;
-    input::-webkit-input-placeholder{
-        font-size:24px;
-        color: #ddd;
+  padding: 40px;
+  input::-webkit-input-placeholder{
+    font-size:24px;
+    color: #ddd;
 
+  }
+  h3{
+    text-align: center;
+    font-size: $font_b;
+    height: 80px;
+    line-height: 46px;
+    font-weight: bold;
+    font-size: 36px;
+  }
+  .item{
+    border:1px solid #ddd;/*no*/
+    height: 76px;
+    margin-bottom: 30px;
+    text-align: left;
+    position: relative;
+    border-radius:6px;
+    .down{
+      display: inline-block;
+      vertical-align: -6px;
+      width: 0px;
+      height: 10px;
+      border: 10px solid;
+      border-color:$black transparent transparent transparent;
     }
-    h3{
-        text-align: center;
-        font-size: $font_b;
-        height: 80px;
-        line-height: 46px;
-        font-weight: bold;
-        font-size: 36px;
-    }
-    .item{
-        border:1px solid #ddd;/*no*/
-        height: 76px;
-        margin-bottom: 30px;
-        text-align: left;
-        position: relative;
-        border-radius:6px;
-        .down{
-            display: inline-block;
-            vertical-align: -6px;
-            width: 0px;
-            height: 10px;
-            border: 10px solid;
-            border-color:$black transparent transparent transparent;
-        }
-        input{
-            font-size: 32px;
-            border:none;
-            background: transparent;
-            width: 100%;
-            height: 76px;
-            vertical-align: middle;
-            text-indent: 20px;
-            padding:0;
-            &.phone{
+    input{
+      font-size: 32px;
+      border:none;
+      background: transparent;
+      width: 100%;
+      height: 76px;
+      vertical-align: middle;
+      text-indent: 20px;
+      padding:0;
+      &.phone{
 
-                width: 380px;
-            }
-        }
-        label{
-            float: left;
-            display: inline-block;
-            line-height: 76px;
-            text-align: center;
-            width:100px;
-        }
-        span.get_yzm{
-            position: absolute;
-            right:0;
-            top:0;
-            width: 164px;
-            height: 76px;
-            line-height: 76px;
-            color: $red;
-            text-align: center;
-            font-size: $font_m;
-        }
+        width: 380px;
+      }
+      &.password-input {
+        text-indent: 80px;
+      }
     }
-    .no_yzm{
-        text-align: right;
-        color: $gray;
-        font-size: $font_m;
+    label{
+      float: left;
+      display: inline-block;
+      line-height: 76px;
+      text-align: center;
+      width:100px;
     }
+    span.get_yzm{
+      position: absolute;
+      right:0;
+      top:0;
+      width: 164px;
+      height: 76px;
+      line-height: 76px;
+      color: $red;
+      text-align: center;
+      font-size: $font_m;
+      &.forget-password {
+        color: $black!important;
+      }
+    }
+    &.reset-phone {
+      position: absolute;
+      top: 200px;
+      width: 490px;
+    }
+  }
+  .no_yzm{
+    text-align: right;
+    color: $gray;
+    font-size: $font_m;
+    &.scene-2 {
+      position: absolute;
+      width: 490px;
+      top: 300px;
+    }
+  }
+  .send-tips {
+    text-align: left;
+  }
+
+  .lock-icon {
+    position: absolute;
+    left:14px;
+    top:14px;
+    width: 41px;
+    height: 44px;
+    background: url('../../assets/img/lock_icon.png') 0 0 no-repeat;
+    background-size: 100%;
+    display: block;
+  }
 }
+

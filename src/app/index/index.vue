@@ -59,12 +59,12 @@
                     <a class="btn">进入游戏</a>
                 </div>
                 <div class="bottom_box">
-                    <a class="link">密码登录</a>
+                    <a class="link" @click="switchPwdLogin()">密码登录</a>
                 </div>
             </div>
 
             <!-- 密码登录 -->
-            <PwdLogin v-if="showNumber==1"></PwdLogin>
+            <PwdLogin v-if="showNumber==1" v-on:switchPhoneLogin="switchPhoneLogin"></PwdLogin>
         </div>
 
         <!-- 用户协议start -->
@@ -208,8 +208,16 @@
             },
             hideUserAlert() {
               this.showUserPro = 0;
+            },
+            switchPwdLogin(){
+
+              this.showNumber = 1;
+
+            },
+            switchPhoneLogin(){
+              this.showNumber = 0;
             }
-            
+
         }
     };
 </script>
