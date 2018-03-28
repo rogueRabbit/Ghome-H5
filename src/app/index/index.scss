@@ -105,6 +105,17 @@ body{
             width:100%;
             left: 0;
             font-size: $font_m;
+            .selectInput{
+                width: 25px;
+                height: 25px;
+                position: relative;
+                left: 25px;
+            }
+            .selectLogo{
+                width: 25px;
+                height: 25px;
+                vertical-align: text-top;
+            }
         }
     }
 
