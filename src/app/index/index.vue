@@ -34,8 +34,10 @@
                 </ul>
                 <div class="other_type" v-if="userType.display_thirdaccout&&showOther==1" @click="showThreeLogo"></div>
                 <div class="bottom_box">
-                    <input type="checkbox">
-                    <b></b>我同意服务条款及隐私政策
+                    <input type="checkbox" name="select" id="" v-model="select" value="select" class="selectInput">
+                    <img src="static/img/index/gl_ok.png" alt="" class="selectLogo" v-if="select">
+                    <img src="static/img/index/gl_no.png" alt="" class="selectLogo" v-if="!select">
+                    <span @click="showUserAlert">我同意服务条款及隐私政策</span>
                 </div>
             </div>
 
@@ -65,6 +67,10 @@
             <PwdLogin v-if="showNumber==1"></PwdLogin>
         </div>
 
+        <!-- 用户协议start -->
+        <UserProtocol v-if="showUserPro" @hideUserAlert="hideUserAlert"></UserProtocol>
+        <!-- 用户协议end -->
+
         <!--风控组件-->
         <risk-management ></risk-management>
         <!--/.风控组件-->
@@ -79,6 +85,7 @@
     import riskManagement from '../../components/risk-management/risk-management';
     import PwdLogin from "../pwdLogin/pwdLogin"
     import { APIs } from '@/api/requestUrl'
+    import UserProtocol from '@/components/userProtocol/userProtocol'
     import { getPostData } from '@/api/ghhttp.js'
     /* eslint-disable */
     export default {
@@ -90,10 +97,12 @@
                 showThree: 0,
                 showOther: 1,
                 phone: '',
-                is_show_risk: '0'
+                is_show_risk: '0',
+                select:1,//默认选择用户条款
+                showUserPro:0
             };
         },
-        components: { PwdLogin },
+        components: { PwdLogin ,riskManagement, UserProtocol},
         created: function () { },
         ready() {
         },
@@ -171,10 +180,13 @@
                 } else {
                     return true;
                 }
+            },
+            showUserAlert(){
+                this.showUserPro = 1;
+            },
+            hideUserAlert(){
+                this.showUserPro = 0;
             }
-        },
-        components: {
-            riskManagement: riskManagement
         }
     };
 </script>
