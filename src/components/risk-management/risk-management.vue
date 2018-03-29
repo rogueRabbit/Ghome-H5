@@ -65,7 +65,7 @@
       refreshImage() {
 
         this.riskData['checkCodeUrl'] =  this.riskData['checkCodeUrl']+"&"+ (+new Date);
-        
+
       },
 
       //验证风控验证码
@@ -75,7 +75,7 @@
           checkCode: this.checkCode,
           checkCodeGuid: this.riskData.checkCodeGuid,
           outInfo: 0,
-          phone: this.riskData.areaCode + this.riskData.phone,
+          phone: this.riskData.areaCode + '-' + this.riskData.phone,
           sms_new:1,
           supportPic: 0,
           type: 4,

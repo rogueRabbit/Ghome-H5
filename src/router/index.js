@@ -9,6 +9,9 @@ import ForgetPasswordSecond from '@/app/forget-password/forget-password-second';
 import ForgetPasswordThird from '@/app/forget-password/forget-password-third';
 import PwdLogin from '@/app/pwdLogin/pwdLogin';
 import VisitorUpgrade from '@/app/visitor-upgrade/visitor-upgrade';
+import SmallId from '@/app/small-id/small-id'
+import RealName from '@/app/realName/realName'
+import ActiveUser from '@/app/active-user/active-user'
 
 Vue.use(Router)
 
@@ -50,9 +53,24 @@ export default new Router({
       component: MsgLogin
     },
     {
-      path:'/visitorUpgrade',
+      path: '/visitorUpgrade',
       name: 'visitorUpgrade',
       component: VisitorUpgrade
+    },
+    {
+      path:'/smallId',
+      name: 'smallId',
+      component: SmallId
+    },
+    {
+      path:'/realName',
+      name: 'realName',
+      component: RealName
+    },
+    {
+      path:'/activeuser',
+      name: 'activeuser',
+      component: ActiveUser
     }
   ]
 })
