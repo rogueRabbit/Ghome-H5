@@ -12,6 +12,10 @@
                     <br>
                     <span>《服务条款及隐私政策》</span>
                 </div>
+                <div class="btnStyle">
+                    <button class="clickStyle left" @click="selectUserPro(1)">立即勾选</button>
+                    <button class="clickStyle right"  @click="selectUserPro(0)">残忍拒绝</button>
+                </div>
             </div>
         </div>
     </div>
@@ -36,7 +40,16 @@
 
         },
         methods: {
-            close(){}
+            close(){
+                this.$emit('closeUserAlert');
+            },
+            selectUserPro(index){
+                if(index == 1){
+                    this.$emit('selectUserPro',1);
+                }else{
+                    this.$emit('selectUserPro',0);
+                }
+            }
         }
     };
 </script>

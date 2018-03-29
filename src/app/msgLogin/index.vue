@@ -20,12 +20,12 @@
                     <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone" autocomplete="off">
                 </div>
                 <div class="item">
-                    <input type="text" placeholder="请输入短信验证码">
+                    <input type="text" placeholder="请输入短信验证码" v-model="msgCode">
                     <span class="get_yzm" @click="getSmsCode">获取验证码</span>
                 </div>
                 <p class="no_yzm">收不到验证码?</p>
                 <div class="btns">
-                    <a class="btn">进入游戏</a>
+                    <a class="btn" :disabled="hasInput == 1" @click="smgLogin"  :class="hasInput?'':'disabledClick'">进入游戏</a>
                 </div>
                 <div class="bottom_box">
                     <a class="link" @click="gotoPwdLogin">密码登录</a>
@@ -91,8 +91,10 @@
                     sdg_height: 0,
                     sdg_width: 0,
                     phone: '',
-                    areaCode: '+86'
+                    areaCode: '+86',
+                    msgCode:''
                 },
+                msgCode:'',
               select:1,//默认选择用户条款
               showUserPro:0,
               showVoice: false,  //是否显示语音验证码的风控,
@@ -104,7 +106,8 @@
                 'H', 'I', 'J', 'K', 'L', 'M', 'N',
                 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                 'V', 'W', 'X', 'Y', 'Z'
-              ]
+              ],
+              hasInput:0//进入游戏按钮是否disable
             };
         },
         components: { PwdLogin ,riskManagement, voiceCode},
@@ -112,6 +115,24 @@
         ready() {
         },
         mounted: function () {
+        },
+        watch:{
+            msgCode(newV,oldV){
+                if(newV != ''&&this.phone != ''){
+                    this.hasInput = 1;
+                }else{
+                    this.hasInput = 0;
+                }
+                this.riskData['msgCode'] = newV;
+            },
+            phone(newV,oldV){
+                if(newV != ''&&this.msgCode != ''){
+                    this.hasInput = 1;
+                }else{
+                    this.hasInput = 0;
+                }
+                this.riskData['phone'] = newV;
+            }
         },
         methods: {
             gotoPwdLogin() {
@@ -136,6 +157,7 @@
                     this.riskData['sdg_height'] = data.sdg_height;
                     this.riskData['sdg_width'] = data.sdg_width;
                     this.riskData['phone'] = this.phone;
+                    this.riskData['areaCode'] = this.areaCode;
                 });
             },
             showThreeLogo() {
@@ -200,6 +222,12 @@
             },
             closeAreaSelect(){
                 this.showArea = 0;
+            },
+            smgLogin(){
+                //登录游戏
+                if(this.hasInput == 1){
+                    alert('登录游戏');
+                }
             }
         }
     };

@@ -51,7 +51,6 @@ const PostRequest = (url, header, params, callback, errback) => {
 }
 
 const getPostData = (url ,params,dataBack, errBack) => {
-    console.log(randomKey);
     let randomKey=getCookie('randomKey');
     PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
         if (dataBack) {

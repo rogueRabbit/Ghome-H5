@@ -256,6 +256,11 @@ body{
     background-size: 100%;
     display: block;
   }
+  .btns{
+      .disabledClick{
+          background: $gray;
+      }
+  }
 }
 
 .area_code{

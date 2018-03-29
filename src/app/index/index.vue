@@ -37,14 +37,14 @@
                     <input type="checkbox" name="select" id="" v-model="select" value="select" class="selectInput">
                     <img src="static/img/index/gl_ok.png" alt="" class="selectLogo" v-if="select">
                     <img src="static/img/index/gl_no.png" alt="" class="selectLogo" v-if="!select">
-                    <span @click="showUserAlert">我同意服务条款及隐私政策</span>
+                    <span @click="showUserAlertClick">我同意服务条款及隐私政策</span>
                 </div>
             </div>
         </div>
 
         <!-- 用户协议start -->
         <UserProtocol v-if="showUserPro" @hideUserAlert="hideUserAlert"></UserProtocol>
-        <UserIsSelect v-if="0"></UserIsSelect>
+        <UserIsSelect v-if="showUserAlert" @closeUserAlert='closeUserAlert' @selectUserPro="selectUserPro"></UserIsSelect>
         <!-- 用户协议end -->
 
         <!--风控组件-->
@@ -88,9 +88,10 @@
                     sdg_width: 0,
                     phone: ''
                 },
-                select: 1,//默认选择用户条款
+                select: 0,//默认选择用户条款
                 showUserPro: 0,
                 showVisitor: false,
+                showUserAlert:false//提醒用户勾选用户协议
             };
         },
         components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect,visitorLoginEntry },
@@ -153,7 +154,11 @@
                 this.showOther = 0;
             },
             goToMsgLogin() {
-                this.$router.push({ name: 'msgLogin', params: { userId: 123 } })
+                if(this.select == 0){
+                    this.showUserAlert = 1;
+                }else{
+                    this.$router.push({ name: 'msgLogin', params: { userId: 123 } })
+                }
                 //this.showNumber = 0;
             },
             goBack() {
@@ -183,7 +188,7 @@
                 this.is_show_risk = -1;
 
             },
-            showUserAlert() {
+            showUserAlertClick() {
                 this.showUserPro = 1;
             },
             hideUserAlert() {
@@ -209,8 +214,18 @@
               this.showVisitor = false;
 
             },
-
-
+            closeUserAlert(){
+                this.showUserAlert = 0;
+            },
+            selectUserPro(index){
+                if(index == 1){
+                    this.select = 1;
+                    this.showUserAlert = 0;
+                }else{
+                    this.select = 0;
+                    this.showUserAlert = 0;
+                }
+            }
         }
     };
 </script>
