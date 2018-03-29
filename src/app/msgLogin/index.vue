@@ -155,6 +155,7 @@
             sendmess(index) {
                 let params = {
                     phone: '+86-' + this.phone,
+                    sms_new:1,
                     supportPic: 2,
                     type: 4,
                     voiceMsg: 0
@@ -252,7 +253,7 @@
                     group: 'game',
                     phone: this.areaCode + '-' + this.phone,
                     sms_new: 1,
-                    sms_type: 1,
+                    sms_type: 4,
                     smscode: this.msgCode,
                 };
                 //登录游戏
