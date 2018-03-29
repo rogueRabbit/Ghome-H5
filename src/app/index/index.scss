@@ -261,6 +261,33 @@ body{
           background: $gray;
       }
   }
+  &.visitor-page {
+    .prompt {
+      text-align: left;
+      .phone {
+        color: $red;
+      }
+    }
+    .remarks {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      height: 76px;
+      margin-bottom: 30px;
+      position: relative;
+      border-radius: 6px;
+      input {
+        font-size: 32px;
+        border:none;
+        background: transparent;
+        width: 100%;
+        height: 76px;
+        vertical-align: middle;
+        text-indent: 20px;
+        padding:0;
+        text-align: center;
+      }
+    }
+  }
 }
 
 .area_code{
@@ -292,7 +319,7 @@ body{
                 }
             }
         }
-    } 
+    }
 }
 
 .ActiveUser{

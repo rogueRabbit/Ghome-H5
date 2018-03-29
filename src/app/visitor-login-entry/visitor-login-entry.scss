@@ -1,49 +1,9 @@
 @import '../index/reset';
 
 .visitor-entry {
-  position: absolute;
-  width: 100%;
   height: 60%;
   top: 20%;
-  left: 0;
-  background-color: $white;
-  z-index: 2;
-  border-radius:10px;
   .container {
-    width: 100%;
-    height: 100%;
-    .header{
-      position: absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height: 70px;
-      .close,.back{
-        position: absolute;
-        width:70px;
-        height:70px;
-        top:0;
-        &.close{
-          right:0;
-        }
-        &.back{
-          left:0;
-        }
-        .icon_close,.icon_back{
-          display: block;
-          width:36px;
-          height:36px;
-          background: url(../../../static/img/index/icon_close1.png) no-repeat;
-          background-size: 36px auto;
-          margin:30px 10px 0 0;
-          &.icon_back{
-            background: url(../../../static/img/index/icon_back.png) no-repeat;
-            background-size: 36px auto;
-            margin:30px 0 0 20px;
-          }
-        }
-      }
-    }
     .title {
       margin-top: 100px;
       text-align: left;
@@ -77,13 +37,3 @@
   }
 }
 
-.visitor-mask {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top:0;
-  left:0;
-  background-color: #000000;
-  opacity: 0.5;
-  z-index: 1;
-}

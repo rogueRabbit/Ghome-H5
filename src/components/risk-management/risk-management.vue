@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="risk-wrap">
+    <div class="dialog-wrap risk-wrap">
       <div class="container">
         <div class="header">
           <a class="close" @click="closeRiskDialog()">
@@ -10,7 +10,7 @@
         <div class="main-content">
           <p class="title">请输入下面的图形验证码</p>
           <div class="code-image">
-            <img :src="riskData.checkCodeUrl" class="ordinary-risk-image" @click="refreshImage()" />
+            <img :src="riskData.checkCodeUrl" class="ordinary-risk-image" @click="refreshImage()" ref="riskImage" />
           </div>
           <div class="input-area">
             <input type="text" class="code-input" placeholder="请输入正确的验证码" v-model="checkCode" maxlength="6" />
@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="risk-mask"></div>
+    <div class="dialog-mask"></div>
     <!--阿里验证码-->
     <div id="_umfp" style="display:inline;width:1px;height:1px;overflow:hidden"></div>
     <!--/.阿里验证码-->
@@ -52,7 +52,7 @@
     },
     ready() {
 
-      console.log('***' + this.riskData);
+      console.log(this.props.riskData);
       //注入阿里验证的方法
       this.injectionAliVerification();
 
@@ -64,7 +64,7 @@
       //点击图片进行刷新
       refreshImage() {
 
-        this.$emit('sendmess');
+        this.riskData['checkCodeUrl'] =  this.riskData['checkCodeUrl']+"&"+ (+new Date);
 
       },
 
@@ -79,13 +79,13 @@
           sms_new:1,
           supportPic: 0,
           type: 4,
-          voiceMsg: 0 
+          voiceMsg: 0
         };
 
         getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data) => {
 
         }, (err) => {
-          //this.$emit('sendmess');
+          this.$emit('sendmess');
         })
       },
 

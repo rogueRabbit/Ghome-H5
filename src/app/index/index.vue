@@ -62,6 +62,7 @@
 
 <script>
     import "./index.scss";
+    import "./dialog.scss";
     import riskManagement from '../../components/risk-management/risk-management';
     import PwdLogin from "../pwdLogin/pwdLogin"
     import { APIs } from '@/api/requestUrl'

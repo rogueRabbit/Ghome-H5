@@ -96,6 +96,7 @@
                     areaCode: '+86',
                     msgCode: ''
                 },
+
                 msgCode: '',
                 select: 1,//默认选择用户条款
                 showUserPro: 0,
@@ -120,6 +121,10 @@
         ready() {
         },
         mounted: function () {
+
+          this.pageSource = this.$route.query.pageSource;
+
+
         },
         watch: {
             msgCode(newV, oldV) {
@@ -173,6 +178,9 @@
                     this.riskData['sdg_width'] = data.sdg_width;
                     this.riskData['phone'] = this.phone;
                     this.riskData['areaCode'] = this.areaCode;
+                    console.log('-data.checkCodeUrl--'+data.checkCodeUrl);
+                    console.log('-data.sdg_height--'+data.sdg_height);
+                    console.log('-data.sdg_width--'+data.sdg_width);
                 });
             },
             showThreeLogo() {
