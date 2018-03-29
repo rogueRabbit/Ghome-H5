@@ -11,7 +11,9 @@
       </div>
       <div class="pwdLogin">
         <div class="login_form">
-          <h3>实名认证<img src="static/img/index/gl_tips.png" alt="" class="tips" @click="closeIntro(1)"></h3>
+          <h3>实名认证
+            <img src="static/img/index/gl_tips.png" alt="" class="tips" @click="closeIntro(1)">
+          </h3>
           <div class="smallContent">
             <div class="title">{{content}}</div>
           </div>
@@ -19,16 +21,20 @@
             <label for="">
               姓名
             </label>
-            <input type="text" name="" id="" class="myName" placeholder="请输入您的真实姓名">
+            <input type="text" name="" id="" class="myName" placeholder="请输入您的真实姓名" v-model="name">
           </div>
           <div class="name idcard">
-              <label for="">
-                身份证
-              </label>
-              <input type="text" name="" id="" class="myName" placeholder="请输入有效的身份证号码">
-            </div>
-          <div class="btns bottomClick">
-            <a class="btn" @click="gotoLogin()">确定</a>
+            <label for="">
+              身份证
+            </label>
+            <input type="text" name="" id="" class="myName" placeholder="请输入有效的身份证号码" v-model="idcard">
+          </div>
+          <div class="btns bottomClick" v-if="isMust">
+            <a class="btn" @click="gotoNext(1)">确定</a>
+          </div>
+          <div class="btns isMust" v-if="!isMust">
+            <a class="btn" @click="gotoNext(1)">确定</a>
+            <a class="btn MustRight" @click="gotoNext(0)">跳过</a>
           </div>
         </div>
       </div>
@@ -40,7 +46,7 @@
           <div class="concat">*海外用户请联系客服。</div>
         </div>
         <div class="btns bottomClick">
-            <a class="btn" @click="closeIntro(0)">我知道了</a>
+          <a class="btn" @click="closeIntro(0)">我知道了</a>
         </div>
       </div>
     </div>
@@ -56,65 +62,74 @@
     name: "RealName",
     data() {
       return {
-        content:'按照文化部《网络游戏管理暂行办法》的相关要求，网络游戏用户需要使用有效的身份证件进行实名注册才能登录游戏；身份证信息只能提交一次不可修改，请谨慎填写。',
-        AlertContent:'您的身份证信息仅用于实名补填，我们不会将此信息用于其他任何场景。',
-        showIntroAlert:0
+        content: '按照文化部《网络游戏管理暂行办法》的相关要求，网络游戏用户需要使用有效的身份证件进行实名注册才能登录游戏；身份证信息只能提交一次不可修改，请谨慎填写。',
+        AlertContent: '您的身份证信息仅用于实名补填，我们不会将此信息用于其他任何场景。',
+        showIntroAlert: 0,
+        isMust: 1,
+        name: '',
+        idcard: '',
+        smgData: '',
+        userData: ''
+
       };
     },
     created: function () { },
     ready() {
     },
     mounted: function () {
-
+      if (this.$route.params.smgData) {
+        this.smgData = JSON.parse(this.$route.params.smgData);
+      }
+      if (this.$route.params.userData) {
+        this.userData = JSON.parse(this.$route.params.userData);
+      }
+      if (this.smgData && this.smgData.realInfo_force == 1) {
+        //必须进行激活
+        this.isMust = 1;
+      }
     },
     methods: {
-      getSmallIdList() {
-        let params={
-          userId:this.$route.params.userid,
-          deviceid:this.$route.params.deviceid
-        };
-        getPostData(APIs.querySmallAccount(), params, (data) => {
-          let dataList=this.dataList;
-        });
-      },
-      gotoLogin() {
-
-        let params = {
-          ua: '1.1',
-          phone: this.phone,
-          password: this.loginPassword,
-          deviceid: 1,
-          group: 1,
-          supportPic: 2
-        };
-
-        getPostData(APIs.getLoginUrl(), params, (res) => {
-
-        })
-      },
       goBack() {
         window.history.go(-1);
       },
-      emailColor(item){
-        let reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-        return reg.test(item); 
-      },
-      showRedColor(listNum){
-        this.dataList.map((item,index)=>{
-          item.select = 0;
-        });
-        //显示选中的代码
-        this.dataList.map((item,index)=>{
-          if(listNum==index){
-            item.select = 1;
-          }
-        });
-      },
-      closeIntro(index){
-        if(index == 0){
+      closeIntro(index) {
+        if (index == 0) {
           this.showIntroAlert = 0;
-        }else{
+        } else {
           this.showIntroAlert = 1;
+        }
+      },
+      gotoNext(index) {
+        if (index == 1) {
+          //实名认证
+          let params = {
+            idcard: this.idcard,
+            name: this.name
+          };
+          getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
+            console.log(data);
+            //判断是否需要激活
+            if (this.smgData != '' && this.smgData.activation == 1) {//1表示需要激活
+              this.$router.push({
+                name: 'activeuser', query: {
+                  userData: this.$route.params.userData,
+                  smgData: this.$route.params.smgData
+                }
+              });
+            } else {
+              //进入游戏
+            }
+          });
+        } else {
+          //跳过实名认证直接进入激活界面
+          if (this.smgData != '' && this.smgData.activation == 1) {//1表示需要激活
+            this.$router.push({
+              name: 'activeuser', query: {
+                userData: this.$route.params.userData,
+                smgData: this.$route.params.smgData
+              }
+            });
+          }
         }
       }
     }
