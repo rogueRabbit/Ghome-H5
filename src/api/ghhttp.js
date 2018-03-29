@@ -53,6 +53,10 @@ const PostRequest = (url, header, params, callback, errback) => {
 const getPostData = (url ,params,dataBack, errBack) => {
     let randomKey=getCookie('randomKey');
     PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
+        if(res.data.code == 18){
+            alert('用户token过期，请返回首页重新登录');
+            window.location.href = '/';
+        }
         if (dataBack) {
             dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
         }
@@ -86,7 +90,8 @@ function setHeaders(token, singnResult, moreHeader) {
         'X-AREA':'231',
         'X-SDK-VERSION':'2.2.0',
         'X-FLOW-ID': '1',
-        'Charsert':'UTF-8'
+        'Charsert':'UTF-8',
+        'X-DeviceType':'pc'
     };
     if (moreHeader) {
         for (let i in moreHeader) {
@@ -97,7 +102,6 @@ function setHeaders(token, singnResult, moreHeader) {
 }
 
 function sign(random, params) {//数据签名加入X-token
-    console.log(random);
     let mapList = '';
     for (let key in params) {
         mapList = mapList + key + '=' + params[key] + '&';
@@ -107,7 +111,6 @@ function sign(random, params) {//数据签名加入X-token
         md5String1 = md5String1.substring(0, md5String1.length - 1);
     }
     md5String1 = (md5String1 + random).toLowerCase();
-    console.log(md5String1);
     return CryptoJS.MD5(md5String1).toString().toUpperCase();
 }
 
@@ -119,8 +122,7 @@ function postDataStr(params) {
     if (mapList.length > 0) {
         mapList = mapList.substring(0, mapList.length - 1);
     }
-    console.log(mapList);
-    console.log(encodeURI(mapList));
+    console.log(encodeURI(mapList).replace(/\+/g, '%2B'));
     return encodeURI(mapList).replace(/\+/g, '%2B')
 }
 export {

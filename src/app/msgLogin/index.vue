@@ -21,11 +21,12 @@
                 </div>
                 <div class="item">
                     <input type="text" placeholder="请输入短信验证码" v-model="msgCode">
-                    <span class="get_yzm" @click="getSmsCode">获取验证码</span>
+                    <span class="get_yzm" @click="getSmsCode" v-if="!showTime">获取验证码</span>
+                    <span class="get_yzm" v-if="showTime">{{timeNumber}}'</span>
                 </div>
                 <p class="no_yzm">收不到验证码?</p>
                 <div class="btns">
-                    <a class="btn" :disabled="hasInput == 1" @click="smgLogin"  :class="hasInput?'':'disabledClick'">进入游戏</a>
+                    <a class="btn" :disabled="hasInput == 1" @click="smgLogin" :class="hasInput?'':'disabledClick'">进入游戏</a>
                 </div>
                 <div class="bottom_box">
                     <a class="link" @click="gotoPwdLogin">密码登录</a>
@@ -45,7 +46,8 @@
                         <h3 class="conuntryTitle">{{word}}</h3>
                         <ul class="country-wrap">
                             <li v-for="(item,key) in countryList" :key="key" @click="onSelect(item.flag,item.text)" class="showCountryList" v-if="item.word==word">
-                                {{item.text}}<span>{{item.flag}}</span>
+                                {{item.text}}
+                                <span>{{item.flag}}</span>
                                 <i class="icon_check_on"></i>
                             </li>
                         </ul>
@@ -92,46 +94,58 @@
                     sdg_width: 0,
                     phone: '',
                     areaCode: '+86',
-                    msgCode:''
+                    msgCode: ''
                 },
-                msgCode:'',
-              select:1,//默认选择用户条款
-              showUserPro:0,
-              showVoice: false,  //是否显示语音验证码的风控,
-              areaCode: '+86',
-              showArea: 0,
-              countryList: country(),
-              wordList: [
-                '常用', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
-                'H', 'I', 'J', 'K', 'L', 'M', 'N',
-                'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-                'V', 'W', 'X', 'Y', 'Z'
-              ],
-              hasInput:0//进入游戏按钮是否disable
+                msgCode: '',
+                select: 1,//默认选择用户条款
+                showUserPro: 0,
+                showVoice: false,  //是否显示语音验证码的风控,
+                areaCode: '+86',
+                showArea: 0,
+                countryList: country(),
+                wordList: [
+                    '常用', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+                    'H', 'I', 'J', 'K', 'L', 'M', 'N',
+                    'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+                    'V', 'W', 'X', 'Y', 'Z'
+                ],
+                hasInput: 0,//进入游戏按钮是否disable
+                timeNumber: 60,//倒计时
+                showTime: 0,
+                countTime: ''
             };
         },
-        components: { PwdLogin ,riskManagement, voiceCode},
+        components: { PwdLogin, riskManagement, voiceCode },
         created: function () { },
         ready() {
         },
         mounted: function () {
         },
-        watch:{
-            msgCode(newV,oldV){
-                if(newV != ''&&this.phone != ''){
+        watch: {
+            msgCode(newV, oldV) {
+                if (newV != '' && this.phone != '') {
                     this.hasInput = 1;
-                }else{
+                } else {
                     this.hasInput = 0;
                 }
                 this.riskData['msgCode'] = newV;
             },
-            phone(newV,oldV){
-                if(newV != ''&&this.msgCode != ''){
+            phone(newV, oldV) {
+                if (newV != '' && this.msgCode != '') {
                     this.hasInput = 1;
-                }else{
+                } else {
                     this.hasInput = 0;
                 }
                 this.riskData['phone'] = newV;
+            },
+            areaCode(newV) {
+                this.riskData['areaCode'] = newV;
+            },
+            timeNumber(newV) {
+                if (newV == 0) {
+                    this.timeNumber = '';
+                    this.showTime = 0;
+                }
             }
         },
         methods: {
@@ -177,8 +191,17 @@
                 //获取短信验证码
                 if (this.isPoneAvailable(this.phone)) {
                     this.sendmess();
+                    this.timeNumber = 60;
+                    this.showTime = 1;
+                    this.showTimeCount();
                 } else {
                     alert('请输入正确手机号');
+                }
+            },
+            showTimeCount() {
+                this.timeNumber--;
+                if (this.timeNumber > 0) {
+                    setTimeout(this.showTimeCount, 1000);
                 }
             },
             isPoneAvailable(str) {
@@ -198,11 +221,11 @@
                 this.showUserPro = 1;
             },
             hideUserAlert() {
-              this.showUserPro = 0;
+                this.showUserPro = 0;
             },
-            closeVoiceDialog(){
+            closeVoiceDialog() {
 
-              this.showVoice = false;
+                this.showVoice = false;
 
             },
             changeArea() {
@@ -216,17 +239,34 @@
                     return 0
                 }
             },
-            onSelect(flag,text){
+            onSelect(flag, text) {
                 this.areaCode = flag;
                 this.showArea = 0;
             },
-            closeAreaSelect(){
+            closeAreaSelect() {
                 this.showArea = 0;
             },
-            smgLogin(){
+            smgLogin() {
+                let params = {
+                    deviceid: new Date().getTime(),
+                    group: 'game',
+                    phone: this.areaCode + '-' + this.phone,
+                    sms_new: 1,
+                    sms_type: 1,
+                    smscode: this.msgCode,
+                };
                 //登录游戏
-                if(this.hasInput == 1){
-                    alert('登录游戏');
+                if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
+                    getPostData(APIs.smsLogin(), params, (data) => {
+                        let resData=data;
+                        resData.hasExtendAccs = 1;
+                        if (resData.hasExtendAccs == 1) {
+                            this.$router.push({ name: 'smallId', params: {
+                                userid:resData.userid,
+                                deviceid:params.deviceid
+                            } });
+                        }
+                    });
                 }
             }
         }

@@ -1,0 +1,25 @@
+@import '../index/reset.scss';
+.small-id{
+    .smallContent{
+        height: 320px;
+        border: 1px solid $border1;
+        border-radius: 15px;
+        padding: 0 20px;
+        text-align: left;
+        overflow: auto;
+        .title{
+            font-size:25px;
+            color:$gray;
+            padding: 20px 0;
+            border-bottom: 1px solid $border1;
+        }
+        .smallList{
+            font-size:25px;
+            padding: 20px 0;
+            border-bottom: 1px solid $border1;
+        }
+        .emailRed{
+            color: $red;
+        }
+    }
+}

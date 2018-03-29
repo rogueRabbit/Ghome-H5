@@ -88,7 +88,7 @@
                     sdg_width: 0,
                     phone: ''
                 },
-                select: 0,//默认选择用户条款
+                select: 1,//默认选择用户条款
                 showUserPro: 0,
                 showVisitor: false,
                 showUserAlert:false//提醒用户勾选用户协议
