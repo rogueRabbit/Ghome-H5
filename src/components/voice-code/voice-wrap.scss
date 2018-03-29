@@ -1,0 +1,23 @@
+@import "../../app/index/reset";
+
+.voice-wrap {
+  height: 88%;
+  top: 6%;
+  .container {
+    .main-content {
+      .voice-title {
+        text-align: left;
+        .phone {
+          color: $red;
+        }
+      }
+      .tips-content {
+        width: 100%;
+        padding: 10px 20px;
+        margin-top: 30px;
+        text-align: left;
+        background-color: $background1;
+      }
+    }
+  }
+}

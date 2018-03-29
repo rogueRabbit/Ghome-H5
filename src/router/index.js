@@ -7,7 +7,8 @@ import Demo from '@/app/demo/demo'
 import ForgetPasswordOne from '@/app/forget-password/forget-password-one';
 import ForgetPasswordSecond from '@/app/forget-password/forget-password-second';
 import ForgetPasswordThird from '@/app/forget-password/forget-password-third';
-import PwdLogin from '@/app/pwdLogin/pwdLogin'
+import PwdLogin from '@/app/pwdLogin/pwdLogin';
+import VisitorUpgrade from '@/app/visitor-upgrade/visitor-upgrade';
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export default new Router({
       path:'/msgLogin',
       name: 'msgLogin',
       component: MsgLogin
+    },
+    {
+      path:'/visitorUpgrade',
+      name: 'visitorUpgrade',
+      component: VisitorUpgrade
     }
   ]
 })

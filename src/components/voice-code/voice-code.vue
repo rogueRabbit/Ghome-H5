@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="risk-wrap">
+    <div class="dialog-wrap voice-wrap">
       <div class="container">
         <div class="header">
           <a class="close" @click="closeVoiceDialog()"><i class="icon_close"></i></a>
@@ -19,12 +19,12 @@
         </div>
       </div>
     </div>
-    <div class="risk-mask"></div>
+    <div class="dialog-mask"></div>
   </div>
 </template>
 
 <script>
-    import '../risk-management/risk-management.scss'
+    import './voice-wrap.scss';
     export default {
         name: "voice-code",
         methods: {

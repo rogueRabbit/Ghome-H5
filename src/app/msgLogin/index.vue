@@ -107,7 +107,8 @@
                 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
                 'V', 'W', 'X', 'Y', 'Z'
               ],
-              hasInput:0//进入游戏按钮是否disable
+              hasInput:0, //进入游戏按钮是否disable,
+              pageSource: '',  //页面跳转来源，游客升级也需要走登录流程，当pageSource='visitor-login'表明是从游客登录页面跳转过来的
             };
         },
         components: { PwdLogin ,riskManagement, voiceCode},
@@ -115,6 +116,10 @@
         ready() {
         },
         mounted: function () {
+
+          this.pageSource = this.$route.query.pageSource;
+
+
         },
         watch:{
             msgCode(newV,oldV){
@@ -158,6 +163,9 @@
                     this.riskData['sdg_width'] = data.sdg_width;
                     this.riskData['phone'] = this.phone;
                     this.riskData['areaCode'] = this.areaCode;
+                    console.log('-data.checkCodeUrl--'+data.checkCodeUrl);
+                    console.log('-data.sdg_height--'+data.sdg_height);
+                    console.log('-data.sdg_width--'+data.sdg_width);
                 });
             },
             showThreeLogo() {
