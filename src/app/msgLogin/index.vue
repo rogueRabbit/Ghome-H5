@@ -110,7 +110,8 @@
                 hasInput: 0,//进入游戏按钮是否disable
                 timeNumber: 60,//倒计时
                 showTime: 0,
-                countTime: ''
+                countTime: '',
+                isGuestLogin: 0
             };
         },
         components: { PwdLogin, riskManagement, voiceCode },
@@ -118,8 +119,10 @@
         ready() {
         },
         mounted: function () {
-
-            this.pageSource = this.$route.query.pageSource;
+            if (this.$route.query.pageSource) {
+                //游客进入登录
+                this.isGuestLogin = 1;
+            }
 
 
         },
@@ -152,7 +155,14 @@
         },
         methods: {
             gotoPwdLogin() {
-                this.$router.push({ name: 'pwdLogin', params: {} })
+                if(this.isGuestLogin == 1){
+                    this.$router.push({ name: 'pwdLogin', query: {
+                        guestData:this.$route.query.guestData,
+                        pageSource:this.$route.query.pageSource
+                    } });
+                }else{
+                    this.$router.push({ name: 'pwdLogin', query: {} });
+                }
             },
             sendmess(index) {
                 let params = {
@@ -220,12 +230,12 @@
             //关闭风控验证码的弹框及后续操作
             closeRiskDialog(type) {
 
-              this.is_show_risk = -1;
-              if(type==0){//登录时，手机号码被风控的情况，关闭弹框，并开始倒计时
-                this.timeNumber = 60;
-                this.showTime = 1;
-                this.showTimeCount();
-              }
+                this.is_show_risk = -1;
+                if (type == 0) {//登录时，手机号码被风控的情况，关闭弹框，并开始倒计时
+                    this.timeNumber = 60;
+                    this.showTime = 1;
+                    this.showTimeCount();
+                }
 
             },
             showUserAlert() {
@@ -259,7 +269,7 @@
             },
             smgLogin() {
                 let params = {
-                    deviceid: new Date().getTime(),
+                    deviceid: window.deviceid,
                     group: 'game',
                     phone: this.areaCode + '-' + this.phone,
                     sms_new: 1,
@@ -268,64 +278,81 @@
                 };
                 //登录游戏
                 if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
-                    getPostData(APIs.smsLogin(), params, (data) => {
-                        let resData = data;
-                        //测试用start
-                        /* resData.hasExtendAccs = 0;
-                        resData.realInfo_status = 1 */
-                        //测试数据结束end
-                        if (resData.hasExtendAccs == 1) {
-                            //有小号进入小号选择界面
+                    if (this.isGuestLogin == 1) {
+                        //游客掉该接口登录，接口不一样
+                        getPostData(APIs.smsAuth(), params, (data1) => {
+                            let resData = data1;
                             this.$router.push({
-                                name: 'smallId', query: {
+                                name: 'visitorUpgrade', query: {
                                     userid: resData.userid,
                                     deviceid: params.deviceid,
-                                    phone: params.phone
+                                    phone: params.phone,
+                                    userData: JSON.stringify(resData),
+                                    guestData:this.$route.query.guestData
                                 }
                             });
-                        } else {
-                            //表示没有小号，判断是否需要实名认证
-                            if (resData.realInfo_status == 1) {
-                                //实名认证
+                        })
+                    } else {
+                        getPostData(APIs.smsLogin(), params, (data) => {
+                            let resData = data;
+                            //测试用start
+                            /* resData.hasExtendAccs = 0;
+                            resData.realInfo_status = 1 */
+                            //测试数据结束end
+                            if (resData.hasExtendAccs == 1) {
+                                //有小号进入小号选择界面
                                 this.$router.push({
-                                    name: 'realName', query: {
+                                    name: 'smallId', query: {
                                         userid: resData.userid,
                                         deviceid: params.deviceid,
-                                        userData: JSON.stringify(resData),
-                                        smgData: JSON.stringify(this.riskData),
                                         phone: params.phone
                                     }
                                 });
                             } else {
-                                //不需要实名情况下判断是否需要激活
-                                if (resData.activation == 1) {
-                                    //需要激活
+                                //表示没有小号，判断是否需要实名认证
+                                if (resData.realInfo_status == 1) {
+                                    //实名认证
                                     this.$router.push({
-                                        name: 'activeuser', query: {
+                                        name: 'realName', query: {
+                                            userid: resData.userid,
+                                            deviceid: params.deviceid,
                                             userData: JSON.stringify(resData),
+                                            smgData: JSON.stringify(this.riskData),
                                             phone: params.phone
                                         }
                                     });
-                                }else {
-                                    //直接进入游戏
+                                } else {
+                                    //不需要实名情况下判断是否需要激活
+                                    if (resData.activation == 1) {
+                                        //需要激活
+                                        this.$router.push({
+                                            name: 'activeuser', query: {
+                                                userData: JSON.stringify(resData),
+                                                phone: params.phone
+                                            }
+                                        });
+                                    } else {
+                                        //直接进入游戏
+                                    }
                                 }
                             }
-                        }
-                    });
-                }else{
-					alert('手机格式不正确');
-				}
+                        });
+                    }
+                } else {
+                    alert('手机格式不正确');
+                }
             },
-            sendVoiceCode(){
+            sendVoiceCode() {
 
-              this.showVoice = true;
+                this.showVoice = true;
 
             },
             //语音验证码中需要出现风控的情况
-            showRiskDialog(fromChildData){
+            showRiskDialog(fromChildData) {
 
               this.riskData = fromChildData;
               this.is_show_risk = 8;
+
 
             }
 

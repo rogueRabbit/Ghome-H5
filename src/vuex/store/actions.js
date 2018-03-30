@@ -5,12 +5,13 @@ import { APIs } from '@/api/requestUrl'
 
 window.randomKey = '';
 window.token = '';
+window.deviceid = 10000;
 let resetkey_count = 0;
 //登录加密操作
 export const PublicKey = ({ commit, state }, callback) => {
   ghhttp((handShakePostStr, res, key) => {
     let headers = {
-      'X-APP-ID': 100112,
+      'X-APP-ID': deviceid,
       'X-TOKEN': state.token
     };
     randomKey = key;
@@ -47,7 +48,7 @@ export const PublicKey = ({ commit, state }, callback) => {
 //获取用户配置
 export const getAppConfigure = ({ commit, state }, dataBack, errBack) => {
   let data = {
-    deviceid: '1000'
+    deviceid: deviceid
   };
   let headersUpdate={
     'X-APP-VERSION':'7.02.0',
@@ -91,7 +92,7 @@ export const getPhonemsAction = ({ commit, state }, dataBack, errBack) => {
 function setHeaders(state, singnResult,moreHeader) {
   //设置请求头配置，用来传递签名
   let headersSet={
-    'X-APP-ID': 1000,
+    'X-APP-ID': deviceid,
     'X-TOKEN': state.token,
     'X-SIGNATURE': singnResult,
     'X-HTTP-ENGINE':'android',

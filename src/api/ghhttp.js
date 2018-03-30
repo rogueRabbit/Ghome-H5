@@ -12,11 +12,11 @@ let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
 const ghhttp = (callback) => {
     let key = RandomUtil();
-    let deviceidStr = '&deviceid=' + encodeURI('unknown-device');
+    let deviceidStr = '&deviceid=' + deviceid;
     let handShakePostStr = 'randkey=' + encodeURI(key);
     mb.map((item) => {
         if (su.indexOf(item) > 0) {
-            deviceidStr = '&deviceid=' + encodeURI(item);
+            deviceidStr = '&deviceid=' + deviceid;
         }
     })
     setCookie('randomKey',key);
@@ -88,13 +88,14 @@ function setHeaders(token, singnResult, moreHeader) {
     //设置请求头配置，用来传递签名
     let headersSet = {
         'X-APP-ID': 791000351,
+        // 'X-APP-ID': 1000,
         'X-TOKEN': getCookie('token'),
         'X-SIGNATURE': singnResult,
         'X-HTTP-ENGINE': 'android',
         'X-PROMOTERID': 'android',
         'X-CHANNEL': 'A1',
         'X-CHANNEL-INFO': '',
-        'X-DEVICEID': 1000,
+        'X-DEVICEID': deviceid,
         'X-APP-VERSION':'7.02.0',
         'X-PLATFORM':2,
         'X-AREA':'231',
