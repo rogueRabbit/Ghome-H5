@@ -56,8 +56,11 @@ const getPostData = (url ,params,dataBack, errBack) => {
         if(res.data.code == 18){
             alert('用户token过期，请返回首页重新登录');
             window.location.href = '/';
+        }else if(res.data.code != 0){
+            alert(res.data.msg);
         }
         if (dataBack) {
+            console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
             dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
         }
     }, (err) => {

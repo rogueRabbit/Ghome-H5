@@ -19,7 +19,7 @@
             </div>
           </div>
           <div class="btns">
-            <a class="btn" @click="gotoLogin()">进入游戏</a>
+            <a class="btn" @click="gotoLogin()" :class="isSlectId?'':'noSelect'">进入游戏</a>
           </div>
         </div>
       </div>
@@ -36,92 +36,126 @@
     name: "SmallId",
     data() {
       return {
-        dataList:[
+        dataList: [
           {
-            accdesc :'111',
-            accid :'accid',
-            accname :'accname ',
-            select:0
+            accdesc: '111',
+            accid: 'accid',
+            accname: 'accname ',
+            select: 0
           },
           {
-            accdesc :'111',
-            accid :'accid',
-            accname :'wangpanhhsdf@126.com ',
-            select:0
+            accdesc: '111',
+            accid: 'accid',
+            accname: 'wangpanhhsdf@126.com ',
+            select: 0
           },
           {
-            accdesc :'111',
-            accid :'accid',
-            accname :'accname ',
-            select:0
+            accdesc: '111',
+            accid: 'accid',
+            accname: 'accname ',
+            select: 0
           },
           {
-            accdesc :'111',
-            accid :'accid',
-            accname :'accname ',
-            select:0
+            accdesc: '111',
+            accid: 'accid',
+            accname: 'accname ',
+            select: 0
           },
           {
-            accdesc :'111',
-            accid :'accid',
-            accname :'accname ',
-            select:0
+            accdesc: '111',
+            accid: 'accid',
+            accname: 'accname ',
+            select: 0
           },
           {
-            accdesc :'111',
-            accid :'accid',
-            accname :'accname ',
-            select:0
+            accdesc: '111',
+            accid: 'accid',
+            accname: 'accname ',
+            select: 0
           }
-        ]
+        ],
+        isSlectId: false,
+        selectSmallId: ''
       };
     },
     created: function () { },
+    watch: {
+      selectSmallId(newV) {
+        if (this.selectSmallId != '') {
+          this.isSlectId = true;
+        }
+      }
+    },
     ready() {
     },
     mounted: function () {
-
+      //this.getSmallIdList();//获取小号列表
     },
     methods: {
       getSmallIdList() {
-        let params={
-          userId:this.$route.params.userid,
-          deviceid:this.$route.params.deviceid
+        let params = {
+          deviceid: this.$route.query.deviceid,
+          userId: this.$route.query.userid
         };
         getPostData(APIs.querySmallAccount(), params, (data) => {
-          let dataList=this.dataList;
+          this.dataList = data.extendAccs.map((item) => {
+            item.select = 0;
+          });
         });
       },
       gotoLogin() {
 
         let params = {
-          ua: '1.1',
-          phone: this.phone,
-          password: this.loginPassword,
-          deviceid: 1,
-          group: 1,
-          supportPic: 2
+          deviceId: this.$route.query.deviceid,
+          phone: this.$route.query.phone + '#' + this.selectSmallId.accid
         };
-
-        getPostData(APIs.getLoginUrl(), params, (res) => {
-
-        })
+        if (this.isSlectId == true) {
+          getPostData(APIs.smallAccountLogin(), params, (res) => {
+            let resData = res;
+            //判断实名
+            if (resData.realInfo_status == 1) {
+              //实名认证
+              this.$router.push({
+                name: 'realName', query: {
+                  userid: resData.userid,
+                  deviceid: params.deviceid,
+                  userData: JSON.stringify(resData),
+                  phone: this.$route.query.phone
+                }
+              });
+            } else {
+              //不需要实名情况下判断是否需要激活
+              if (resData.activation == 1) {
+                //需要激活
+                this.$router.push({
+                  name: 'activeuser', query: {
+                    userData: JSON.stringify(resData),
+                    phone: this.$route.query.phone
+                  }
+                });
+              } else {
+                //直接进入游戏
+              }
+            }
+          })
+        }
       },
       goBack() {
         window.history.go(-1);
       },
-      emailColor(item){
+      emailColor(item) {
         let reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-        return reg.test(item); 
+        return reg.test(item);
       },
-      showRedColor(listNum){
-        this.dataList.map((item,index)=>{
+      showRedColor(listNum) {
+        this.dataList.map((item, index) => {
           item.select = 0;
         });
         //显示选中的代码
-        this.dataList.map((item,index)=>{
-          if(listNum==index){
+        this.dataList.map((item, index) => {
+          if (listNum == index) {
             item.select = 1;
+            this.selectSmallId = item;
           }
         });
       }

@@ -119,7 +119,7 @@
         },
         mounted: function () {
 
-          this.pageSource = this.$route.query.pageSource;
+            this.pageSource = this.$route.query.pageSource;
 
 
         },
@@ -157,7 +157,7 @@
             sendmess(index) {
                 let params = {
                     phone: '+86-' + this.phone,
-                    sms_new:1,
+                    sms_new: 1,
                     supportPic: 2,
                     type: 4,
                     voiceMsg: 0
@@ -167,6 +167,11 @@
                 }
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                     console.log(data);
+                    if (data.nextAction != 8) {
+                        this.timeNumber = 60;
+                        this.showTime = 1;
+                        this.showTimeCount();
+                    }
                     this.is_show_risk = data.nextAction;
                     this.riskData['checkCodeGuid'] = data.checkCodeGuid;
                     this.riskData['checkCodeUrl'] = data.checkCodeUrl;
@@ -194,9 +199,6 @@
                 //获取短信验证码
                 if (this.isPoneAvailable(this.phone)) {
                     this.sendmess();
-                    this.timeNumber = 60;
-                    this.showTime = 1;
-                    this.showTimeCount();
                 } else {
                     alert('请输入正确手机号');
                 }
@@ -261,13 +263,47 @@
                 //登录游戏
                 if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
                     getPostData(APIs.smsLogin(), params, (data) => {
-                        let resData=data;
-                        resData.hasExtendAccs = 1;
+                        let resData = data;
+                        //测试用start
+                        resData.hasExtendAccs = 0;
+                        resData.realInfo_status = 1
+                        //测试数据结束end
                         if (resData.hasExtendAccs == 1) {
-                            this.$router.push({ name: 'smallId', params: {
-                                userid:resData.userid,
-                                deviceid:params.deviceid
-                            } });
+                            //有小号进入小号选择界面
+                            this.$router.push({
+                                name: 'smallId', query: {
+                                    userid: resData.userid,
+                                    deviceid: params.deviceid,
+                                    phone: params.phone
+                                }
+                            });
+                        } else {
+                            //表示没有小号，判断是否需要实名认证
+                            if (resData.realInfo_status == 1) {
+                                //实名认证
+                                this.$router.push({
+                                    name: 'realName', query: {
+                                        userid: resData.userid,
+                                        deviceid: params.deviceid,
+                                        userData: JSON.stringify(resData),
+                                        smgData: JSON.stringify(this.riskData),
+                                        phone: params.phone
+                                    }
+                                });
+                            } else {
+                                //不需要实名情况下判断是否需要激活
+                                if (resData.activation == 1) {
+                                    //需要激活
+                                    this.$router.push({
+                                        name: 'activeuser', query: {
+                                            userData: JSON.stringify(resData),
+                                            phone: params.phone
+                                        }
+                                    });
+                                }else {
+                                    //直接进入游戏
+                                }
+                            }
                         }
                     });
                 }

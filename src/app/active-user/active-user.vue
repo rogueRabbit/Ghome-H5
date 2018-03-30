@@ -13,13 +13,13 @@
         <div class="login_form">
           <h3>请输入激活码</h3>
           <div class="item" v-if="!isThree">
-            <label class="country">+86
+            <label class="country">{{areaCode}}
               <span class="down"></span>
             </label>
-            <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone" autocomplete="off">
+            <input type="text" placeholder="手机号码自动获取" class="phone" v-model="phone" autocomplete="off" disabled>
           </div>
           <div class="item">
-            <input type="password" placeholder="请输入激活码" class="password-input" v-model="loginPassword">
+            <input type="password" placeholder="请输入激活码" class="password-input" v-model="activeCode">
             <i class="lock-icon"></i>
           </div>
           <div class="btns bottomGoGame">
@@ -40,8 +40,9 @@
         data() {
             return {
               phone: '',
-              loginPassword: '',
-              isThree:0
+              activeCode: '',
+              isThree:0,
+              areaCode:'+86'
             };
         },
         created: function () { },
@@ -62,26 +63,13 @@
               supportPic: 2
             };
 
-            getPostData(APIs.getLoginUrl(), params, (res) => {
+            getPostData(APIs.getActivateCheckUrl(), params, (res) => {
 
             })
           },
 
-          //点击忘记密码
-          gotoForgetPassword(){
-
-            this.$router.push({name: 'forgetPasswordOne', query:{phone: this.phone}});
-
-          },
-
-          switchPhoneLogin(){
-
-            this.$router.push({ name: 'msgLogin', params: { } })
-
-          },
-
           goBack(){
-
+            window.history.go(-1);
           }
 
         }

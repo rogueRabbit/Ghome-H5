@@ -44,6 +44,19 @@
     .bottomClick {
         margin-top: 26px !important;
     }
+    .isMust{
+        margin-top: 26px !important;
+        display: flex;
+        .btn{
+            flex: 1;
+            margin: 0 10px;
+        }
+        .MustRight{
+            background: white;
+            border: 1px solid $border2;
+            color:$fontColor;
+        }
+    }
     .introId {
         position: fixed;
         top: 0px;
