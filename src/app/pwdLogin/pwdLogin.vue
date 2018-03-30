@@ -55,6 +55,9 @@
 				</div>
 			</div>
 		</div>
+		<!--风控组件-->
+		<risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:closeRiskDialog="closeRiskDialog" isPwd="1"></risk-management>
+		<!--/.风控组件-->
 	</div>
 </template>
 
@@ -62,6 +65,7 @@
 	import { getPostData } from '@/api/ghhttp.js'
 	import { APIs } from '@/api/requestUrl'
 	import { country } from '../msgLogin/country.js'
+	import riskManagement from '@/components/risk-management/risk-management';
 	/* eslint-disable */
 	export default {
 		name: "PwdLogin",
@@ -79,12 +83,30 @@
 				areaCode: '+86',
 				showArea: 0,
 				hasInput: 0,//进入游戏按钮是否disable
+				isGuestLogin: 0,
+				is_show_risk: 0,
+				riskData: {
+					checkCodeGuid: '',
+					checkCodeUrl: '',
+					imagecodeType: '',
+					sdg_height: 0,
+					sdg_width: 0,
+					phone: '',
+					areaCode: '+86',
+					msgCode: ''
+				},
+				resData: ''
 			};
 		},
+		components: { riskManagement },
 		created: function () { },
 		ready() {
 		},
 		mounted: function () {
+			if (this.$route.query.pageSource) {
+				//游客进入登录
+				this.isGuestLogin = 1;
+			}
 		},
 		watch: {
 			loginPassword(newV, oldV) {
@@ -103,73 +125,143 @@
 			}
 		},
 		methods: {
-
+			//关闭风控验证码的弹框及后续操作
+			closeRiskDialog(type) {
+				let params = {
+					deviceid: deviceid,
+					group: "game",
+					password: this.loginPassword,
+					phone: this.phone,
+					supportPic: 1
+				};
+				this.is_show_risk = -1;
+				if (type == 0) {
+					//验证码校验成功后跳转
+					this.$router.push({
+						name: 'visitorUpgrade', query: {
+							userid: this.resData.userid,
+							deviceid: params.deviceid,
+							phone: params.phone,
+							userData: JSON.stringify(this.resData),
+							guestData: this.$route.query.guestData
+						}
+					});
+				}
+			},
 			gotoLogin() {
 
 				let params = {
-					deviceid: 1,
-					group: 1,
+					deviceid: deviceid,
+					group: "game",
 					password: this.loginPassword,
 					phone: this.phone,
-					supportPic: 2
+					supportPic: 1
 				};
 				if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
-					getPostData(APIs.getLoginUrl(), params, (data) => {
-						let resData = data;
-						//测试用start
-						/* resData.hasExtendAccs = 0;
-						resData.realInfo_status = 1 */
-						//测试数据结束end
-						if (resData.hasExtendAccs == 1) {
-							//有小号进入小号选择界面
-							this.$router.push({
-								name: 'smallId', query: {
-									userid: resData.userid,
-									deviceid: params.deviceid,
-									phone: params.phone
-								}
-							});
-						} else {
-							//表示没有小号，判断是否需要实名认证
-							if (resData.realInfo_status == 1) {
-								//实名认证
+					if (this.isGuestLogin == 1) {
+						getPostData(APIs.getAuthUrl(), params, (data) => {
+							let resData = data;
+							this.resData = data;
+							this.is_show_risk = data.nextAction;
+							this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+							this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+							this.riskData['imagecodeType'] = data.imagecodeType;
+							this.riskData['sdg_height'] = data.sdg_height;
+							this.riskData['sdg_width'] = data.sdg_width;
+							this.riskData['phone'] = this.phone;
+							if (this.is_show_risk != 8) {
 								this.$router.push({
-									name: 'realName', query: {
+									name: 'visitorUpgrade', query: {
 										userid: resData.userid,
 										deviceid: params.deviceid,
+										phone: params.phone,
 										userData: JSON.stringify(resData),
-										smgData: JSON.stringify(this.riskData),
+										guestData: this.$route.query.guestData
+									}
+								});
+							}
+						})
+					} else {
+						getPostData(APIs.getLoginUrl(), params, (data) => {
+							let resData = data;
+							//测试用start
+							/* resData.hasExtendAccs = 0;
+							resData.realInfo_status = 1 */
+							//测试数据结束end
+							if (resData.hasExtendAccs == 1) {
+								//有小号进入小号选择界面
+								this.$router.push({
+									name: 'smallId', query: {
+										userid: resData.userid,
+										deviceid: params.deviceid,
 										phone: params.phone
 									}
 								});
 							} else {
-								//不需要实名情况下判断是否需要激活
-								if (resData.activation == 1) {
-									//需要激活
+								//表示没有小号，判断是否需要实名认证
+								if (resData.realInfo_status == 1) {
+									//实名认证
 									this.$router.push({
-										name: 'activeuser', query: {
+										name: 'realName', query: {
+											userid: resData.userid,
+											deviceid: params.deviceid,
 											userData: JSON.stringify(resData),
+											smgData: JSON.stringify(this.riskData),
 											phone: params.phone
 										}
 									});
 								} else {
-									//直接进入游戏
+									//不需要实名情况下判断是否需要激活
+									if (resData.activation == 1) {
+										//需要激活
+										this.$router.push({
+											name: 'activeuser', query: {
+												userData: JSON.stringify(resData),
+												phone: params.phone
+											}
+										});
+									} else {
+										//直接进入游戏
+									}
 								}
 							}
-						}
-					});
-				}else{
+						});
+					}
+				} else {
 					alert('手机格式不正确');
 				}
 			},
+			sendmess(index) {
+				let params = {
+					phone: this.areaCode + this.phone,
+					sms_new: 1,
+					supportPic: 2,
+					type: 4,
+					voiceMsg: 0
+				};
+				if (index) {
+					params.voiceMsg = 1;
+				}
+				getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
+					console.log(data);
+					this.is_show_risk = data.nextAction;
+					this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+					this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+					this.riskData['imagecodeType'] = data.imagecodeType;
+					this.riskData['sdg_height'] = data.sdg_height;
+					this.riskData['sdg_width'] = data.sdg_width;
+					this.riskData['phone'] = this.phone;
+					this.riskData['areaCode'] = this.areaCode;
+				});
+			},
 			isPoneAvailable(str) {
-                let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-                if (!myreg.test(str)) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
+				let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+				if (!myreg.test(str)) {
+					return false;
+				} else {
+					return true;
+				}
+			},
 			//点击忘记密码
 			gotoForgetPassword() {
 

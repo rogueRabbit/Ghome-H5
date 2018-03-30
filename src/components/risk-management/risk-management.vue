@@ -48,6 +48,9 @@
       riskData: {
         type: Object,
         required: true
+      },
+      isPwd: {
+        required: false
       }
     },
     data() {
@@ -61,9 +64,9 @@
         outInfo: 0
       }
     },
-    mounted: function(){
+    mounted: function () {
 
-      this.injectionAliVerification();
+      //this.injectionAliVerification();
 
 
     },
@@ -73,44 +76,72 @@
       //点击图片进行刷新
       refreshImage() {
 
-        this.riskData['checkCodeUrl'] =  this.riskData['checkCodeUrl']+"&"+ (+new Date);
+        this.riskData['checkCodeUrl'] = this.riskData['checkCodeUrl'] + "&" + (+new Date);
 
       },
 
       //验证风控验证码
       VerificationCode() {
+        if (this.isPwd && this.isPwd == 1) {
+          //游客密码登录风控
+          let param = {
+            checkCodeGuid: this.riskData.checkCodeGuid,
+            deviceid: window.deviceid,
+            group:'game',
+            outInfo: this.outInfo,
+            password:this.checkCode,
+            supportPic: 0
+          };
+          getPostData(APIs.getCheckCodeAuthUrl(), param, (data, responseCode) => {
+            console.log(responseCode);
 
-        let param = {
-          checkCode: this.checkCode,
-          checkCodeGuid: this.riskData.checkCodeGuid,
-          outInfo: this.outInfo,
-          phone: this.riskData.areaCode + '-' + this.riskData.phone,
-          sms_new:1,
-          supportPic: 0,
-          type: 4,
-          voiceMsg: 0
-        };
-        console.log(param);
-
-        getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
-          console.log(responseCode);
-
-          if(this.riskData.imagecodeType==1){//图片验证码
-            if(data.nextAction ==0&&responseCode==0){
-              this.$emit('closeRiskDialog', 0);
-            }else if(data.nextAction ==0&&responseCode==1023){//短信发送太频繁
-              alert('短信发送太频繁');
-            }else{//输入错误
-              this.refreshImage();
+            if (this.riskData.imagecodeType == 1) {//图片验证码
+              if (data.nextAction == 0 && responseCode == 0) {
+                this.$emit('closeRiskDialog', 0);
+              } else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
+                alert('短信发送太频繁');
+              } else {//输入错误
+                this.refreshImage();
+              }
+            } else if (this.riskData.imagecodeType == 2) {//阿里验证码
+              if (data.nextAction == 0 && responseCode == 0) {
+                this.$emit('closeRiskDialog', 0);
+              }
             }
-          }else if(this.riskData.imagecodeType==2){//阿里验证码
-            if(data.nextAction ==0&&responseCode==0){
-              this.$emit('closeRiskDialog', 0);
+          }, (err) => {
+            this.refreshImage();
+          })
+        } else {
+          let param = {
+            checkCode: this.checkCode,
+            checkCodeGuid: this.riskData.checkCodeGuid,
+            outInfo: this.outInfo,
+            phone: this.riskData.areaCode + '-' + this.riskData.phone,
+            sms_new: 1,
+            supportPic: 0,
+            type: 4,
+            voiceMsg: 0
+          };
+          getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
+            console.log(responseCode);
+
+            if (this.riskData.imagecodeType == 1) {//图片验证码
+              if (data.nextAction == 0 && responseCode == 0) {
+                this.$emit('closeRiskDialog', 0);
+              } else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
+                alert('短信发送太频繁');
+              } else {//输入错误
+                this.refreshImage();
+              }
+            } else if (this.riskData.imagecodeType == 2) {//阿里验证码
+              if (data.nextAction == 0 && responseCode == 0) {
+                this.$emit('closeRiskDialog', 0);
+              }
             }
-          }
-        }, (err) => {
-          this.refreshImage();
-        })
+          }, (err) => {
+            this.refreshImage();
+          })
+        }
       },
 
       //注入阿里验证的方法
@@ -135,14 +166,14 @@
           }
         };
 
-        if(!(nc_appkey&&nc_scene)){
+        if (!(nc_appkey && nc_scene)) {
           alert("参数不合法")
-        }else {
+        } else {
           nc.init(nc_option);
         }
       },
 
-      onJSONPCallback(){
+      onJSONPCallback() {
 
 
 
