@@ -12,10 +12,10 @@
       <div class="pwdLogin">
         <div class="login_form">
           <h3>账号登录</h3>
-          <div class="smallContent">
+          <div class="smallContent" v-if="dataList!=''">
             <div class="title">请选择你要登录的账号</div>
             <div class="smallList" v-for="(item,key) in dataList" :key="key" @click="showRedColor(key)" :class="item.select?'emailRed':''">
-              {{item.accname}}
+              {{item.accdesc}}
             </div>
           </div>
           <div class="btns">
@@ -36,44 +36,7 @@
     name: "SmallId",
     data() {
       return {
-        dataList: [
-          {
-            accdesc: '111',
-            accid: 'accid',
-            accname: 'accname ',
-            select: 0
-          },
-          {
-            accdesc: '111',
-            accid: 'accid',
-            accname: 'wangpanhhsdf@126.com ',
-            select: 0
-          },
-          {
-            accdesc: '111',
-            accid: 'accid',
-            accname: 'accname ',
-            select: 0
-          },
-          {
-            accdesc: '111',
-            accid: 'accid',
-            accname: 'accname ',
-            select: 0
-          },
-          {
-            accdesc: '111',
-            accid: 'accid',
-            accname: 'accname ',
-            select: 0
-          },
-          {
-            accdesc: '111',
-            accid: 'accid',
-            accname: 'accname ',
-            select: 0
-          }
-        ],
+        dataList: "",
         isSlectId: false,
         selectSmallId: ''
       };
@@ -89,7 +52,9 @@
     ready() {
     },
     mounted: function () {
-      //this.getSmallIdList();//获取小号列表
+      setTimeout(()=>{
+        this.getSmallIdList();//获取小号列表
+      },100);
     },
     methods: {
       getSmallIdList() {
@@ -100,6 +65,7 @@
         getPostData(APIs.querySmallAccount(), params, (data) => {
           this.dataList = data.extendAccs.map((item) => {
             item.select = 0;
+            return item;
           });
         });
       },
@@ -107,7 +73,7 @@
 
         let params = {
           deviceId: this.$route.query.deviceid,
-          phone: this.$route.query.phone + '#' + this.selectSmallId.accid
+          phone: this.selectSmallId.accname
         };
         if (this.isSlectId == true) {
           getPostData(APIs.smallAccountLogin(), params, (res) => {

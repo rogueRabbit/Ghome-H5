@@ -265,8 +265,8 @@
                     getPostData(APIs.smsLogin(), params, (data) => {
                         let resData = data;
                         //测试用start
-                        resData.hasExtendAccs = 0;
-                        resData.realInfo_status = 1
+                        /* resData.hasExtendAccs = 0;
+                        resData.realInfo_status = 1 */
                         //测试数据结束end
                         if (resData.hasExtendAccs == 1) {
                             //有小号进入小号选择界面
@@ -306,7 +306,9 @@
                             }
                         }
                     });
-                }
+                }else{
+					alert('手机格式不正确');
+				}
             },
             sendVoiceCode(){
 

@@ -23,7 +23,7 @@
             <i class="lock-icon"></i>
           </div>
           <div class="btns bottomGoGame">
-            <a class="btn" @click="gotoLogin()">进入游戏</a>
+            <a class="btn" @click="gotoLogin()" :class="hasInput?'':'disabledClick'">进入游戏</a>
           </div>
         </div>
       </div>
@@ -42,29 +42,37 @@
               phone: '',
               activeCode: '',
               isThree:0,
-              areaCode:'+86'
+              areaCode:'+86',
+              hasInput:0
             };
         },
         created: function () { },
         ready() {
         },
+        watch:{
+          activeCode(newV){
+            if(newV != ''){
+              this.hasInput = 1;
+            }else{
+              this.hasInput = 0;
+            }
+          }
+        },
         mounted: function () {
+          let phoneList = this.$route.query.phone.split('-');
+          this.areaCode = phoneList[0];
+          this.phone = phoneList[1];
         },
         methods: {
 
           gotoLogin(){
 
             let params = {
-              ua: '1.1',
-              phone: this.phone,
-              password: this.loginPassword,
-              deviceid: 1,
-              group: 1,
-              supportPic: 2
+              activation:this.activeCode
             };
 
             getPostData(APIs.getActivateCheckUrl(), params, (res) => {
-
+              console.log(res);
             })
           },
 
