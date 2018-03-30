@@ -38,7 +38,8 @@
         data(){
           return {
             phone: '',
-            loginPassword: ''
+            loginPassword: '',
+            areaCode: ''
           }
         },
         methods: {

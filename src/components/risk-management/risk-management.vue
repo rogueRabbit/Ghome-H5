@@ -25,21 +25,18 @@
           <!--/.普通图片验证码-->
           <!--阿里验证码-->
           <div v-if="riskData.imagecodeType==2">
-            <div id="alitest"></div>
+            <iframe :src="riskData.checkCodeUrl" class="ali-iframe"></iframe>
           </div>
           <!--/.阿里验证码-->
         </div>
       </div>
     </div>
     <div class="dialog-mask"></div>
-
   </div>
 </template>
 
 <script>
-  // import '../../assets/css/nc/nc.css';
   import './risk-management.scss';
-  // import '../../assets/js/nc';
   import { getPostData } from '@/api/ghhttp.js'
   import { APIs } from '@/api/requestUrl'
   export default {
@@ -63,7 +60,7 @@
     },
     mounted: function(){
 
-      this.injectionAliVerification();
+      console.log('--'+this.riskData.checkCodeUrl);
 
 
     },
@@ -90,10 +87,8 @@
           type: 4,
           voiceMsg: 0
         };
-        console.log(param);
 
         getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
-          console.log(responseCode);
 
           if(this.riskData.imagecodeType==1){//图片验证码
             if(data.nextAction ==0&&responseCode==0){
@@ -116,36 +111,30 @@
       //注入阿里验证的方法
       injectionAliVerification() {
 
-        var nc = new noCaptcha();
-        var nc_appkey = 'FFFF0000000001795A0A';  // 应用标识,不可更改'FFFF0000000001794A8B'
-        var nc_scene = 'login';  //场景,不可更改'register'
-        var ud = 'userdata'; //userdata,igw用
-        var nc_token = [nc_appkey, (new Date()).getTime(), Math.random()].join(':');
-
-        var that = this;
-        var nc_option = {
-          renderTo: '#alitest',//渲染到该DOM ID指定的Div位置
-          appkey: nc_appkey,
-          scene: nc_scene,
-          token: nc_token,
-          callback: function (data) {// 校验成功回调
-            console.log(data);
-            that.outInfo = data;
-            that.VerificationCode();
-          }
-        };
-
-        if(!(nc_appkey&&nc_scene)){
-          alert("参数不合法")
-        }else {
-          nc.init(nc_option);
-        }
-      },
-
-      onJSONPCallback(){
-
-
-
+        // var nc = new noCaptcha();
+        // var nc_appkey = 'FFFF0000000001795A0A';  // 应用标识,不可更改'FFFF0000000001794A8B'
+        // var nc_scene = 'login';  //场景,不可更改'register'
+        // var ud = 'userdata'; //userdata,igw用
+        // var nc_token = [nc_appkey, (new Date()).getTime(), Math.random()].join(':');
+        //
+        // var that = this;
+        // var nc_option = {
+        //   renderTo: '#alitest',//渲染到该DOM ID指定的Div位置
+        //   appkey: nc_appkey,
+        //   scene: nc_scene,
+        //   token: nc_token,
+        //   callback: function (data) {// 校验成功回调
+        //     console.log(data);
+        //     that.outInfo = data;
+        //     that.VerificationCode();
+        //   }
+        // };
+        //
+        // if(!(nc_appkey&&nc_scene)){
+        //   alert("参数不合法")
+        // }else {
+        //   nc.init(nc_option);
+        // }
       },
       //点击左上角的关闭
       closeRiskDialog() {

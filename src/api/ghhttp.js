@@ -87,8 +87,8 @@ function getRequestCommonHeader() {
 function setHeaders(token, singnResult, moreHeader) {
     //设置请求头配置，用来传递签名
     let headersSet = {
-        'X-APP-ID': 791000351,
-        // 'X-APP-ID': 1000,
+        // 'X-APP-ID': 791000351,
+        'X-APP-ID': 1000,
         'X-TOKEN': getCookie('token'),
         'X-SIGNATURE': singnResult,
         'X-HTTP-ENGINE': 'android',

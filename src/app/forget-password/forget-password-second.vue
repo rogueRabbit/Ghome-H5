@@ -13,10 +13,11 @@
       <div class="pwdLogin">
         <div class="login_form">
           <h3>重置密码</h3>
-          <p class="send-tips" v-if="true">已发送短信至<span class="receive-phone">1555</span></p>
+          <p class="send-tips" v-if="send_success">已发送短信至<span class="receive-phone">1555</span></p>
           <div class="item reset-phone">
-            <input type="password" placeholder="请输入登录密码"  v-model="loginPassword">
-            <span class="get_yzm" @click="getSmsCode()">获取验证码</span>
+            <input type="password" placeholder="请设置登录密码"  v-model="loginPassword">
+            <span class="get_yzm" @click="getSmsCode()" v-if="!showTime">获取验证码</span>
+            <span class="get_yzm" v-if="showTime">{{timeNumber}}'</span>
           </div>
           <p class="no_yzm scene-2" @click="sendVoiceCode">收不到验证码?</p>
           <div class="btns next-action">
@@ -59,6 +60,9 @@
             },
             is_show_risk: 0,   //0--表示无下一步， 8 表示下一步需要进行图形验证码,
             showVoice: false,  //是否显示语音验证码的风控,
+            send_success: false,
+            timeNumber: 60,//倒计时
+            showTime: 0,
           }
         },
         components: {
@@ -102,6 +106,11 @@
               }
               getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                 console.log(data);
+                if (data.nextAction != 8) {
+                  this.timeNumber = 60;
+                  this.showTime = 1;
+                  this.showTimeCount();
+                }
                 this.is_show_risk = data.nextAction;
                 this.riskData['checkCodeGuid'] = data.checkCodeGuid;
                 this.riskData['checkCodeUrl'] = data.checkCodeUrl;
@@ -109,18 +118,31 @@
                 this.riskData['sdg_height'] = data.sdg_height;
                 this.riskData['sdg_width'] = data.sdg_width;
                 this.riskData['phone'] = this.phone;
+                this.riskData['areaCode'] = this.areaCode;
               });
+            },
+
+            showTimeCount() {
+              this.timeNumber--;
+              if (this.timeNumber > 0) {
+                setTimeout(this.showTimeCount, 1000);
+              }
             },
 
             targetThird(){
 
-              this.$router.push({name: 'forgetPasswordThird', query:{phone: this.phone}});
+              this.$router.push({name: 'forgetPasswordThird', query:{phone: this.phone, areaCode: this.areaCode}});
 
             },
 
-            closeRiskDialog(){
+            closeRiskDialog(type){
 
               this.is_show_risk = -1;
+              if(type == 0){//风控验证码，校验成功，
+                this.timeNumber = 60;
+                this.showTime = 1;
+                this.showTimeCount();
+              }
 
             },
             sendVoiceCode(){
