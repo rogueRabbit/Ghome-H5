@@ -270,15 +270,17 @@
                 if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
                     getPostData(APIs.smsLogin(), params, (data) => {
                         let resData = data;
-                        //测试用
+                        //测试用start
                         resData.hasExtendAccs = 0;
                         resData.realInfo_status = 1
+                        //测试数据结束end
                         if (resData.hasExtendAccs == 1) {
                             //有小号进入小号选择界面
                             this.$router.push({
-                                name: 'smallId', params: {
+                                name: 'smallId', query: {
                                     userid: resData.userid,
-                                    deviceid: params.deviceid
+                                    deviceid: params.deviceid,
+                                    phone: params.phone
                                 }
                             });
                         } else {
@@ -286,13 +288,27 @@
                             if (resData.realInfo_status == 1) {
                                 //实名认证
                                 this.$router.push({
-                                    name: 'realName', params: {
+                                    name: 'realName', query: {
                                         userid: resData.userid,
                                         deviceid: params.deviceid,
-                                        userData:JSON.stringify(resData),
-                                        smgData:JSON.stringify(this.riskData)
+                                        userData: JSON.stringify(resData),
+                                        smgData: JSON.stringify(this.riskData),
+                                        phone: params.phone
                                     }
                                 });
+                            } else {
+                                //不需要实名情况下判断是否需要激活
+                                if (resData.activation == 1) {
+                                    //需要激活
+                                    this.$router.push({
+                                        name: 'activeuser', query: {
+                                            userData: JSON.stringify(resData),
+                                            phone: params.phone
+                                        }
+                                    });
+                                }else {
+                                    //直接进入游戏
+                                }
                             }
                         }
                     });

@@ -24,7 +24,7 @@
             <span class="get_yzm forget-password" @click="gotoForgetPassword()">忘记密码</span>
           </div>
           <div class="btns">
-            <a class="btn" @click="gotoLogin()">进入游戏</a>
+            <a class="btn" @click="gotoLogin()" :class="hasInput?'':'disabledClick'">进入游戏</a>
           </div>
           <div class="bottom_box">
             <a class="link" @click="switchPhoneLogin()">短信登录</a>
@@ -86,16 +86,31 @@
     },
     mounted: function () {
     },
+    watch: {
+      loginPassword(newV, oldV) {
+        if (newV != '' && this.phone != '') {
+          this.hasInput = 1;
+        } else {
+          this.hasInput = 0;
+        }
+      },
+      phone(newV, oldV) {
+        if (newV != '' && this.loginPassword != '') {
+          this.hasInput = 1;
+        } else {
+          this.hasInput = 0;
+        }
+      }
+    },
     methods: {
 
       gotoLogin() {
 
         let params = {
-          ua: '1.1',
-          phone: this.phone,
-          password: this.loginPassword,
           deviceid: 1,
           group: 1,
+          phone: this.phone,
+          password: this.loginPassword,
           supportPic: 2
         };
 

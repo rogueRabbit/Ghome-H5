@@ -60,6 +60,7 @@ const getPostData = (url ,params,dataBack, errBack) => {
             alert(res.data.msg);
         }
         if (dataBack) {
+            console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
             dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
         }
     }, (err) => {

@@ -77,11 +77,11 @@
     ready() {
     },
     mounted: function () {
-      if (this.$route.params.smgData) {
-        this.smgData = JSON.parse(this.$route.params.smgData);
+      if (this.$route.query.smgData) {
+        this.smgData = JSON.parse(this.$route.query.smgData);
       }
-      if (this.$route.params.userData) {
-        this.userData = JSON.parse(this.$route.params.userData);
+      if (this.$route.query.userData) {
+        this.userData = JSON.parse(this.$route.query.userData);
       }
       if (this.smgData && this.smgData.realInfo_force == 1) {
         //必须进行激活
@@ -112,8 +112,9 @@
             if (this.smgData != '' && this.smgData.activation == 1) {//1表示需要激活
               this.$router.push({
                 name: 'activeuser', query: {
-                  userData: this.$route.params.userData,
-                  smgData: this.$route.params.smgData
+                  userData: this.$route.query.userData,
+                  smgData: this.$route.query.smgData,
+                  phone: this.$route.query.phone
                 }
               });
             } else {
@@ -125,8 +126,9 @@
           if (this.smgData != '' && this.smgData.activation == 1) {//1表示需要激活
             this.$router.push({
               name: 'activeuser', query: {
-                userData: this.$route.params.userData,
-                smgData: this.$route.params.smgData
+                userData: this.$route.query.userData,
+                smgData: this.$route.query.smgData,
+                phone: this.$route.query.phone
               }
             });
           }
