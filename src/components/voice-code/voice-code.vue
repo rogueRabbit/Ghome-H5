@@ -21,9 +21,9 @@
       </div>
     </div>
     <div class="dialog-mask"></div>
-    <!--&lt;!&ndash;风控组件&ndash;&gt;-->
-    <!--<risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:sendmess="sendmess" v-on:closeRiskDialog="closeRiskDialog"></risk-management v-if="is_show_risk==8">-->
-    <!--&lt;!&ndash;/.风控组件&ndash;&gt;-->
+    <!--风控组件-->
+    <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData"  v-on:closeRiskDialog="closeRiskDialog"></risk-management>
+    <!--/.风控组件-->
   </div>
 </template>
 
@@ -44,6 +44,9 @@
         },
         data(){
           return {
+            show_count_down: false,
+            count_time: 60,
+            voice_time_out:'',
             is_show_risk: 0,
             riskData: {
               checkCodeGuid: '',
@@ -60,21 +63,12 @@
         components: {
           riskManagement
         },
-        data(){
-          return {
-            show_count_down: false,
-            count_time: 60,
-            voice_time_out:'',
-          }
-
-        },
         created: function () {
 
         },
         ready() {
         },
         mounted: function(){
-
 
 
         },
@@ -89,6 +83,12 @@
 
             this.riskData['phone'] = newV;
 
+          },
+          count_time(newV) {
+            if (newV == 0) {
+              this.count_time = '';
+              this.show_count_down = false;
+            }
           }
 
         },
@@ -111,29 +111,16 @@
               let nextAction = data.nextAction;
               if(nextAction==0){
                 this.show_count_down = true;
-                this.count_time = 60;
-
-                setTimeout(()=>{
-                  if(this.count_time>0){
-                    this.count_time--;
-                  }
-
-                  if(this.count_time==0){
-                    this.show_count_down = false;
-                  }
-
-                }, 1000);
+                this.showTimeCount();
               }else if(nextAction == 8){//风控的情况
-                let childRiskData = {
-                  checkCodeGuid:  data.checkCodeGuid,
-                  checkCodeUrl:  data.checkCodeUrl,
-                  imagecodeType:  data.imagecodeType,
-                  sdg_height:  data.sdg_height,
-                  sdg_width:  data.sdg_width,
-                  phone:  data.phone,
-                  areaCode:  data.areaCode,
-                };
-                this.$emit('showRiskDialog', childRiskData);
+                this.is_show_risk = data.nextAction;
+                this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+                this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+                this.riskData['imagecodeType'] = data.imagecodeType;
+                this.riskData['sdg_height'] = data.sdg_height;
+                this.riskData['sdg_width'] = data.sdg_width;
+                this.riskData['phone'] = this.phone;
+                this.riskData['areaCode'] = this.areaCode;
               }
             });
           },
@@ -145,10 +132,20 @@
 
           },
 
-          closeRiskDialog() {
+          closeRiskDialog(type) {
 
             this.is_show_risk = -1;
+            if(type == 0){//图片风控验证码，校验成功
+              this.show_count_down = true;
+              this.showTimeCount();
+            }
+          },
 
+          showTimeCount() {
+            this.count_time--;
+            if (this.count_time > 0) {
+              setTimeout(this.showTimeCount, 1000);
+            }
           },
 
         }

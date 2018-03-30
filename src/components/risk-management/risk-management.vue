@@ -83,13 +83,17 @@
         };
         console.log(param);
 
-        getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data) => {
-          console.log(data);
-          if(data.nextAction ==0){
-            this.$emit('closeRiskDialog');
+        getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
+          console.log(responseCode);
+          if(data.nextAction ==0&&responseCode==0){
+            this.$emit('closeRiskDialog', 0);
+          }else if(data.nextAction ==0&&responseCode==1023){//短信发送太频繁
+            alert('短信发送太频繁');
+          }else{//输入错误
+            this.refreshImage();
           }
         }, (err) => {
-          this.$emit('sendmess');
+          this.refreshImage();
         })
       },
 
@@ -123,7 +127,7 @@
       //点击左上角的关闭
       closeRiskDialog() {
 
-        this.$emit('closeRiskDialog');
+        this.$emit('closeRiskDialog', -1);
 
       }
     }

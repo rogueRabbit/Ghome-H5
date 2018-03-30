@@ -217,9 +217,15 @@
                     return true;
                 }
             },
-            closeRiskDialog() {
+            //关闭风控验证码的弹框及后续操作
+            closeRiskDialog(type) {
 
-                this.is_show_risk = -1;
+              this.is_show_risk = -1;
+              if(type==0){//登录时，手机号码被风控的情况，关闭弹框，并开始倒计时
+                this.timeNumber = 60;
+                this.showTime = 1;
+                this.showTimeCount();
+              }
 
             },
             showUserAlert() {
@@ -315,13 +321,15 @@
               this.showVoice = true;
 
             },
-
+            //语音验证码中需要出现风控的情况
             showRiskDialog(fromChildData){
 
               this.riskData = fromChildData;
               this.is_show_risk = 8;
+              this.checkSource = 'voiceCheck';
 
             }
+
         }
     };
 </script>
