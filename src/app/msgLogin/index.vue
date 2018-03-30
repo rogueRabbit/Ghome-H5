@@ -326,7 +326,6 @@
 
               this.riskData = fromChildData;
               this.is_show_risk = 8;
-              this.checkSource = 'voiceCheck';
 
             }
 

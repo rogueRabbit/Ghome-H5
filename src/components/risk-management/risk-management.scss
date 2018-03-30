@@ -34,6 +34,11 @@
           background-color: $background2;
         }
       }
+      #alitest {
+        position: absolute;
+        width: 480px;
+        bottom: 20px;
+      }
     }
   }
   &.show {

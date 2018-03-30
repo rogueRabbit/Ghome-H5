@@ -18,7 +18,7 @@
             <input type="password" placeholder="请输入登录密码"  v-model="loginPassword">
             <span class="get_yzm" @click="getSmsCode()">获取验证码</span>
           </div>
-          <p class="no_yzm scene-2">收不到验证码?</p>
+          <p class="no_yzm scene-2" @click="sendVoiceCode">收不到验证码?</p>
           <div class="btns next-action">
             <a class="btn" @click="targetThird()">下一步</a>
           </div>
@@ -27,6 +27,10 @@
       <!--风控组件-->
       <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:sendmess="sendmess" v-on:closeRiskDialog="closeRiskDialog"></risk-management>
       <!--/.风控组件-->
+
+      <!--语音验证码-->
+      <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
+      <!--/.语音验证码-->
     </div>
   </div>
 </template>
@@ -35,10 +39,13 @@
     import { APIs } from '@/api/requestUrl';
     import { getPostData } from '@/api/ghhttp.js';
     import riskManagement from '../../components/risk-management/risk-management';
+    import voiceCode from '../../components/voice-code/voice-code';
+
     export default {
         name: "forget-password-second",
         data(){
           return {
+            areaCode: '+86',
             phone: '',
             loginPassword: '',
             send_code_success: false,
@@ -51,10 +58,12 @@
               phone: ''
             },
             is_show_risk: 0,   //0--表示无下一步， 8 表示下一步需要进行图形验证码,
+            showVoice: false,  //是否显示语音验证码的风控,
           }
         },
         components: {
-          riskManagement
+          riskManagement,
+          voiceCode
         },
         mounted: function(){
 
@@ -113,8 +122,24 @@
 
               this.is_show_risk = -1;
 
-            }
+            },
+            sendVoiceCode(){
 
+              this.showVoice = true;
+
+            },
+            closeVoiceDialog() {
+
+              this.showVoice = false;
+
+            },
+            //语音验证码中需要出现风控的情况
+            showRiskDialog(fromChildData){
+
+              this.riskData = fromChildData;
+              this.is_show_risk = 8;
+
+            }
           }
     }
 </script>
