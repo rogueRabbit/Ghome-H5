@@ -55,6 +55,9 @@
         color: $white;
         font-size: 32px;
         border: none;
+        &.gray {
+          background-color: $background2;
+        }
       }
     }
   }

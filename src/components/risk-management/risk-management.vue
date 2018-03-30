@@ -81,9 +81,13 @@
           type: 4,
           voiceMsg: 0
         };
+        console.log(param);
 
         getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data) => {
-
+          console.log(data);
+          if(data.nextAction ==0){
+            this.$emit('closeRiskDialog');
+          }
         }, (err) => {
           this.$emit('sendmess');
         })

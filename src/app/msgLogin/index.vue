@@ -24,7 +24,7 @@
                     <span class="get_yzm" @click="getSmsCode" v-if="!showTime">获取验证码</span>
                     <span class="get_yzm" v-if="showTime">{{timeNumber}}'</span>
                 </div>
-                <p class="no_yzm">收不到验证码?</p>
+                <p class="no_yzm" @click="sendVoiceCode">收不到验证码?</p>
                 <div class="btns">
                     <a class="btn" :disabled="hasInput == 1" @click="smgLogin" :class="hasInput?'':'disabledClick'">进入游戏</a>
                 </div>
@@ -60,12 +60,10 @@
         <!--/.风控组件-->
 
         <!--语音验证码-->
-        <voice-code v-if="showVoice" v-on:closeVoiceDialog="closeVoiceDialog"></voice-code>
+        <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
         <!--/.语音验证码-->
 
     </div>
-
-
 </template>
 
 <script>
@@ -96,7 +94,6 @@
                     areaCode: '+86',
                     msgCode: ''
                 },
-
                 msgCode: '',
                 select: 1,//默认选择用户条款
                 showUserPro: 0,
@@ -178,9 +175,6 @@
                     this.riskData['sdg_width'] = data.sdg_width;
                     this.riskData['phone'] = this.phone;
                     this.riskData['areaCode'] = this.areaCode;
-                    console.log('-data.checkCodeUrl--'+data.checkCodeUrl);
-                    console.log('-data.sdg_height--'+data.sdg_height);
-                    console.log('-data.sdg_width--'+data.sdg_width);
                 });
             },
             showThreeLogo() {
@@ -277,6 +271,18 @@
                         }
                     });
                 }
+            },
+            sendVoiceCode(){
+
+              this.showVoice = true;
+
+            },
+
+            showRiskDialog(fromChildData){
+
+              this.riskData = fromChildData;
+              this.is_show_risk = 8;
+
             }
         }
     };
