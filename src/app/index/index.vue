@@ -52,7 +52,7 @@
         <!--/.风控组件-->
 
         <!--游客登录的入口-->
-        <visitor-login-entry v-if="showVisitor" v-on:closeVisitorDialog="closeVisitorDialog"></visitor-login-entry>
+        <visitor-login-entry v-if="showVisitor" v-on:closeVisitorDialog="closeVisitorDialog" :guestData="guestData"></visitor-login-entry>
         <!--/.游客登录的入口-->
 
     </div>
@@ -92,10 +92,11 @@
                 select: 1,//默认选择用户条款
                 showUserPro: 0,
                 showVisitor: false,
-                showUserAlert:false//提醒用户勾选用户协议
+                showUserAlert: false,//提醒用户勾选用户协议
+                guestData:''
             };
         },
-        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect,visitorLoginEntry },
+        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry },
         created: function () { },
         ready() {
         },
@@ -155,9 +156,9 @@
                 this.showOther = 0;
             },
             goToMsgLogin() {
-                if(this.select == 0){
+                if (this.select == 0) {
                     this.showUserAlert = 1;
-                }else{
+                } else {
                     this.$router.push({ name: 'msgLogin', params: { userId: 123 } })
                 }
                 //this.showNumber = 0;
@@ -193,36 +194,43 @@
                 this.showUserPro = 1;
             },
             hideUserAlert() {
-              this.showUserPro = 0;
+                this.showUserPro = 0;
             },
-            switchPwdLogin(){
+            switchPwdLogin() {
 
-              this.showNumber = 1;
-
-            },
-            switchPhoneLogin(){
-              this.showNumber = 0;
-              this.showUserPro = 0;
-            },
-
-            visitorLogin(){
-
-              this.showVisitor = true;
-            },
-
-            closeVisitorDialog(){
-
-              this.showVisitor = false;
+                this.showNumber = 1;
 
             },
-            closeUserAlert(){
+            switchPhoneLogin() {
+                this.showNumber = 0;
+                this.showUserPro = 0;
+            },
+
+            visitorLogin() {
+                let params={
+                    deviceId:window.deviceid,
+                    supportAutoLogin:1
+                };
+                console.log(params);
+                getPostData(APIs.getGuestLoginUrl(), params, (data1) => { 
+                    this.showVisitor = true;
+                    this.guestData = data1;
+                })
+            },
+
+            closeVisitorDialog() {
+
+                this.showVisitor = false;
+
+            },
+            closeUserAlert() {
                 this.showUserAlert = 0;
             },
-            selectUserPro(index){
-                if(index == 1){
+            selectUserPro(index) {
+                if (index == 1) {
                     this.select = 1;
                     this.showUserAlert = 0;
-                }else{
+                } else {
                     this.select = 0;
                     this.showUserAlert = 0;
                 }

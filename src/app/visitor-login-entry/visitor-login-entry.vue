@@ -3,7 +3,9 @@
     <div class="dialog-wrap visitor-entry">
       <div class="container">
         <div class="header">
-          <a class="close" @click="closeVisitorDialog()"><i class="icon_close"></i></a>
+          <a class="close" @click="closeVisitorDialog()">
+            <i class="icon_close"></i>
+          </a>
         </div>
         <div class="title">
           当前为游客登录，为了您游戏便捷及账号安全，请尽快绑定为正式游戏账号。
@@ -19,40 +21,53 @@
 </template>
 
 <script>
-    import { getPostData } from '@/api/ghhttp.js'
-    import { APIs } from '@/api/requestUrl'
-    import './visitor-login-entry.scss';
-    export default {
-        name: "visitor-login-entry",
-        methods: {
+  import { getPostData } from '@/api/ghhttp.js'
+  import { APIs } from '@/api/requestUrl'
+  import './visitor-login-entry.scss';
+  export default {
+    name: "visitor-login-entry",
+    data() {
+      return {
+        GetGuestData: ''
+      }
+    },
+    props: ['guestData'],
+    mounted: function () {
+      this.GetGuestData = this.guestData;
+    },
+    methods: {
 
-          closeVisitorDialog(){
+      closeVisitorDialog() {
 
-            this.$emit('closeVisitorDialog');
+        this.$emit('closeVisitorDialog');
 
-          },
+      },
 
-          //直接点击进入游戏
-          directLogin(){
+      //直接点击进入游戏
+      directLogin() {
 
-            getPostData(APIs.getGuestLoginUrl(), {}, (res) => {
+        getPostData(APIs.getGuestLoginUrl(), {}, (res) => {
 
-            })
-          },
+        })
+      },
 
-          //点击立即绑定
-          immediatelyBind(){
+      //点击立即绑定
+      immediatelyBind() {
 
-            this.$router.push({ name: 'msgLogin', query: { pageSource: 'visitor-login'} })
-            // this.$router.push({ name: 'visitorUpgrade', query: { pageSource: 'visitor-login'} })
-
+        this.$router.push({
+          name: 'msgLogin', query: {
+            pageSource: 'visitor-login',
+            guestData: JSON.stringify(this.GetGuestData)
           }
+        });
+        // this.$router.push({ name: 'visitorUpgrade', query: { pageSource: 'visitor-login'} })
+
+      }
 
 
-        }
     }
+  }
 </script>
 
 <style scoped>
-
 </style>
