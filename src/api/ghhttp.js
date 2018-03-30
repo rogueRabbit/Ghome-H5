@@ -5,6 +5,9 @@ import { tripleDESToolEncrypt, tripleDESToolDecrypt ,getCookie} from "@/utils/ra
 let config = {
     TOKEN: 1
 }
+
+const errorCodeObj = [1023]
+
 let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
 const ghhttp = (callback) => {
@@ -56,12 +59,16 @@ const getPostData = (url ,params,dataBack, errBack) => {
         if(res.data.code == 18){
             alert('用户token过期，请返回首页重新登录');
             window.location.href = '/';
-        }else if(res.data.code != 0){
+        }else if(res.data.code != 0 && !errorCodeObj.includes(res.data.code)){
             alert(res.data.msg);
         }
         if (dataBack) {
             console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
-            dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+            let code = 0;
+            if(errorCodeObj.includes(res.data.code)){
+              code = res.data.code;
+            }
+            dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code);
         }
     }, (err) => {
         if (errBack) {
