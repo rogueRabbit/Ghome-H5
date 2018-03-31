@@ -347,8 +347,11 @@
             },
             sendVoiceCode() {
 
+              if (this.isPoneAvailable(this.phone)) {
                 this.showVoice = true;
-
+              } else {
+                alert('请输入正确手机号');
+              }
             },
             //语音验证码中需要出现风控的情况
             showRiskDialog(fromChildData) {

@@ -270,7 +270,7 @@
 			//点击忘记密码
 			gotoForgetPassword() {
 
-				this.$router.push({ name: 'forgetPasswordOne', query: { phone: this.phone } });
+				this.$router.push({ name: 'forgetPasswordOne', query: { phone: this.phone, areaCode: this.areaCode } });
 
 			},
 

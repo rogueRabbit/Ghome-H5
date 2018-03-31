@@ -2,7 +2,7 @@
   <div class="index_wrap">
     <div class="index_main">
       <div class="header_bar">
-        <a class="back">
+        <a class="back" @click="backPage">
           <i class="icon_back"></i>
         </a>
         <a class="close">
@@ -14,7 +14,7 @@
         <div class="login_form">
           <h3>重置密码</h3>
           <div class="item reset-phone">
-            <label class="country">+86
+            <label class="country" @click="changeArea">{{areaCode}}
               <span class="down"></span>
             </label>
             <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone" autocomplete="off">
@@ -25,27 +25,57 @@
         </div>
       </div>
     </div>
+    <!--国家区号-->
+    <mobile-home v-if="show_mobile_home" v-on:closeMobileHome="closeMobileHome"></mobile-home>
+    <!--/.国家区号-->
   </div>
 </template>
 
 <script>
+    import mobileHome from '../../components/mobile-home/mobile-home';
     export default {
         name: "forget-password",
         data(){
           return {
             phone: '',
+            show_mobile_home: false,
+            areaCode: '+86',
           }
+        },
+        components: {
+          mobileHome
         },
         mounted: function(){
 
           this.phone = this.$route.query.phone;
+          this.areaCode = this.$route.query.areaCode;
 
         },
         methods: {
 
           targetSecond(){
 
-            this.$router.push({name: 'forgetPasswordSecond', query:{phone: this.phone}});
+            this.$router.push({name: 'forgetPasswordSecond', query:{phone: this.phone, areaCode: this.areaCode}});
+
+          },
+
+          changeArea(){
+
+            this.show_mobile_home = true;
+
+          },
+
+          closeMobileHome(data){
+
+            this.show_mobile_home = false;
+            if(data != -1){
+              this.areaCode = data;
+            }
+          },
+
+          backPage(){
+
+            this.$router.push({name: 'pwdLogin', query:{phone: this.phone, areaCode: this.areaCode}});
 
           }
 

@@ -51,7 +51,12 @@ export default {
 		},
 		isGuest: {
 			required: false
-		}
+		},
+    voiceMsg: {
+		  type: Number,
+		  required: false,
+      default: 0
+    }
 	},
 	data() {
 		return {
@@ -61,7 +66,7 @@ export default {
 				height: this.riskData.sdg_height + 'px',
 			},
 			checkCode: '',
-			outInfo: 0
+			outInfo: 0,
 		}
 	},
 	mounted: function () {
@@ -95,7 +100,7 @@ export default {
 					sms_new: 1,
 					supportPic: 0,
 					type: 4,
-					voiceMsg: 0
+					voiceMsg: this.voiceMsg
 				};
 				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
 					console.log(responseCode);
