@@ -22,7 +22,7 @@
     </div>
     <div class="dialog-mask"></div>
     <!--风控组件-->
-    <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData"  v-on:closeRiskDialog="closeRiskDialog"></risk-management>
+    <risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-bind:voiceMsg="1"  v-on:closeRiskDialog="closeRiskDialog"></risk-management>
     <!--/.风控组件-->
   </div>
 </template>
@@ -137,6 +137,7 @@
             this.is_show_risk = -1;
             if(type == 0){//图片风控验证码，校验成功
               this.show_count_down = true;
+              this.count_time = 60;
               this.showTimeCount();
             }
           },
