@@ -36,150 +36,161 @@
 </template>
 
 <script>
-	import './risk-management.scss';
-	import { getPostData } from '@/api/ghhttp.js'
-	import { APIs } from '@/api/requestUrl'
-	export default {
-		name: "riskManagement",
-		props: {
-			riskData: {
-				type: Object,
-				required: true
+import './risk-management.scss';
+import { getPostData } from '@/api/ghhttp.js'
+import { APIs } from '@/api/requestUrl'
+export default {
+	name: "riskManagement",
+	props: {
+		riskData: {
+			type: Object,
+			required: true
+		},
+		isPwd: {
+			required: false
+		},
+		isGuest: {
+			required: false
+		}
+	},
+	data() {
+		return {
+			//风控验证码的图片尺寸
+			imageCodeStyle: {
+				width: this.riskData.sdg_width + 'px',
+				height: this.riskData.sdg_height + 'px',
 			},
-			isPwd: {
-				required: false
-			}
-		},
-		data() {
-			return {
-				//风控验证码的图片尺寸
-				imageCodeStyle: {
-					width: this.riskData.sdg_width + 'px',
-					height: this.riskData.sdg_height + 'px',
-				},
-				checkCode: '',
-				outInfo: 0
-			}
-		},
-		mounted: function () {
+			checkCode: '',
+			outInfo: 0
+		}
+	},
+	mounted: function () {
+	},
+
+	methods: {
+
+		//点击图片进行刷新
+		refreshImage() {
+
+			this.riskData['checkCodeUrl'] = this.riskData['checkCodeUrl'] + "&" + (+new Date);
+
 		},
 
-		methods: {
-
-			//点击图片进行刷新
-			refreshImage() {
-
-				this.riskData['checkCodeUrl'] = this.riskData['checkCodeUrl'] + "&" + (+new Date);
-
-			},
-
-			//验证风控验证码
-			VerificationCode() {
-				if (this.isPwd && this.isPwd == 1) {
+		//验证风控验证码
+		VerificationCode() {
+			if (this.isPwd && this.isPwd == 1) {//密码登录页面跳转的风控验证
+				if (this.isGuest && this.isGuest == 1) {
 					//游客密码登录风控
-					let param = {
-						checkCodeGuid: this.riskData.checkCodeGuid,
-						deviceid: window.deviceid,
-						group: 'game',
-						outInfo: this.outInfo,
-						password: this.checkCode,
-						supportPic: 0
-					};
-					getPostData(APIs.getCheckCodeAuthUrl(), param, (data, responseCode) => {
-						console.log(responseCode);
-
-						if (this.riskData.imagecodeType == 1) {//图片验证码
-							if (data.nextAction == 0 && responseCode == 0) {
-								this.$emit('closeRiskDialog', 0);
-							} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
-								alert('短信发送太频繁');
-							} else {//输入错误
-								this.refreshImage();
-							}
-						} else if (this.riskData.imagecodeType == 2) {//阿里验证码
-							if (data.nextAction == 0 && responseCode == 0) {
-								this.$emit('closeRiskDialog', 0);
-							}
-						}
-					}, (err) => {
-						this.refreshImage();
-					})
+					this.checkCodeUrl(APIs.getCheckCodeAuthUrl());
 				} else {
-					let param = {
-						checkCode: this.checkCode,
-						checkCodeGuid: this.riskData.checkCodeGuid,
-						outInfo: this.outInfo,
-						phone: this.riskData.areaCode + '-' + this.riskData.phone,
-						sms_new: 1,
-						supportPic: 0,
-						type: 4,
-						voiceMsg: 0
-					};
-					getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
-						console.log(responseCode);
-
-						if (this.riskData.imagecodeType == 1) {//图片验证码
-							if (data.nextAction == 0 && responseCode == 0) {
-								this.$emit('closeRiskDialog', 0);
-							} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
-								alert('短信发送太频繁');
-							} else {//输入错误
-								this.refreshImage();
-							}
-						} else if (this.riskData.imagecodeType == 2) {//阿里验证码
-							if (data.nextAction == 0 && responseCode == 0) {
-								this.$emit('closeRiskDialog', 0);
-							}
-						}
-					}, (err) => {
-						this.refreshImage();
-					})
+					//非游客密码登录风控
+					this.checkCodeUrl(APIs.getCheckCodeLoginUrl());
 				}
-			},
-
-			//注入阿里验证的方法
-			injectionAliVerification() {
-
-				var nc = new noCaptcha();
-				var nc_appkey = 'FFFF0000000001795A0A';  // 应用标识,不可更改'FFFF0000000001794A8B'
-				var nc_scene = 'login';  //场景,不可更改'register'
-				var ud = 'userdata'; //userdata,igw用
-				var nc_token = [nc_appkey, (new Date()).getTime(), Math.random()].join(':');
-
-				var that = this;
-				var nc_option = {
-					renderTo: '#alitest',//渲染到该DOM ID指定的Div位置
-					appkey: nc_appkey,
-					scene: nc_scene,
-					token: nc_token,
-					callback: function (data) {// 校验成功回调
-						console.log(data);
-						that.outInfo = data;
-						that.VerificationCode();
-					}
+			} else {
+				let param = {
+					checkCode: this.checkCode,
+					checkCodeGuid: this.riskData.checkCodeGuid,
+					outInfo: this.outInfo,
+					phone: this.riskData.areaCode + '-' + this.riskData.phone,
+					sms_new: 1,
+					supportPic: 0,
+					type: 4,
+					voiceMsg: 0
 				};
+				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
+					console.log(responseCode);
 
-				if (!(nc_appkey && nc_scene)) {
-					alert("参数不合法")
-				} else {
-					nc.init(nc_option);
-				}
-			},
-
-			onJSONPCallback() {
-
-
-
-			},
-			//点击左上角的关闭
-			closeRiskDialog() {
-
-				this.$emit('closeRiskDialog', -1);
-
+					if (this.riskData.imagecodeType == 1) {//图片验证码
+						if (data.nextAction == 0 && responseCode == 0) {
+							this.$emit('closeRiskDialog', 0);
+						} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
+							alert('短信发送太频繁');
+						} else {//输入错误
+							this.refreshImage();
+						}
+					} else if (this.riskData.imagecodeType == 2) {//阿里验证码
+						if (data.nextAction == 0 && responseCode == 0) {
+							this.$emit('closeRiskDialog', 0);
+						}
+					}
+				}, (err) => {
+					this.refreshImage();
+				})
 			}
+		},
+		checkCodeUrl(url) {
+			let param = {
+				checkCodeGuid: this.riskData.checkCodeGuid,
+				deviceid: window.deviceid,
+				group: 'game',
+				outInfo: this.outInfo,
+				password: this.checkCode,
+				supportPic: 0
+			};
+			getPostData(url, param, (data, responseCode) => {
+				console.log(responseCode);
+
+				if (this.riskData.imagecodeType == 1) {//图片验证码
+					if (data.nextAction == 0 && responseCode == 0) {
+						this.$emit('closeRiskDialog', 0);
+					} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
+						alert('短信发送太频繁');
+					} else {//输入错误
+						this.refreshImage();
+					}
+				} else if (this.riskData.imagecodeType == 2) {//阿里验证码
+					if (data.nextAction == 0 && responseCode == 0) {
+						this.$emit('closeRiskDialog', 0);
+					}
+				}
+			}, (err) => {
+				this.refreshImage();
+			})
+		},
+		//注入阿里验证的方法
+		injectionAliVerification() {
+
+			var nc = new noCaptcha();
+			var nc_appkey = 'FFFF0000000001795A0A';  // 应用标识,不可更改'FFFF0000000001794A8B'
+			var nc_scene = 'login';  //场景,不可更改'register'
+			var ud = 'userdata'; //userdata,igw用
+			var nc_token = [nc_appkey, (new Date()).getTime(), Math.random()].join(':');
+
+			var that = this;
+			var nc_option = {
+				renderTo: '#alitest',//渲染到该DOM ID指定的Div位置
+				appkey: nc_appkey,
+				scene: nc_scene,
+				token: nc_token,
+				callback: function (data) {// 校验成功回调
+					console.log(data);
+					that.outInfo = data;
+					that.VerificationCode();
+				}
+			};
+
+			if (!(nc_appkey && nc_scene)) {
+				alert("参数不合法")
+			} else {
+				nc.init(nc_option);
+			}
+		},
+
+		onJSONPCallback() {
+
+
+
+		},
+		//点击左上角的关闭
+		closeRiskDialog() {
+
+			this.$emit('closeRiskDialog', -1);
+
 		}
 	}
+}
 </script>
 
 <style scoped>
+
 </style>

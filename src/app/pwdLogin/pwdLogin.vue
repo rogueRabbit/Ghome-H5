@@ -1,5 +1,5 @@
 <template>
-	<div class="index_wrap">
+	<div class="index_wrap PwdLogin">
 		<div class="index_main" v-if='!showArea'>
 			<div class="header_bar">
 				<a class="back">
@@ -23,7 +23,7 @@
 						<i class="lock-icon"></i>
 						<span class="get_yzm forget-password" @click="gotoForgetPassword()">忘记密码</span>
 					</div>
-					<div class="btns">
+					<div class="btns goGameBtn">
 						<a class="btn" @click="gotoLogin()" :class="hasInput?'':'disabledClick'">进入游戏</a>
 					</div>
 					<div class="bottom_box">
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 		<!--风控组件-->
-		<risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:closeRiskDialog="closeRiskDialog" isPwd="1"></risk-management>
+		<risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:closeRiskDialog="closeRiskDialog" isPwd="1" isGuest="1"></risk-management>
 		<!--/.风控组件-->
 	</div>
 </template>
