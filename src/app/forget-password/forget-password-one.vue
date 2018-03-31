@@ -20,7 +20,7 @@
             <input type="text" placeholder="请输入手机号码" class="phone" v-model="phone" autocomplete="off">
           </div>
           <div class="btns next-action">
-            <a class="btn" @click="targetSecond()">下一步</a>
+            <a class="btn" @click="targetSecond()" :class="hasInput?'':'disabledClick'">下一步</a>
           </div>
         </div>
       </div>
@@ -40,6 +40,7 @@
             phone: '',
             show_mobile_home: false,
             areaCode: '+86',
+            hasInput: 0,//进入游戏按钮是否disable
           }
         },
         components: {
@@ -49,6 +50,17 @@
 
           this.phone = this.$route.query.phone;
           this.areaCode = this.$route.query.areaCode;
+
+        },
+        watch:{
+
+          phone(newV, oldV) {
+            if (newV != '' && this.phone != '') {
+              this.hasInput = 1;
+            } else {
+              this.hasInput = 0;
+            }
+          }
 
         },
         methods: {

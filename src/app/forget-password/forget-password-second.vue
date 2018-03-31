@@ -15,13 +15,13 @@
           <h3>重置密码</h3>
           <p class="send-tips" v-if="showTime">已发送短信至<span class="receive-phone">{{phone}}</span></p>
           <div class="item reset-phone">
-            <input type="password" placeholder="请设置登录密码"  v-model="loginPassword">
+            <input type="password" placeholder="请设置登录密码"  v-model="verifyCode">
             <span class="get_yzm" @click="getSmsCode()" v-if="!showTime">获取验证码</span>
             <span class="get_yzm" v-if="showTime">{{timeNumber}}'</span>
           </div>
           <p class="no_yzm scene-2" @click="sendVoiceCode">收不到验证码?</p>
           <div class="btns next-action">
-            <a class="btn" @click="targetThird()">下一步</a>
+            <a class="btn" @click="targetThird()" :class="hasInput?'':'disabledClick'">下一步</a>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
           return {
             areaCode: '+86',
             phone: '',
-            loginPassword: '',
+            verifyCode: '',
             send_code_success: false,
             riskData:{
               checkCodeGuid: '',
@@ -63,6 +63,7 @@
             showVoice: false,  //是否显示语音验证码的风控,
             timeNumber: 60,//倒计时
             showTime: 0,
+            hasInput: 0,//进入游戏按钮是否disable
           }
         },
         components: {
@@ -81,6 +82,14 @@
             if (newV == 0) {
               this.timeNumber = '';
               this.showTime = 0;
+            }
+          },
+
+          verifyCode(newV, oldV) {
+            if (newV != '' && this.verifyCode != '') {
+              this.hasInput = 1;
+            } else {
+              this.hasInput = 0;
             }
           }
 
