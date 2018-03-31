@@ -1,12 +1,12 @@
 <template>
-  <div class="index_wrap">
+  <div class="index_wrap" v-if="showApp">
     <div class="index_main">
       <div class="header_bar">
         <a class="back" @click="backPage">
           <i class="icon_back"></i>
         </a>
         <a class="close">
-          <i class="icon_close"></i>
+          <i class="icon_close" @click="closeAlert"></i>
         </a>
       </div>
 
@@ -29,11 +29,15 @@
         </div>
       </div>
     </div>
+    <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
+
   </div>
 </template>
 
 <script>
-    export default {
+  import Close from '@/components/close/close';
+  import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
+  export default {
         name: "forget-password-third",
         data(){
           return {
@@ -41,12 +45,22 @@
             loginPassword: '',
             areaCode: '',
             hasInput: 0,//进入游戏按钮是否disable
+            showApp:1,
+            showCloseStatus:0,
           }
+        },
+        components: {
+          Close
         },
         mounted: function(){
 
-          this.phone = this.$route.query.phone;
-          this.areaCode = this.$route.query.areaCode;
+          if(getLocalStorage('phone')!=null){
+            this.phone = getLocalStorage('phone');
+          }
+
+          if(getLocalStorage('areaCode')!=null){
+            this.areaCode = getLocalStorage('areaCode');
+          }
 
         },
         watch: {
@@ -69,11 +83,19 @@
 
           backPage(){
 
-            this.$router.push({name: 'forgetPasswordSecond', query:{phone: this.phone, areaCode: this.areaCode}});
+            this.$router.go(-1);
 
+          },
+          closeLogin(){
+            this.showApp = 0;
+            this.showCloseStatus = 0;
+          },
+          closeAlert(){
+            this.showCloseStatus = 1;
+          },
+          closeBtn(){
+            this.showCloseStatus = 0;
           }
-
-
         }
     }
 </script>

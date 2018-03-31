@@ -1,12 +1,12 @@
 <template>
-  <div class="index_wrap">
+  <div class="index_wrap" v-if="showApp">
     <div class="index_main">
       <div class="header_bar">
         <a class="back" @click="backPage">
           <i class="icon_back"></i>
         </a>
         <a class="close">
-          <i class="icon_close"></i>
+          <i class="icon_close" @click="closeAlert"></i>
         </a>
       </div>
 
@@ -32,6 +32,9 @@
       <!--语音验证码-->
       <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
       <!--/.语音验证码-->
+
+      <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
+
     </div>
   </div>
 </template>
@@ -41,7 +44,8 @@
     import { getPostData } from '@/api/ghhttp.js';
     import riskManagement from '../../components/risk-management/risk-management';
     import voiceCode from '../../components/voice-code/voice-code';
-
+    import Close from '@/components/close/close';
+    import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
     export default {
         name: "forget-password-second",
         data(){
@@ -64,16 +68,25 @@
             timeNumber: 60,//倒计时
             showTime: 0,
             hasInput: 0,//进入游戏按钮是否disable
+            showApp:1,
+            showCloseStatus:0,
           }
         },
         components: {
           riskManagement,
-          voiceCode
+          voiceCode,
+          Close
         },
         mounted: function(){
 
-            this.phone = this.$route.query.phone;
-            this.areaCode = this.$route.query.areaCode;
+          if(getLocalStorage('phone')!=null){
+            this.phone = getLocalStorage('phone');
+          }
+
+          if(getLocalStorage('areaCode')!=null){
+            this.areaCode = getLocalStorage('areaCode');
+          }
+
 
         },
         watch:{
@@ -149,7 +162,7 @@
 
           targetThird(){
 
-            this.$router.push({name: 'forgetPasswordThird', query:{phone: this.phone, areaCode: this.areaCode}});
+            this.$router.push({name: 'forgetPasswordThird', query:{}});
 
           },
 
@@ -183,8 +196,19 @@
 
           backPage(){
 
-            this.$router.push({name: 'forgetPasswordOne', query:{phone: this.phone, areaCode: this.areaCode}});
+            this.$router.go(-1);
 
+          },
+
+          closeLogin(){
+            this.showApp = 0;
+            this.showCloseStatus = 0;
+          },
+          closeAlert(){
+            this.showCloseStatus = 1;
+          },
+          closeBtn(){
+            this.showCloseStatus = 0;
           }
         }
     }
