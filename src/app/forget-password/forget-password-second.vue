@@ -1,12 +1,12 @@
 <template>
-  <div class="index_wrap">
+  <div class="index_wrap" v-if="showApp">
     <div class="index_main">
       <div class="header_bar">
         <a class="back" @click="backPage">
           <i class="icon_back"></i>
         </a>
         <a class="close">
-          <i class="icon_close"></i>
+          <i class="icon_close" @click="closeAlert"></i>
         </a>
       </div>
 
@@ -15,13 +15,13 @@
           <h3>重置密码</h3>
           <p class="send-tips" v-if="showTime">已发送短信至<span class="receive-phone">{{phone}}</span></p>
           <div class="item reset-phone">
-            <input type="password" placeholder="请设置登录密码"  v-model="loginPassword">
+            <input type="password" placeholder="请设置登录密码"  v-model="verifyCode">
             <span class="get_yzm" @click="getSmsCode()" v-if="!showTime">获取验证码</span>
             <span class="get_yzm" v-if="showTime">{{timeNumber}}'</span>
           </div>
           <p class="no_yzm scene-2" @click="sendVoiceCode">收不到验证码?</p>
           <div class="btns next-action">
-            <a class="btn" @click="targetThird()">下一步</a>
+            <a class="btn" @click="targetThird()" :class="hasInput?'':'disabledClick'">下一步</a>
           </div>
         </div>
       </div>
@@ -32,6 +32,9 @@
       <!--语音验证码-->
       <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
       <!--/.语音验证码-->
+
+      <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
+
     </div>
   </div>
 </template>
@@ -41,14 +44,15 @@
     import { getPostData } from '@/api/ghhttp.js';
     import riskManagement from '../../components/risk-management/risk-management';
     import voiceCode from '../../components/voice-code/voice-code';
-
+    import Close from '@/components/close/close';
+    import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
     export default {
         name: "forget-password-second",
         data(){
           return {
             areaCode: '+86',
             phone: '',
-            loginPassword: '',
+            verifyCode: '',
             send_code_success: false,
             riskData:{
               checkCodeGuid: '',
@@ -63,16 +67,26 @@
             showVoice: false,  //是否显示语音验证码的风控,
             timeNumber: 60,//倒计时
             showTime: 0,
+            hasInput: 0,//进入游戏按钮是否disable
+            showApp:1,
+            showCloseStatus:0,
           }
         },
         components: {
           riskManagement,
-          voiceCode
+          voiceCode,
+          Close
         },
         mounted: function(){
 
-            this.phone = this.$route.query.phone;
-            this.areaCode = this.$route.query.areaCode;
+          if(getLocalStorage('phone')!=null){
+            this.phone = getLocalStorage('phone');
+          }
+
+          if(getLocalStorage('areaCode')!=null){
+            this.areaCode = getLocalStorage('areaCode');
+          }
+
 
         },
         watch:{
@@ -81,6 +95,14 @@
             if (newV == 0) {
               this.timeNumber = '';
               this.showTime = 0;
+            }
+          },
+
+          verifyCode(newV, oldV) {
+            if (newV != '' && this.verifyCode != '') {
+              this.hasInput = 1;
+            } else {
+              this.hasInput = 0;
             }
           }
 
@@ -140,7 +162,7 @@
 
           targetThird(){
 
-            this.$router.push({name: 'forgetPasswordThird', query:{phone: this.phone, areaCode: this.areaCode}});
+            this.$router.push({name: 'forgetPasswordThird', query:{}});
 
           },
 
@@ -174,8 +196,19 @@
 
           backPage(){
 
-            this.$router.push({name: 'forgetPasswordOne', query:{phone: this.phone, areaCode: this.areaCode}});
+            this.$router.go(-1);
 
+          },
+
+          closeLogin(){
+            this.showApp = 0;
+            this.showCloseStatus = 0;
+          },
+          closeAlert(){
+            this.showCloseStatus = 1;
+          },
+          closeBtn(){
+            this.showCloseStatus = 0;
           }
         }
     }

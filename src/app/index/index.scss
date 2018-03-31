@@ -231,6 +231,10 @@ body{
       top: 200px;
       width: 490px;
     }
+    &.not-edit {
+      background-color: $background3;
+      border: 1px solid $border3;
+    }
   }
   .no_yzm{
     text-align: right;

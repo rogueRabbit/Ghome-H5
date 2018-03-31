@@ -68,8 +68,9 @@
 	import { APIs } from '@/api/requestUrl'
 	import { country } from '../msgLogin/country.js'
 	import riskManagement from '@/components/risk-management/risk-management';
-	import Close from '@/components/close/close'
-	/* eslint-disable */
+	import Close from '@/components/close/close';
+  import { getLocalStorage, setLocalStorage } from '../../utils/Tools';
+  /* eslint-disable */
 	export default {
 		name: "PwdLogin",
 		data() {
@@ -100,7 +101,7 @@
 				},
 				resData: '',
 				showApp:1,
-                showCloseStatus:0
+        showCloseStatus:0
 			};
 		},
 		components: { riskManagement ,Close},
@@ -112,7 +113,16 @@
 				//游客进入登录
 				this.isGuestLogin = 1;
 			}
-		},
+
+      if(getLocalStorage('phone')!=null){
+        this.phone = getLocalStorage('phone');
+      }
+
+      if(getLocalStorage('areaCode')!=null){
+        this.areaCode = getLocalStorage('areaCode');
+      }
+
+    },
 		watch: {
 			loginPassword(newV, oldV) {
 				if (newV != '' && this.phone != '') {
@@ -127,7 +137,11 @@
 				} else {
 					this.hasInput = 0;
 				}
-			}
+			},
+      areaCode(newV) {
+        this.riskData['areaCode'] = newV;
+        setLocalStorage('areaCode', newV);
+      },
 		},
 		methods: {
 			//关闭风控验证码的弹框及后续操作
@@ -163,6 +177,7 @@
 					supportPic: 1
 				};
 				if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
+				  setLocalStorage('phone', this.phone);
 					if (this.isGuestLogin == 1) {
 						getPostData(APIs.getAuthUrl(), params, (data) => {
 							let resData = data;

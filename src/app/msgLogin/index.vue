@@ -73,9 +73,10 @@
     import { getPostData } from '@/api/ghhttp.js';
     import voiceCode from '../../components/voice-code/voice-code';
     import { country } from './country.js'
-    import Close from '@/components/close/close'
+    import Close from '@/components/close/close';
+    import { getLocalStorage, setLocalStorage } from '../../utils/Tools';
     import mobileHome from '@/components/mobile-home/mobile-home';
-    /* eslint-disable */
+     /* eslint-disable */
     export default {
         name: "MsgLogin",
         data() {
@@ -128,6 +129,13 @@
                 this.isGuestLogin = 1;
             }
 
+            if(getLocalStorage('phone')!=null){
+              this.phone = getLocalStorage('phone');
+            }
+
+            if(getLocalStorage('areaCode')!=null){
+              this.areaCode = getLocalStorage('areaCode');
+            }
 
         },
         watch: {
@@ -146,9 +154,11 @@
                     this.hasInput = 0;
                 }
                 this.riskData['phone'] = newV;
+
             },
             areaCode(newV) {
                 this.riskData['areaCode'] = newV;
+
             },
             timeNumber(newV) {
                 if (newV == 0) {
@@ -213,6 +223,8 @@
                 //获取短信验证码
                 if (this.isPoneAvailable(this.phone)) {
                     this.sendmess();
+                    setLocalStorage('phone', this.phone);
+                    setLocalStorage('areaCode', this.areaCode);
                 } else {
                     alert('请输入正确手机号');
                 }
@@ -282,6 +294,7 @@
                 };
                 //登录游戏
                 if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
+                    setLocalStorage('phone', this.phone);
                     if (this.isGuestLogin == 1) {
                         //游客掉该接口登录，接口不一样
                         getPostData(APIs.smsAuth(), params, (data1) => {
