@@ -1,12 +1,12 @@
 <template>
-	<div class="index_wrap realName">
+	<div class="index_wrap realName" v-if="showApp">
 		<div class="index_main">
 			<div class="header_bar">
 				<a class="back">
 					<i class="icon_back" @click="goBack"></i>
 				</a>
 				<a class="close">
-					<i class="icon_close"></i>
+					<i class="icon_close" @click="closeAlert"></i>
 				</a>
 			</div>
 			<div class="pwdLogin">
@@ -50,6 +50,7 @@
 				</div>
 			</div>
 		</div>
+		<Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
 	</div>
 </template>
 
@@ -57,6 +58,7 @@
 	import { getPostData } from '@/api/ghhttp.js'
 	import { APIs } from '@/api/requestUrl'
 	import './realName.scss'
+	import Close from '@/components/close/close'
 	/* eslint-disable */
 	export default {
 		name: "RealName",
@@ -69,7 +71,9 @@
 				name: '',
 				idcard: '',
 				smgData: '',
-				userData: ''
+				userData: '',
+				showApp:1,
+                showCloseStatus:0
 
 			};
 		},
@@ -90,6 +94,7 @@
 				this.isMust = 0;
 			}
 		},
+		components:{Close},
 		methods: {
 			goBack() {
 				window.history.go(-1);
@@ -138,7 +143,17 @@
 						//不需要激活直接进入游戏
 					}
 				}
-			}
+			},
+			closeLogin(){
+                this.showApp = 0;
+                this.showCloseStatus = 0;
+            },
+            closeAlert(){
+                this.showCloseStatus = 1;
+            },
+            closeBtn(){
+                this.showCloseStatus = 0;
+            }
 		}
 	};
 </script>
