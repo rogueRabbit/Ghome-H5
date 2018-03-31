@@ -1,5 +1,5 @@
 <template>
-    <div class="userIsSelect">
+    <div class="userIsSelect close">
         <div class="contentShow">
             <div class="index_main">
                 <div class="header_bar">
@@ -10,7 +10,7 @@
                 <div class="content">
                     是否确认退出登录
                 </div>
-                <div class="btnStyle">
+                <div class="btnStyle closeStyle">
                     <button class="clickStyle left" @click="selectUserPro(1)">取消</button>
                     <button class="clickStyle right"  @click="selectUserPro(0)">确认退出</button>
                 </div>

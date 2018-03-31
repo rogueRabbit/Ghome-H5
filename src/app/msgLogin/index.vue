@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="index_main area_code" v-if="showArea">
+        <div class="index_main area_code" v-show="showArea">
             <div class="header_bar">
                 <a class="close">
                     <i class="icon_close" @click="closeAreaSelect"></i>
@@ -74,6 +74,7 @@
     import voiceCode from '../../components/voice-code/voice-code';
     import { country } from './country.js'
     import Close from '@/components/close/close'
+    import mobileHome from '@/components/mobile-home/mobile-home';
     /* eslint-disable */
     export default {
         name: "MsgLogin",
@@ -117,7 +118,7 @@
                 showCloseStatus:0
             };
         },
-        components: { PwdLogin, riskManagement, voiceCode ,Close},
+        components: { PwdLogin, riskManagement, voiceCode ,Close,mobileHome},
         created: function () { },
         ready() {
         },

@@ -33,7 +33,7 @@
 			</div>
 		</div>
 
-		<div class="index_main area_code" v-if="showArea">
+		<div class="index_main area_code" v-show="showArea">
 			<div class="header_bar">
 				<a class="close">
 					<i class="icon_close" @click="closeAreaSelect"></i>
