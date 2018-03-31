@@ -39,13 +39,13 @@
         },
         methods: {
             close(){
-                this.$emit('closeUserAlert');
+                this.$emit('closeBtn');
             },
             selectUserPro(index){
                 if(index == 1){
-                    this.$emit('selectUserPro',1);
+                    this.$emit('closeBtn',1);
                 }else{
-                    this.$emit('selectUserPro',0);
+                    this.$emit('closeClick',0);
                 }
             }
         }

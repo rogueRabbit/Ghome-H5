@@ -1,12 +1,12 @@
 <template>
-	<div class="index_wrap PwdLogin">
+	<div class="index_wrap PwdLogin"  v-if="showApp">
 		<div class="index_main" v-if='!showArea'>
 			<div class="header_bar">
 				<a class="back">
 					<i class="icon_back" @click="goBack"></i>
 				</a>
 				<a class="close">
-					<i class="icon_close"></i>
+					<i class="icon_close" @click="closeAlert"></i>
 				</a>
 			</div>
 			<div class="pwdLogin">
@@ -58,6 +58,8 @@
 		<!--风控组件-->
 		<risk-management v-if="is_show_risk==8" v-bind:riskData="riskData" v-on:closeRiskDialog="closeRiskDialog" isPwd="1" isGuest="1"></risk-management>
 		<!--/.风控组件-->
+
+		<Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
 	</div>
 </template>
 
@@ -66,6 +68,7 @@
 	import { APIs } from '@/api/requestUrl'
 	import { country } from '../msgLogin/country.js'
 	import riskManagement from '@/components/risk-management/risk-management';
+	import Close from '@/components/close/close'
 	/* eslint-disable */
 	export default {
 		name: "PwdLogin",
@@ -95,10 +98,12 @@
 					areaCode: '+86',
 					msgCode: ''
 				},
-				resData: ''
+				resData: '',
+				showApp:1,
+                showCloseStatus:0
 			};
 		},
-		components: { riskManagement },
+		components: { riskManagement ,Close},
 		created: function () { },
 		ready() {
 		},
@@ -297,6 +302,16 @@
 			closeAreaSelect() {
 				this.showArea = 0;
 			},
+            closeLogin(){
+                this.showApp = 0;
+                this.showCloseStatus = 0;
+            },
+            closeAlert(){
+                this.showCloseStatus = 1;
+            },
+            closeBtn(){
+                this.showCloseStatus = 0;
+            }
 		}
 	};
 </script>

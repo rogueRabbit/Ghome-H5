@@ -1,12 +1,12 @@
 <template>
-    <div class="index_wrap">
+    <div class="index_wrap"  v-if="showApp">
         <div class="index_main" v-if="!showArea">
             <div class="header_bar">
                 <a class="back">
                     <i class="icon_back" @click="goBack"></i>
                 </a>
                 <a class="close">
-                    <i class="icon_close"></i>
+                    <i class="icon_close"  @click="closeAlert"></i>
                 </a>
             </div>
 
@@ -62,7 +62,7 @@
         <!--语音验证码-->
         <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
         <!--/.语音验证码-->
-
+        <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
     </div>
 </template>
 
@@ -73,6 +73,7 @@
     import { getPostData } from '@/api/ghhttp.js';
     import voiceCode from '../../components/voice-code/voice-code';
     import { country } from './country.js'
+    import Close from '@/components/close/close'
     /* eslint-disable */
     export default {
         name: "MsgLogin",
@@ -111,10 +112,12 @@
                 timeNumber: 60,//倒计时
                 showTime: 0,
                 countTime: '',
-                isGuestLogin: 0
+                isGuestLogin: 0,
+                showApp:1,
+                showCloseStatus:0
             };
         },
-        components: { PwdLogin, riskManagement, voiceCode },
+        components: { PwdLogin, riskManagement, voiceCode ,Close},
         created: function () { },
         ready() {
         },
@@ -357,6 +360,16 @@
               this.is_show_risk = 8;
 
 
+            },
+            closeLogin(){
+                this.showApp = 0;
+                this.showCloseStatus = 0;
+            },
+            closeAlert(){
+                this.showCloseStatus = 1;
+            },
+            closeBtn(){
+                this.showCloseStatus = 0;
             }
 
         }

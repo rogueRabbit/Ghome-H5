@@ -1,12 +1,12 @@
 <template>
-    <div class="index_wrap">
+    <div class="index_wrap" v-if="showApp">
         <div class="index_main">
             <div class="header_bar">
                 <a class="back">
                     <i class="icon_back" @click="goBack"></i>
                 </a>
                 <a class="close">
-                    <i class="icon_close"></i>
+                    <i class="icon_close" @click="closeAlert"></i>
                 </a>
             </div>
             <!-- 登录首页 -->
@@ -54,7 +54,7 @@
         <!--游客登录的入口-->
         <visitor-login-entry v-if="showVisitor" v-on:closeVisitorDialog="closeVisitorDialog" :guestData="guestData"></visitor-login-entry>
         <!--/.游客登录的入口-->
-
+        <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
     </div>
 
 
@@ -70,6 +70,7 @@
     import UserIsSelect from '@/components/userIsSelect/userIsSelect'
     import { getPostData } from '@/api/ghhttp.js';
     import visitorLoginEntry from '../visitor-login-entry/visitor-login-entry'
+    import Close from '@/components/close/close'
     /* eslint-disable */
     export default {
         name: "HomePage",
@@ -93,10 +94,12 @@
                 showUserPro: 0,
                 showVisitor: false,
                 showUserAlert: false,//提醒用户勾选用户协议
-                guestData:''
+                guestData:'',
+                showApp:1,
+                showCloseStatus:0
             };
         },
-        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry },
+        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry ,Close},
         created: function () { },
         ready() {
         },
@@ -234,6 +237,16 @@
                     this.select = 0;
                     this.showUserAlert = 0;
                 }
+            },
+            closeLogin(){
+                this.showApp = 0;
+                this.showCloseStatus = 0;
+            },
+            closeAlert(){
+                this.showCloseStatus = 1;
+            },
+            closeBtn(){
+                this.showCloseStatus = 0;
             }
         }
     };
