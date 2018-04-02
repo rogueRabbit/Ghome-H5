@@ -1,6 +1,6 @@
 import { RandomUtil,setCookie } from "@/utils/randomUtil.js"
 import { getPublickeyUrl, APIs } from './requestUrl'
-import JSEncrypt from 'JSEncrypt'
+import JSEncrypt from 'jsencrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt ,getCookie} from "@/utils/randomUtil.js"
 let config = {
     TOKEN: 1
