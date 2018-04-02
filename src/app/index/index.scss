@@ -292,6 +292,25 @@ body{
       }
     }
   }
+  .login-list {
+    .account-ul {
+      border: 1px solid $border1;
+      border-radius: 10px;
+      text-align: left;
+      max-height: 250px;
+      overflow: auto;
+      li {
+        margin-left: 10px;
+        border-bottom: 1px solid $border1;
+        &:last-child{
+          border-bottom: none;
+        }
+        p {
+          padding: 20px;
+        }
+      }
+    }
+  }
 }
 
 .area_code{

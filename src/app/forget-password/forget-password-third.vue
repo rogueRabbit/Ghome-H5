@@ -34,6 +34,8 @@
 </template>
 
 <script>
+  import { APIs } from '@/api/requestUrl';
+  import { getPostData } from '@/api/ghhttp.js';
   import Close from '@/components/close/close';
   import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
   export default {
@@ -46,6 +48,7 @@
             hasInput: 0,//进入游戏按钮是否disable
             showApp:1,
             showCloseStatus:0,
+            resData: ''
           }
         },
         components: {
@@ -59,6 +62,11 @@
 
           if(getLocalStorage('areaCode')!=null){
             this.areaCode = getLocalStorage('areaCode');
+          }
+
+          if(this.$route.query.resData){
+           let routeData = this.$route.query.resData;
+           this.resData = JSON.parse(routeData);
           }
 
         },
@@ -77,7 +85,57 @@
 
           gotoLogin(){
 
+            let params = {
+              authTicket: '',
+              deviceid: window.deviceid,
+              password:this.loginPassword
+            };
 
+            getPostData(APIs.getSetPasswordUrl(), params, (res, responseCode) => {
+              if(responseCode ==0){
+
+                let phone = this.areaCode + '-' + this.phone;
+                console.log('--'+this.resData.hasExtendAccs);
+                console.log('--'+this.resData.realInfo_status);
+                console.log('--'+this.resData.activation);
+                if (this.resData.hasExtendAccs == 1) {
+                    //有小号进入小号选择界面
+                    this.$router.push({
+                      name: 'smallId', query: {
+                        userid: this.resData.userid,
+                        deviceid: params.deviceid,
+                        phone: phone
+                      }
+                    });
+                }else {
+                  //表示没有小号，判断是否需要实名认证
+                  if (this.resData.realInfo_status == 1) {
+                      //实名认证
+                      this.$router.push({
+                          name: 'realName', query: {
+                          userid: res.userid,
+                          deviceid: params.deviceid,
+                          userData: JSON.stringify(this.resData),
+                          phone: phone
+                        }
+                      });
+                  } else {
+                    //不需要实名情况下判断是否需要激活
+                    if (this.resData.activation == 1) {
+                        //需要激活
+                        this.$router.push({
+                            name: 'activeuser', query: {
+                            userData: JSON.stringify(this.resData),
+                            phone: phone
+                          }
+                        });
+                    } else {
+                      //直接进入游戏
+                    }
+                  }
+                }
+              }
+            })
           },
 
           backPage(){
