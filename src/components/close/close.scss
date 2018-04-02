@@ -1,5 +1,5 @@
 @import '../../app/index/reset.scss';
-.userIsSelect {
+.userIsSelect.close{
     position: fixed;
     top: 0;
     left: 0;
@@ -45,6 +45,9 @@
                 margin-left: 20px;
                 background:$white;
             }
+        }
+        .closeStyle{
+            margin-top: 40px;
         }
     }
 }

@@ -7,10 +7,10 @@
         </a>
       </div>
       <div class="title">手机归属地</div>
-      <div class="content">
+      <div class="content" ref="radioAll">
         <div class="showList" v-for="(word,key) in wordList" :key="key">
           <div class="listWord" v-if="getCountryList(word)">
-            <h3 class="conuntryTitle">{{word}}</h3>
+            <h3 class="conuntryTitle" :ref="'radio'+key">{{word}}</h3>
             <ul class="country-wrap">
               <li v-for="(item,key) in countryList" :key="key" @click="onSelect(item.flag,item.text)" class="showCountryList" v-if="item.word==word">
                 {{item.text}}
@@ -40,6 +40,31 @@
             ],
             areaCode: '+86',
           }
+        },
+        props:['areaCodeTest'],
+        mounted:function(){
+          /* let number = this.countryList.length + this.wordList.length;
+          let selectIndex = 0;
+          let selectWord  = '常用';
+          let wordNumber = 0;
+          if(this.areaCodeTest){
+            console.log(this.areaCodeTest);
+            this.countryList.map((item,index)=>{
+              if(item.flag == this.areaCodeTest){
+                selectIndex = index + 1;
+                selectWord = item.word
+              }
+            });
+            this.wordList.map((item,index)=>{
+              if(item == selectWord){
+                wordNumber = index + 1;
+              }
+            });
+          }
+          console.log(this.$refs.radio1[0].clientHeight);
+          let top = (this.$refs.radio1[0].offsetHeight)*(wordNumber + selectIndex);
+          console.log(top);
+          this.$refs.radioAll.scrollTop=top; */
         },
         methods: {
 
