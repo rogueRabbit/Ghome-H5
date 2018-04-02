@@ -15,7 +15,7 @@
           <h3>重置密码</h3>
           <p class="send-tips" v-if="showTime">已发送短信至<span class="receive-phone">{{phone}}</span></p>
           <div class="item reset-phone">
-            <input type="password" placeholder="请设置登录密码"  v-model="verifyCode">
+            <input type="password" placeholder="请输入验证码"  v-model="verifyCode">
             <span class="get_yzm" @click="getSmsCode()" v-if="!showTime">获取验证码</span>
             <span class="get_yzm" v-if="showTime">{{timeNumber}}'</span>
           </div>
@@ -45,7 +45,7 @@
     import riskManagement from '../../components/risk-management/risk-management';
     import voiceCode from '../../components/voice-code/voice-code';
     import Close from '@/components/close/close';
-    import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
+    import { getLocalStorage, setLocalStorage, isPoneAvailable, removeStorage } from '../../utils/Tools';
     export default {
         name: "forget-password-second",
         data(){
@@ -87,6 +87,11 @@
             this.areaCode = getLocalStorage('areaCode');
           }
 
+          if(getLocalStorage('sendSuccess')==1){
+            this.timeNumber = 60;
+            this.showTime = 1;
+            this.showTimeCount();
+          }
 
         },
         watch:{
@@ -130,26 +135,28 @@
           sendmess() {
             let params = {
               phone: this.phone,
+              sms_new: 1,
               supportPic: 2,
               type: 4,
               voiceMsg: 0
             };
 
-            getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
-              console.log(data);
-              if (data.nextAction != 8) {
-                this.timeNumber = 60;
-                this.showTime = 1;
-                this.showTimeCount();
+            getPostData(APIs.getRequestSmsCodeUrl(), params, (data, responseCode) => {
+              if(responseCode==0){
+                if (data.nextAction != 8) {
+                  this.timeNumber = 60;
+                  this.showTime = 1;
+                  this.showTimeCount();
+                }
+                this.is_show_risk = data.nextAction;
+                this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+                this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+                this.riskData['imagecodeType'] = data.imagecodeType;
+                this.riskData['sdg_height'] = data.sdg_height;
+                this.riskData['sdg_width'] = data.sdg_width;
+                this.riskData['phone'] = this.phone;
+                this.riskData['areaCode'] = this.areaCode;
               }
-              this.is_show_risk = data.nextAction;
-              this.riskData['checkCodeGuid'] = data.checkCodeGuid;
-              this.riskData['checkCodeUrl'] = data.checkCodeUrl;
-              this.riskData['imagecodeType'] = data.imagecodeType;
-              this.riskData['sdg_height'] = data.sdg_height;
-              this.riskData['sdg_width'] = data.sdg_width;
-              this.riskData['phone'] = this.phone;
-              this.riskData['areaCode'] = this.areaCode;
             });
           },
 
@@ -162,8 +169,22 @@
 
           targetThird(){
 
-            this.$router.push({name: 'forgetPasswordThird', query:{}});
+            let params = {
+              deviceid: window.deviceid,
+              group: 'game',
+              phone: this.areaCode + '-' + this.phone,
+              sms_new: 1,
+              sms_type: 4,
+              smscode: this.verifyCode,
+            };
 
+            getPostData(APIs.smsLogin(), params, (res, responseCode) => {
+              if(responseCode == 0){
+                removeStorage('sendSuccess');
+                this.$router.push({name: 'forgetPasswordThird', query:{resData: JSON.stringify(res)}});
+              }
+              console.log(res);
+            });
           },
 
           closeRiskDialog(type){
@@ -196,6 +217,7 @@
 
           backPage(){
 
+            removeStorage('sendSuccess');
             this.$router.go(-1);
 
           },

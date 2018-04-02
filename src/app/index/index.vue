@@ -25,7 +25,7 @@
                     </li>
                     <li>
                         <i class="wb"></i>
-                        <p>微博</p>
+                        <p @click="weiboLogin">微博</p>
                     </li>
                     <li>
                         <i class="wx"></i>
@@ -215,7 +215,7 @@
                     supportAutoLogin:1
                 };
                 console.log(params);
-                getPostData(APIs.getGuestLoginUrl(), params, (data1) => { 
+                getPostData(APIs.getGuestLoginUrl(), params, (data1) => {
                     this.showVisitor = true;
                     this.guestData = data1;
                 })
@@ -247,6 +247,27 @@
             },
             closeBtn(){
                 this.showCloseStatus = 0;
+            },
+            weiboLogin(){
+
+              if(WB2.checkedLogin()){
+                  WB2.anyWhere(function(W){
+                    W.parseCMD('/account/get_uid.json', function(oResult1, bStatus){
+                      if(bStatus){
+                        W.parseCMD('/users/show.json', function(oResult2,bStatus){
+                          if(bStatus){
+                            var args = {
+                              openid: oResult2.id,
+                              access_token: WB2.oauthData.access_token,
+                              username: oResult2.name,
+                              userHeadImg: oResult2.profile_image_url,
+                            }
+                          }
+                        },{uid: oResult1.uid},{method: 'get', cache_time: 30});
+                      }
+                    },{}, {method: 'get', cache_time: 30});
+                  });
+              }
             }
         }
     };

@@ -11,7 +11,8 @@ import PwdLogin from '@/app/pwdLogin/pwdLogin';
 import VisitorUpgrade from '@/app/visitor-upgrade/visitor-upgrade';
 import SmallId from '@/app/small-id/small-id'
 import RealName from '@/app/realName/realName'
-import ActiveUser from '@/app/active-user/active-user'
+import ActiveUser from '@/app/active-user/active-user';
+import LoginList from '@/app/login-list/login-list';
 
 Vue.use(Router)
 
@@ -71,6 +72,11 @@ export default new Router({
       path:'/activeuser',
       name: 'activeuser',
       component: ActiveUser
+    },
+    {
+      path:'/loginList',
+      name: 'loginList',
+      component: LoginList
     }
   ]
 })

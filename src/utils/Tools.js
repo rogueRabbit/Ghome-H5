@@ -7,6 +7,10 @@ const setLocalStorage = function(name, val){
   localStorage.setItem(name, JSON.stringify(val))
 };
 
+const removeStorage =  function(name){
+  localStorage.removeItem(name);
+};
+
 const isPoneAvailable =  function (str) {
   let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
   if (!myreg.test(str)) {
@@ -19,6 +23,7 @@ const isPoneAvailable =  function (str) {
 export {
   getLocalStorage,
   setLocalStorage,
-  isPoneAvailable
+  isPoneAvailable,
+  removeStorage
 }
 
