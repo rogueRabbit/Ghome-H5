@@ -17,6 +17,13 @@ module.exports = {
         pathRewrite:{
           '^/v1':'/v1'
         }
+      },
+      '/sdo':{
+        target:'http://login.sdo.com',
+        changeOrigin:true,
+        pathRewrite:{
+          '^/sdo':'/sdo'
+        }
       }
     },
 

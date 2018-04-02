@@ -25,7 +25,7 @@
 					<!--/.普通图片验证码-->
 					<!--阿里验证码-->
 					<div v-if="riskData.imagecodeType==2">
-						<iframe :src="riskData.checkCodeUrl" class="ali-iframe"></iframe>
+						<iframe src="/sdo/Login/login_alitest.php?appkey=FFFF0000000001795A0A&scene=login" class="ali-iframe" id="testRist"></iframe>
 					</div>
 					<!--/.阿里验证码-->
 				</div>
@@ -70,8 +70,13 @@ export default {
 		}
 	},
 	mounted: function () {
+		setTimeout(function(){
+			console.log(document.getElementById('testRist').contentWindow.document);
+		},1000);
 	},
-
+	updated:function(){
+		console.log(document.getElementById('testRist').contentWindow.document);
+	},
 	methods: {
 
 		//点击图片进行刷新
