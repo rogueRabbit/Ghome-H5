@@ -104,7 +104,7 @@
         ready() {
         },
         mounted: function () {
-
+            window.localStorage.clear();
             this.$store.dispatch('PublicKey', () => {
                 this.$store.dispatch('getAppConfigure', (data) => {
                     //获取用户配置

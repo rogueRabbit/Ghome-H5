@@ -72,8 +72,8 @@
 				idcard: '',
 				smgData: '',
 				userData: '',
-				showApp:1,
-                showCloseStatus:0
+				showApp: 1,
+				showCloseStatus: 0
 
 			};
 		},
@@ -94,7 +94,7 @@
 				this.isMust = 0;
 			}
 		},
-		components:{Close},
+		components: { Close },
 		methods: {
 			goBack() {
 				window.history.go(-1);
@@ -113,21 +113,27 @@
 						idcard: this.idcard,
 						name: this.name
 					};
-					getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
-						console.log(data);
-						//判断是否需要激活
-						if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
-							this.$router.push({
-								name: 'activeuser', query: {
-									userData: this.$route.query.userData,
-									smgData: this.$route.query.smgData,
-									phone: this.$route.query.phone
-								}
-							});
-						} else {
-							//进入游戏
-						}
-					});
+					if (this.isRealName(this.name) != true) {
+						alert('真实姓名填写有误');
+					} else if (this.isCard(this.idcard) != true) {
+						alert('身份证号填写有误');
+					} else {
+						getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
+							console.log(data);
+							//判断是否需要激活
+							if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
+								this.$router.push({
+									name: 'activeuser', query: {
+										userData: this.$route.query.userData,
+										smgData: this.$route.query.smgData,
+										phone: this.$route.query.phone
+									}
+								});
+							} else {
+								//进入游戏
+							}
+						});
+					}
 				} else {
 					//跳过实名认证直接进入激活界面
 					console.log(this.userData != '' && this.userData.activation == 1);
@@ -139,21 +145,37 @@
 								phone: this.$route.query.phone
 							}
 						});
-					}else{
+					} else {
 						//不需要激活直接进入游戏
 					}
 				}
 			},
-			closeLogin(){
-                this.showApp = 0;
-                this.showCloseStatus = 0;
-            },
-            closeAlert(){
-                this.showCloseStatus = 1;
-            },
-            closeBtn(){
-                this.showCloseStatus = 0;
-            }
+			isRealName(name) {
+				let regName = /^[\u4e00-\u9fa5]{2,4}$/;
+				if (regName.test(name)) {
+					return true;
+				}else{
+					return false;
+				}
+			},
+			isCard(card) {
+				let regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+				if (regIdNo.test(card)) {
+					return true;
+				}else{
+					return false;
+				}
+			},
+			closeLogin() {
+				this.showApp = 0;
+				this.showCloseStatus = 0;
+			},
+			closeAlert() {
+				this.showCloseStatus = 1;
+			},
+			closeBtn() {
+				this.showCloseStatus = 0;
+			}
 		}
 	};
 </script>

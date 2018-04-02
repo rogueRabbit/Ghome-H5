@@ -11,9 +11,9 @@ import PwdLogin from '@/app/pwdLogin/pwdLogin';
 import VisitorUpgrade from '@/app/visitor-upgrade/visitor-upgrade';
 import SmallId from '@/app/small-id/small-id'
 import RealName from '@/app/realName/realName'
-import ActiveUser from '@/app/active-user/active-user';
 import LoginList from '@/app/login-list/login-list';
-
+import ActiveUser from '@/app/active-user/active-user'
+import NoRegister from '@/app/noRegister/noRegister'
 Vue.use(Router)
 
 export default new Router({
@@ -77,6 +77,11 @@ export default new Router({
       path:'/loginList',
       name: 'loginList',
       component: LoginList
+    },
+    {
+      path:'/noRegister',
+      name: 'noRegister',
+      component: NoRegister
     }
   ]
 })
