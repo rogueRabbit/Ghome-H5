@@ -330,9 +330,23 @@ body{
     .bottomGoGame{
         margin-top:146px !important;
     }
+    .activerUserDisabled{
+        background: #dddcdc;
+    }
 }
 .PwdLogin{
     .goGameBtn{
-        margin-top: 111px !important;
+        margin-top: 100px !important;
+    }
+    .concatTitle{
+        padding: 10px;
+        font-size: 12px;
+        color: $gray;
+    }
+    .registerDisable{
+        background: #dddcdc;
+    }
+    .noRegester{
+        text-indent: 140px !important;
     }
 }

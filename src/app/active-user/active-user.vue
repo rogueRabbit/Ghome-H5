@@ -12,7 +12,7 @@
 			<div class="pwdLogin">
 				<div class="login_form">
 					<h3>请输入激活码</h3>
-					<div class="item" v-if="!isThree">
+					<div class="item activerUserDisabled" v-if="!isThree">
 						<label class="country">{{areaCode}}
 							<span class="down"></span>
 						</label>

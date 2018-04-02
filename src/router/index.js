@@ -12,7 +12,7 @@ import VisitorUpgrade from '@/app/visitor-upgrade/visitor-upgrade';
 import SmallId from '@/app/small-id/small-id'
 import RealName from '@/app/realName/realName'
 import ActiveUser from '@/app/active-user/active-user'
-
+import NoRegister from '@/app/noRegister/noRegister'
 Vue.use(Router)
 
 export default new Router({
@@ -71,6 +71,11 @@ export default new Router({
       path:'/activeuser',
       name: 'activeuser',
       component: ActiveUser
+    },
+    {
+      path:'/noRegister',
+      name: 'noRegister',
+      component: NoRegister
     }
   ]
 })
