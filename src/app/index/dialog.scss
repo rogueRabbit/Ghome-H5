@@ -59,6 +59,11 @@
           background-color: $background2;
         }
       }
+      iframe {
+        .container {
+          background-color: red;
+        }
+      }
     }
   }
 }

@@ -173,7 +173,7 @@
             },
             sendmess(index) {
                 let params = {
-                    phone: '+86-' + this.phone,
+                    phone: this.areaCode + this.phone,
                     sms_new: 1,
                     supportPic: 2,
                     type: 4,
@@ -182,21 +182,24 @@
                 if (index) {
                     params.voiceMsg = 1;
                 }
-                getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
+                getPostData(APIs.getRequestSmsCodeUrl(), params, (data, resCode) => {
                     console.log(data);
-                    if (data.nextAction != 8) {
+
+                    if(resCode == 0){
+                      if (data.nextAction != 8) {
                         this.timeNumber = 60;
                         this.showTime = 1;
                         this.showTimeCount();
+                      }
+                      this.is_show_risk = data.nextAction;
+                      this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+                      this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+                      this.riskData['imagecodeType'] = data.imagecodeType;
+                      this.riskData['sdg_height'] = data.sdg_height;
+                      this.riskData['sdg_width'] = data.sdg_width;
+                      this.riskData['phone'] = this.phone;
+                      this.riskData['areaCode'] = this.areaCode;
                     }
-                    this.is_show_risk = data.nextAction;
-                    this.riskData['checkCodeGuid'] = data.checkCodeGuid;
-                    this.riskData['checkCodeUrl'] = data.checkCodeUrl;
-                    this.riskData['imagecodeType'] = data.imagecodeType;
-                    this.riskData['sdg_height'] = data.sdg_height;
-                    this.riskData['sdg_width'] = data.sdg_width;
-                    this.riskData['phone'] = this.phone;
-                    this.riskData['areaCode'] = this.areaCode;
                 });
             },
             showThreeLogo() {

@@ -16,7 +16,7 @@
             <span>如果您曾经屏蔽过盛大游戏的短信推送，请发送000000至10690079以解除屏蔽</span>
           </div>
           <button class="confirm-button" @click="sendmess" v-if="!show_count_down">获取语音验证码</button>
-          <button class="confirm-button gray" v-if="show_count_down">{{count_time}}</button>
+          <button class="confirm-button gray" v-if="show_count_down">{{count_time}}'</button>
         </div>
       </div>
     </div>

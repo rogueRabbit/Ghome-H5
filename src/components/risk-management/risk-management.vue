@@ -25,7 +25,7 @@
 					<!--/.普通图片验证码-->
 					<!--阿里验证码-->
 					<div v-if="riskData.imagecodeType==2">
-						<iframe :src="riskData.checkCodeUrl" class="ali-iframe"></iframe>
+						<iframe ref="previewIframe" :src="riskData.checkCodeUrl" class="ali-iframe" id="ali-iframe"  @load="loaded"></iframe>
 					</div>
 					<!--/.阿里验证码-->
 				</div>
@@ -67,10 +67,27 @@ export default {
 			},
 			checkCode: '',
 			outInfo: 0,
+      imageType: '',
 		}
 	},
 	mounted: function () {
+
+	  this.imageType = this.riskData.imagecodeType;
+
 	},
+
+  watch: {
+
+    imageType(newV, oldV){
+
+      if(newV == 2){
+        this.setIframeStyle();
+      }
+
+    },
+
+
+  },
 
 	methods: {
 
@@ -144,6 +161,7 @@ export default {
 						this.refreshImage();
 					}
 				} else if (this.riskData.imagecodeType == 2) {//阿里验证码
+
 					if (data.nextAction == 0 && responseCode == 0) {
 						this.$emit('closeRiskDialog', 0);
 					}
@@ -191,7 +209,33 @@ export default {
 
 			this.$emit('closeRiskDialog', -1);
 
-		}
+		},
+
+    setIframeStyle(){
+
+
+
+
+      console.log(document.getElementById('ali-iframe').contentWindow.document)
+      //console.log(document.getElementById("ali-iframe").contentWindow.document)
+      // console.log(this.getIframe("ali-iframe").getElementsByClassName('container'));
+      // this.getIframe("ali-iframe").getElementsByClassName('container').style.backgroundColor = '#ff0000';
+      // console.log(this.$refs.previewIframe.contentWindow.document);
+
+
+    },
+
+    loaded(){
+
+      const vm = this.$refs.previewIframe.contentWindow.vm;
+
+    },
+
+    getIframe(id){
+
+      return document.getElementById(id).contentWindow.document;
+
+    }
 	}
 }
 </script>
