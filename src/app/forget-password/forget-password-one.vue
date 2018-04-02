@@ -26,7 +26,7 @@
       </div>
     </div>
     <!--国家区号-->
-    <mobile-home v-if="show_mobile_home" v-on:closeMobileHome="closeMobileHome"></mobile-home>
+    <mobile-home v-show="show_mobile_home" v-on:closeMobileHome="closeMobileHome"></mobile-home>
     <!--/.国家区号-->
     <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
 

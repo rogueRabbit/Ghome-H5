@@ -33,7 +33,7 @@
       <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
       <!--/.语音验证码-->
 
-      <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
+      <Close @closeClick="closeLogin" v-show="showCloseStatus" @closeBtn="closeBtn"></Close>
 
     </div>
   </div>

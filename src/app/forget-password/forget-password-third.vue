@@ -30,7 +30,6 @@
       </div>
     </div>
     <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
-
   </div>
 </template>
 
