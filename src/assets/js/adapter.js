@@ -1,7 +1,7 @@
 (function (doc, win) {
   var UA = navigator.userAgent,
     isAndroid = /android|adr/gi.test(UA),
-    isIos = /iphone|ipod|ipad/gi.test(UA) && !isAndroid;
+    isIos = /iphone|ipod|ipad/gi.test(UA);
   var docEl = doc.documentElement,
   resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
   recalc = function () {
@@ -16,7 +16,12 @@
       if (clientWidth * dpr > maxwidth) {
           clientWidth = maxwidth/dpr;
       }
-      docEl.style.fontSize = parseInt(100 * (clientWidth / 750)) + 'px';
+      if(isAndroid || isIos){
+        console.log(1)
+        docEl.style.fontSize = parseInt(100 * (clientWidth / 750)) + 'px';
+      }else{
+        docEl.style.fontSize='60px'
+      }
   };
   if (!doc.addEventListener) return;
   win.addEventListener(resizeEvt, recalc, false);
