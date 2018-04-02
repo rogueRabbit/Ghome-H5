@@ -136,6 +136,7 @@
                 } else {
                     this.hasInput = 0;
                 }
+                setLocalStorage('phone', newV);
                 this.riskData['phone'] = newV;
 
             },

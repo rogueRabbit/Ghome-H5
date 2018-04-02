@@ -120,6 +120,7 @@ export default {
 			} else {
 				this.hasInput = 0;
 			}
+			setLocalStorage('phone', newV);
 		},
 		areaCode(newV) {
 			this.riskData['areaCode'] = newV;
