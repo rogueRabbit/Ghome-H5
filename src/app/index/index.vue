@@ -18,21 +18,25 @@
                         <a class="btn btn_border" v-if="userType.guest_enable==1" @click="visitorLogin">游客登录</a>
                     </div>
                 </div>
-                <ul class="third_type" v-if="userType.display_thirdaccout&&showThree==1">
-                    <li class="cur">
-                        <i class="dy"></i>
-                        <p>叨鱼</p>
-                    </li>
-                    <li>
-                        <i class="wb"></i>
-                        <p @click="weiboLogin">微博</p>
-                    </li>
-                    <li>
-                        <i class="wx"></i>
-                        <p>微信</p>
-                    </li>
-                </ul>
-                <div class="other_type" v-if="userType.display_thirdaccout&&showOther==1" @click="showThreeLogo"></div>
+                <transition name="threein">
+                    <ul class="third_type" v-if="showThree">
+                        <li class="cur" v-if="userType.daoyu_enable">
+                            <i class="dy"></i>
+                            <p>叨鱼</p>
+                        </li>
+                        <li  v-if="userType.weibo_enable">
+                            <i class="wb"></i>
+                            <p @click="weiboLogin">微博</p>
+                        </li>
+                        <li v-if="userType.weixin_enable">
+                            <i class="wx"></i>
+                            <p>微信</p>
+                        </li>
+                    </ul>
+                </transition>
+                <transition name="fadeout">
+                    <div class="other_type" v-show="showOther==1" @click="showThreeLogo"></div>
+                </transition>
                 <div class="bottom_box">
                     <input type="checkbox" name="select" id="" v-model="select" value="select" class="selectInput">
                     <img src="static/img/index/gl_ok.png" alt="" class="selectLogo" v-if="select">
@@ -116,27 +120,19 @@
                 this.$store.dispatch('getAppConfigure', (data) => {
                     //获取用户配置
                     loadingTest.close();
-                    let mock = ''
-                    mockData ? mock : mock = {
-                        daoyu_enable: 1,
-                        device_feature: "",
-                        display_thirdaccout: 0,
-                        greport_log_level: "all",
-                        guest_enable: 0,
-                        log_level: "all",
-                        show_guest_confirm: 1,
-                        weibo_appKey: "4115557623",
-                        weibo_enable: 1,
-                        weibo_redirectUrl: "https://www.sdo.com",
-                        weixin_appId: "wx4b5f6da6126099ec",
-                        weixin_enable: 1,
-                        weixin_key: "3f31750780dda7daff947cbd695cefd3"
-                    };
-                    this.userType = mock ? mock : data;
+                    let mock = data;
+                    this.userType = mock;
                     if (this.userType.display_thirdaccout == 0 && this.userType.guest_enable == 0) {
                         this.showNumber = 0;
                     }
-                    console.log(data);
+                    if(this.userType.display_thirdaccout == 0&&(mock.daoyu_enable||mock.weibo_enable||mock.weixin_enable)){
+                        this.showOther = 1;
+                        this.showThree = 0;
+                    }else{
+                        this.showThree = 1;
+                        this.showOther = 0;
+                    }
+                    console.log(this.userType);
                 });
             });
         },
