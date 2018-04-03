@@ -40,6 +40,8 @@
 	import { APIs } from '@/api/requestUrl'
 	import Close from '@/components/close/close';
 	import { getLocalStorage, setLocalStorage } from '../../utils/Tools';
+	import Loading from '@/components/loading/'
+	import Toast from '@/components/toast';
 	/* eslint-disable */
 	export default {
 		name: "NoRegister",
@@ -132,21 +134,35 @@
 							deviceid: deviceid,
 							password: this.loginPassword
 						};
+						let loadingTest = Loading(
+							{
+								message: '',
+								duration: 10
+							}
+						);
 						getPostData(APIs.getSetPasswordUrl(), params, (data) => {
 							//游客重置密码结束，直接进入游戏
+							loadingTest.close();
 						});
 					} else {
 						//正常用户登录流程
 						let params = {
-							authTicket:'',
+							authTicket: '',
 							deviceid: deviceid,
 							password: this.loginPassword
 						};
+						let loadingTest = Loading(
+							{
+								message: '',
+								duration: 10
+							}
+						);
 						getPostData(APIs.getSetPasswordUrl(), params, (data) => {
 							//测试用start
                             /* resData.hasExtendAccs = 0;
                             resData.realInfo_status = 1 */
 							//测试数据结束end
+							loadingTest.close();
 							if (resData.hasExtendAccs == 1) {
 								//有小号进入小号选择界面
 								this.$router.push({

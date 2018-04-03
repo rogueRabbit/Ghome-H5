@@ -1,6 +1,6 @@
 import Vue from 'vue';
-
-const ToastConstructor = Vue.extend(require('./loading.vue'));
+import loading from './loading.vue';
+const ToastConstructor = Vue.extend(loading);
 let toastPool = [];
 
 let getAnInstance = () => {
@@ -37,7 +37,7 @@ let Loading = (options = {}) => {
   let duration = options.duration || 3000;
 
   let instance = getAnInstance();
-  instance.closed = false;
+  instance.closed = true;
   clearTimeout(instance.timer);
   instance.message = typeof options === 'string' ? options : options.message;
   instance.position = options.position || 'middle';

@@ -1,5 +1,5 @@
 <template>
-    <div class="mint-toast myLoading" v-show="visible" :class="customClass" :style="{ 'padding': iconClass === '' ? '10px' : '0px' }">
+    <div class="mint-toast myLoading loadingToast" v-show="visible" :class="customClass" :style="{ 'padding': iconClass === '' ? '10px' : '0px' }">
       <div class="bg"></div>
       <i class="mint-toast-icon" :class="iconClass" v-if="iconClass !== ''"></i>
       <div class="loading"></div>
