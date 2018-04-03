@@ -203,7 +203,10 @@
 						});
 					}
 				} else {
-					alert('手机格式不正确');
+          Toast({
+            message: '手机格式不正确',
+            duration: 3000
+          });
 				}
 			},
 

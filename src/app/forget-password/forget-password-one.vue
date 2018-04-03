@@ -47,6 +47,8 @@
     import mobileHome from '../../components/mobile-home/mobile-home';
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
+    import Toast from '@/components/toast';
+
     export default {
         name: "forget-password",
         data(){
@@ -107,9 +109,11 @@
               // setLocalStorage('phone', this.phone);
               this.sendmess();
             }else{
-              alert('手机格式不正确');
+              Toast({
+                message: '手机号码格式不正确',
+                duration: 3000
+              })
             }
-
           },
 
           sendmess() {

@@ -58,7 +58,7 @@
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage ,getSessionStorage,setSessionStorage} from '../../utils/Tools';
     import mobileHome from '@/components/mobile-home/mobile-home';
-    import Toast from '../../components/toast';
+    import Toast from '@/components/toast';
     import Loading from '@/components/loading/'
     /* eslint-disable */
     export default {

@@ -46,6 +46,8 @@
     import voiceCode from '../../components/voice-code/voice-code';
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage, isPoneAvailable, removeStorage } from '../../utils/Tools';
+    import Toast from '@/components/toast';
+
     export default {
         name: "forget-password-second",
         data(){
@@ -119,7 +121,10 @@
             if(this.isPoneAvailable(this.phone)){
               this.sendmess();
             }else{
-              alert('请输入正确手机号');
+              Toast({
+                message: '请输入正确手机号码',
+                duration: 3000
+              });
             }
           },
 

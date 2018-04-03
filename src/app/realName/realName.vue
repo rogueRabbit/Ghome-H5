@@ -108,6 +108,12 @@ export default {
 			} else {
 				this.showIntroAlert = 1;
 			}
+
+			let source = this.getUrlParam(window.location.href, 'from');
+			if(source == 'pay'){
+
+      }
+
 		},
 		gotoNext(index) {
 			if (index == 1) {
