@@ -1,0 +1,205 @@
+$heightLoading : 100px;
+$widthLoading : 100px;
+@keyframes loadingAnimate{
+    4%{
+        background: url('../../assets/img/loading/loading0001.png') center center;
+        background-size: 100%;
+        height: $heightLoading;
+        width: $widthLoading;
+    }
+    8%{
+        background: url('../../assets/img/loading/loading0002.png') center center;
+        background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    12%{
+        background: url('../../assets/img/loading/loading0003.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    16%{
+        background: url('../../assets/img/loading/loading0004.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    20%{
+        background: url('../../assets/img/loading/loading0005.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    24%{
+        background: url('../../assets/img/loading/loading0006.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    28%{
+        background: url('../../assets/img/loading/loading0007.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    32%{
+        background: url('../../assets/img/loading/loading0008.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    36%{
+        background: url('../../assets/img/loading/loading0009.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    40%{
+        background: url('../../assets/img/loading/loading0010.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    44%{
+        background: url('../../assets/img/loading/loading0011.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    48%{
+        background: url('../../assets/img/loading/loading0012.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    52%{
+        background: url('../../assets/img/loading/loading0013.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    56%{
+        background: url('../../assets/img/loading/loading0014.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    60%{
+        background: url('../../assets/img/loading/loading0015.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    64%{
+        background: url('../../assets/img/loading/loading0016.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    68%{
+        background: url('../../assets/img/loading/loading0017.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    72%{
+        background: url('../../assets/img/loading/loading0018.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    76%{
+        background: url('../../assets/img/loading/loading0019.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    82%{
+        background: url('../../assets/img/loading/loading0020.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    86%{
+        background: url('../../assets/img/loading/loading0021.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    90%{
+        background: url('../../assets/img/loading/loading0022.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    94%{
+        background: url('../../assets/img/loading/loading0023.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+    100%{
+        background: url('../../assets/img/loading/loading0024.png') center center;background-size: 100%;height: $heightLoading;
+        width: $widthLoading;
+    }
+}
+.mint-toast {
+    position: fixed;
+    max-width: 80%;
+    border-radius: 5px;
+    background: rgba(0,0,0,.7);
+    color: #fff;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 10001;
+    
+    .bg{
+      display:none;
+    }
+}
+.giftToast{
+  background:rgba(82,52,10,0.9) no-repeat center center;
+  height:270px;
+  width:400px;
+  border-radius: 20px;
+  .mint-toast-text{
+    padding-top:0;
+  }
+  .bg{
+    display:block;
+    width:238px;
+    height:238px;
+    background-image:url(./img/ani.png);
+    background-size:238px auto;
+    position:absolute;
+    left:50%;
+    top:50%;
+    z-index:-1;
+    margin:-136px 0 0 -120px;
+    -webkit-animation: rotate 2s 0s linear infinite;
+    animation: rotate 2s 0s linear infinite
+  }
+}
+.mint-toast.is-placebottom {
+    bottom: 50px;
+    left: 50%;
+    -webkit-transform: translate(-50%);
+    transform: translate(-50%);
+}
+
+.mint-toast.is-placemiddle {
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+
+.mint-toast.is-placetop {
+    top: 200px;
+    left: 50%;
+    -webkit-transform: translate(-50%);
+    transform: translate(-50%);
+}
+
+.mint-toast-icon {
+    display: inline-block;
+    text-align: center;
+    font-size: 30px;
+}
+
+.mint-toast-text {
+    font-size: 26px;
+    display: block;
+    text-align: center;
+}
+
+.mint-toast-pop-transition {
+    -webkit-transition: opacity .3s linear;
+    transition: opacity .3s linear
+}
+
+.mint-toast-pop-enter,.mint-toast-pop-leave {
+    opacity: 0
+}
+@keyframes rotate {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+
+    50% {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg)
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+.myLoading{
+    .loading{
+        height: $heightLoading;
+        width: $widthLoading;
+        animation: loadingAnimate 5s infinite;
+        -webkit-animation:loadingAnimate 5s infinite;
+    }
+}
