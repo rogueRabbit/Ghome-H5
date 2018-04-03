@@ -93,6 +93,12 @@
 			} else if (this.userData && this.userData.realInfo_force == 0) {
 				this.isMust = 0;
 			}
+
+			let source = this.getUrlParam(window.location.href, 'from');
+			if(source == 'pay'){
+
+      }
+
 		},
 		components: { Close },
 		methods: {
@@ -175,7 +181,15 @@
 			},
 			closeBtn() {
 				this.showCloseStatus = 0;
-			}
+			},
+      getUrlParam(url, name){
+
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = url.slice(url.indexOf("?")).substr(1).match(reg);
+        if (r != null)
+        return unescape(decodeURIComponent(r[2]));
+        return null;
+      }
 		}
 	};
 </script>
