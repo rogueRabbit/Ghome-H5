@@ -71,6 +71,7 @@
     import { getPostData } from '@/api/ghhttp.js';
     import visitorLoginEntry from '../visitor-login-entry/visitor-login-entry'
     import Close from '@/components/close/close'
+    import Loading from '@/components/loading/'
     /* eslint-disable */
     export default {
         name: "HomePage",
@@ -94,20 +95,27 @@
                 showUserPro: 0,
                 showVisitor: false,
                 showUserAlert: false,//提醒用户勾选用户协议
-                guestData:'',
-                showApp:1,
-                showCloseStatus:0
+                guestData: '',
+                showApp: 1,
+                showCloseStatus: 0
             };
         },
-        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry ,Close},
+        components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry, Close },
         created: function () { },
         ready() {
         },
         mounted: function () {
             window.localStorage.clear();
+            let loadingTest = Loading(
+                {
+                    message: '',
+                    duration: 10
+                }
+            );
             this.$store.dispatch('PublicKey', () => {
                 this.$store.dispatch('getAppConfigure', (data) => {
                     //获取用户配置
+                    loadingTest.close();
                     let mock = ''
                     mockData ? mock : mock = {
                         daoyu_enable: 1,
@@ -143,8 +151,15 @@
                 if (index) {
                     params.voiceMsg = 1;
                 }
+                let loadingTest = Loading(
+                    {
+                        message: '',
+                        duration: 10
+                    }
+                );
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                     console.log(data);
+                    loadingTest.close();
                     this.is_show_risk = data.nextAction;
                     this.riskData['checkCodeGuid'] = data.checkCodeGuid;
                     this.riskData['checkCodeUrl'] = data.checkCodeUrl;
@@ -210,9 +225,9 @@
             },
 
             visitorLogin() {
-                let params={
-                    deviceId:window.deviceid,
-                    supportAutoLogin:1
+                let params = {
+                    deviceId: window.deviceid,
+                    supportAutoLogin: 1
                 };
                 console.log(params);
                 getPostData(APIs.getGuestLoginUrl(), params, (data1) => {
@@ -238,36 +253,36 @@
                     this.showUserAlert = 0;
                 }
             },
-            closeLogin(){
+            closeLogin() {
                 this.showApp = 0;
                 this.showCloseStatus = 0;
             },
-            closeAlert(){
+            closeAlert() {
                 this.showCloseStatus = 1;
             },
-            closeBtn(){
+            closeBtn() {
                 this.showCloseStatus = 0;
             },
-            weiboLogin(){
+            weiboLogin() {
 
-              if(WB2.checkedLogin()){
-                  WB2.anyWhere(function(W){
-                    W.parseCMD('/account/get_uid.json', function(oResult1, bStatus){
-                      if(bStatus){
-                        W.parseCMD('/users/show.json', function(oResult2,bStatus){
-                          if(bStatus){
-                            var args = {
-                              openid: oResult2.id,
-                              access_token: WB2.oauthData.access_token,
-                              username: oResult2.name,
-                              userHeadImg: oResult2.profile_image_url,
+                if (WB2.checkedLogin()) {
+                    WB2.anyWhere(function (W) {
+                        W.parseCMD('/account/get_uid.json', function (oResult1, bStatus) {
+                            if (bStatus) {
+                                W.parseCMD('/users/show.json', function (oResult2, bStatus) {
+                                    if (bStatus) {
+                                        var args = {
+                                            openid: oResult2.id,
+                                            access_token: WB2.oauthData.access_token,
+                                            username: oResult2.name,
+                                            userHeadImg: oResult2.profile_image_url,
+                                        }
+                                    }
+                                }, { uid: oResult1.uid }, { method: 'get', cache_time: 30 });
                             }
-                          }
-                        },{uid: oResult1.uid},{method: 'get', cache_time: 30});
-                      }
-                    },{}, {method: 'get', cache_time: 30});
-                  });
-              }
+                        }, {}, { method: 'get', cache_time: 30 });
+                    });
+                }
             }
         }
     };

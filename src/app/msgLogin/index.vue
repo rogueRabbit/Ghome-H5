@@ -59,6 +59,7 @@
     import { getLocalStorage, setLocalStorage } from '../../utils/Tools';
     import mobileHome from '@/components/mobile-home/mobile-home';
     import Toast from '../../components/toast';
+    import Loading from '@/components/loading/'
     /* eslint-disable */
     export default {
         name: "MsgLogin",
@@ -183,23 +184,28 @@
                 if (index) {
                     params.voiceMsg = 1;
                 }
+                let loadingTest = Loading(
+                    {
+                        message: '',
+                        duration: 10
+                    }
+                );
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data, resCode) => {
-                    console.log(data);
-
-                    if(resCode == 0){
-                      if (data.nextAction != 8) {
-                        this.timeNumber = 60;
-                        this.showTime = 1;
-                        this.showTimeCount();
-                      }
-                      this.is_show_risk = data.nextAction;
-                      this.riskData['checkCodeGuid'] = data.checkCodeGuid;
-                      this.riskData['checkCodeUrl'] = data.checkCodeUrl;
-                      this.riskData['imagecodeType'] = data.imagecodeType;
-                      this.riskData['sdg_height'] = data.sdg_height;
-                      this.riskData['sdg_width'] = data.sdg_width;
-                      this.riskData['phone'] = this.phone;
-                      this.riskData['areaCode'] = this.areaCode;
+                    loadingTest.close();
+                    if (resCode == 0) {
+                        if (data.nextAction != 8) {
+                            this.timeNumber = 60;
+                            this.showTime = 1;
+                            this.showTimeCount();
+                        }
+                        this.is_show_risk = data.nextAction;
+                        this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+                        this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+                        this.riskData['imagecodeType'] = data.imagecodeType;
+                        this.riskData['sdg_height'] = data.sdg_height;
+                        this.riskData['sdg_width'] = data.sdg_width;
+                        this.riskData['phone'] = this.phone;
+                        this.riskData['areaCode'] = this.areaCode;
                     }
                 });
             },
@@ -224,8 +230,8 @@
                     setLocalStorage('areaCode', this.areaCode);
                 } else {
                     Toast({
-                      message: '请输入正确手机号码',
-                      duration: 3000
+                        message: '请输入正确手机号码',
+                        duration: 3000
                     })
                 }
             },
@@ -371,8 +377,8 @@
                 } else {
                     // alert('手机格式不正确');
                     Toast({
-                      message: '手机号码格式不正确',
-                      duration: 3000
+                        message: '手机号码格式不正确',
+                        duration: 3000
                     })
                 }
             },
@@ -382,8 +388,8 @@
                     this.showVoice = true;
                 } else {
                     Toast({
-                      message: '请输入正确手机号码',
-                      duration: 3000
+                        message: '请输入正确手机号码',
+                        duration: 3000
                     })
                 }
             },

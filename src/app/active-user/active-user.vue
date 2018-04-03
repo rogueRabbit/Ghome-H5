@@ -33,68 +33,75 @@
 </template>
 
 <script>
-import { getPostData } from '@/api/ghhttp.js'
-import { APIs } from '@/api/requestUrl'
-import Close from '@/components/close/close'
-/* eslint-disable */
-export default {
-	name: "ActiveUser",
-	data() {
-		return {
-			phone: '',
-			activeCode: '',
-			isThree: 0,
-			areaCode: '+86',
-			hasInput: 0,
-			showApp: 1,
-			showCloseStatus: 0
-		};
-	},
-	components: { Close },
-	created: function () { },
-	ready() {
-	},
-	watch: {
-		activeCode(newV) {
-			if (newV != '') {
-				this.hasInput = 1;
-			} else {
-				this.hasInput = 0;
-			}
-		}
-	},
-	mounted: function () {
-		let phoneList = this.$route.query.phone.split('-');
-		this.areaCode = phoneList[0];
-		this.phone = phoneList[1];
-	},
-	methods: {
-
-		gotoLogin() {
-
-			let params = {
-				activation: this.activeCode
+	import { getPostData } from '@/api/ghhttp.js'
+	import { APIs } from '@/api/requestUrl'
+	import Close from '@/components/close/close'
+	import Loading from '@/components/loading/'
+	/* eslint-disable */
+	export default {
+		name: "ActiveUser",
+		data() {
+			return {
+				phone: '',
+				activeCode: '',
+				isThree: 0,
+				areaCode: '+86',
+				hasInput: 0,
+				showApp: 1,
+				showCloseStatus: 0
 			};
+		},
+		components: { Close },
+		created: function () { },
+		ready() {
+		},
+		watch: {
+			activeCode(newV) {
+				if (newV != '') {
+					this.hasInput = 1;
+				} else {
+					this.hasInput = 0;
+				}
+			}
+		},
+		mounted: function () {
+			let phoneList = this.$route.query.phone.split('-');
+			this.areaCode = phoneList[0];
+			this.phone = phoneList[1];
+		},
+		methods: {
 
-			getPostData(APIs.getActivateCheckUrl(), params, (res) => {
-				console.log(res);
-			})
-		},
+			gotoLogin() {
 
-		goBack() {
-			window.history.go(-1);
-		},
-		closeLogin() {
-			this.showApp = 0;
-			this.showCloseStatus = 0;
-		},
-		closeAlert() {
-			this.showCloseStatus = 1;
-		},
-		closeBtn() {
-			this.showCloseStatus = 0;
+				let params = {
+					activation: this.activeCode
+				};
+				let loadingTest = Loading(
+					{
+						message: '',
+						duration: 10
+					}
+				);
+				getPostData(APIs.getActivateCheckUrl(), params, (res) => {
+					loadingTest.close();
+					console.log(res);
+				})
+			},
+
+			goBack() {
+				window.history.go(-1);
+			},
+			closeLogin() {
+				this.showApp = 0;
+				this.showCloseStatus = 0;
+			},
+			closeAlert() {
+				this.showCloseStatus = 1;
+			},
+			closeBtn() {
+				this.showCloseStatus = 0;
+			}
+
 		}
-
-	}
-};
+	};
 </script>

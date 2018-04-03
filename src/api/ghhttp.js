@@ -3,6 +3,7 @@ import { getPublickeyUrl, APIs } from './requestUrl'
 import JSEncrypt from 'jsencrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt ,getCookie} from "@/utils/randomUtil.js"
 import Toast from '../components/toast';
+import Loading from '@/components/loading/'
 
 let config = {
     TOKEN: 1
@@ -95,8 +96,8 @@ function getRequestCommonHeader() {
 function setHeaders(token, singnResult, moreHeader) {
     //设置请求头配置，用来传递签名
     let headersSet = {
-        'X-APP-ID': 791000351,
-        //'X-APP-ID': 791000070,
+        //'X-APP-ID': 791000351,
+        'X-APP-ID': 791000070,
         //'X-APP-ID': 791000071,
         //'X-APP-ID': 1017,//
         //'X-APP-ID': 1000,

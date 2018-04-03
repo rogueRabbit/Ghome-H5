@@ -101,11 +101,11 @@ $widthLoading : 100px;
         width: $widthLoading;
     }
 }
-.mint-toast {
+.loadingToast {
     position: fixed;
     max-width: 80%;
     border-radius: 5px;
-    background: rgba(0,0,0,.7);
+    background: rgba(0,0,0,0);
     color: #fff;
     box-sizing: border-box;
     text-align: center;
@@ -199,7 +199,7 @@ $widthLoading : 100px;
     .loading{
         height: $heightLoading;
         width: $widthLoading;
-        animation: loadingAnimate 5s infinite;
-        -webkit-animation:loadingAnimate 5s infinite;
+        animation: loadingAnimate 1s infinite;
+        -webkit-animation:loadingAnimate 1s infinite;
     }
 }

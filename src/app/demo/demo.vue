@@ -173,7 +173,7 @@
             Loading(
                 {
                     message: '图片格式不支持',
-                    duration: 1000
+                    duration: 10000
                 }
             );
         },

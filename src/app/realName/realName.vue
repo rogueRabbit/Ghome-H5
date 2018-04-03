@@ -59,6 +59,8 @@
 	import { APIs } from '@/api/requestUrl'
 	import './realName.scss'
 	import Close from '@/components/close/close'
+	import Loading from '@/components/loading/'
+	import Toast from '@/components/toast';
 	/* eslint-disable */
 	export default {
 		name: "RealName",
@@ -120,12 +122,25 @@
 						name: this.name
 					};
 					if (this.isRealName(this.name) != true) {
-						alert('真实姓名填写有误');
+						Toast({
+							message: '真实姓名填写有误',
+							duration: 3000
+						});
 					} else if (this.isCard(this.idcard) != true) {
-						alert('身份证号填写有误');
+						Toast({
+							message: '身份证号填写有误',
+							duration: 3000
+						});
 					} else {
+						let loadingTest = Loading(
+							{
+								message: '',
+								duration: 10
+							}
+						);
 						getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
 							console.log(data);
+							loadingTest.close();
 							//判断是否需要激活
 							if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
 								this.$router.push({
@@ -160,7 +175,7 @@
 				let regName = /^[\u4e00-\u9fa5]{2,4}$/;
 				if (regName.test(name)) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			},
@@ -168,7 +183,7 @@
 				let regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 				if (regIdNo.test(card)) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			},
