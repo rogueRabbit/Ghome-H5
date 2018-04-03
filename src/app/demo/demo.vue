@@ -148,6 +148,7 @@
     import "./demo.scss";
     import { APIs } from '@/api/requestUrl'
     import { getPostData } from '@/api/ghhttp.js'
+    import Loading from '@/components/loading/'
     /* eslint-disable */
     export default {
         name: "Demo",
@@ -168,16 +169,13 @@
         ready() {
         },
         mounted: function () {
-            if (this.$store.state.token == '') {
-                this.$store.dispatch('PublicKey', () => {
-                    this.$store.dispatch('getAppConfigure', (data) => {
-                        //获取用户配置
-                    });
-                    this.$store.dispatch('picCheckSmsSend2', (data) => {
-                        //获取用户配置
-                    });
-                });
-            }
+           
+            Loading(
+                {
+                    message: '图片格式不支持',
+                    duration: 1000
+                }
+            );
         },
         methods: {
             getMsg(index) {
@@ -187,8 +185,8 @@
                     type: 4,
                     voiceMsg: 0
                 };
-                if(index){
-                    params.voiceMsg=1;
+                if (index) {
+                    params.voiceMsg = 1;
                 }
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
                     console.log(data);
