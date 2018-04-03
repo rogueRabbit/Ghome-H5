@@ -11,12 +11,12 @@
             font-size:25px;
             color:$gray;
             padding: 20px 0;
-            border-bottom: 1px solid $border1;
+            border-bottom: 1px solid $border1/*no*/;
         }
         .smallList{
             font-size:25px;
             padding: 20px 0;
-            border-bottom: 1px solid $border1;
+            border-bottom: 1px solid $border1/*no*/;
         }
         .emailRed{
             color: $red;

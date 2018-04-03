@@ -158,7 +158,7 @@
 								});
 							} else {
 								//表示没有小号，判断是否需要实名认证
-								if (resData.realInfo_status == 1) {
+								if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
 									//实名认证
 									this.$router.push({
 										name: 'realName', query: {

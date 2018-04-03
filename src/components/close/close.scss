@@ -34,7 +34,8 @@
                 height: 70px;
                 flex: 1;
                 border-radius: 10px;
-                border: 1px solid $red;
+                border: 1px solid $red/*no*/;
+                font-size: 26px;
             }
             .left{
                 margin-right: 20px;

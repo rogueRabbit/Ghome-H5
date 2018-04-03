@@ -21,7 +21,7 @@
     }
     .name {
         text-align: left;
-        border: 1px solid $border1;
+        border: 1px solid $border1/*no*/;
         height: 76px;
         margin: 20px 0;
         label {
@@ -53,7 +53,7 @@
         }
         .MustRight{
             background: white;
-            border: 1px solid $border2;
+            border: 1px solid $border2/*no*/;
             color:$fontColor;
         }
     }

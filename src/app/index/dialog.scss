@@ -33,6 +33,7 @@
           background: url(../../../static/img/index/icon_close1.png) no-repeat;
           background-size: 36px auto;
           margin:30px 10px 0 0;
+          cursor: pointer;
           &.icon_back{
             background: url(../../../static/img/index/icon_back.png) no-repeat;
             background-size: 36px auto;
@@ -55,6 +56,7 @@
         color: $white;
         font-size: 32px;
         border: none;
+        cursor: pointer;
         &.gray {
           background-color: $background2;
         }

@@ -1,5 +1,5 @@
 import { ghhttp,  PostRequest } from '@/api/ghhttp.js'
-import JSEncrypt from 'JSEncrypt'
+import JSEncrypt from 'jsencrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt,setCookie } from "@/utils/randomUtil.js"
 import { APIs } from '@/api/requestUrl'
 

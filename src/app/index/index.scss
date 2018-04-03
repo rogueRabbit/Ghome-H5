@@ -13,6 +13,7 @@ body{
     border-radius: 8px;
     display:block;
     margin-bottom: 28px;
+    cursor: pointer;
 }
 .btn_border{
     border:1px solid $red;/*no*/
@@ -110,6 +111,7 @@ body{
             width:100%;
             left: 0;
             font-size: $font_m;
+            cursor: pointer;
             .selectInput{
                 width: 25px;
                 height: 25px;
@@ -149,6 +151,7 @@ body{
             background: url(../../../static/img/index/icon_close1.png) no-repeat;
             background-size: 36px auto;
             margin:30px 10px 0 0;
+            cursor: pointer;
             &.icon_back{
                 background: url(../../../static/img/index/icon_back.png) no-repeat;
                 background-size: 36px auto;
@@ -222,6 +225,7 @@ body{
       color: $red;
       text-align: center;
       font-size: $font_m;
+      cursor: pointer;
       &.forget-password {
         color: $gray!important;
       }
@@ -233,13 +237,14 @@ body{
     }
     &.not-edit {
       background-color: $background3;
-      border: 1px solid $border3;
+      border: 1px solid $border3/*no*/;
     }
   }
   .no_yzm{
     text-align: right;
     color: $gray;
     font-size: $font_m;
+    cursor: pointer;
     &.scene-2 {
       position: absolute;
       width: 490px;
@@ -274,7 +279,7 @@ body{
     }
     .remarks {
       margin-top: 20px;
-      border: 1px solid #ddd;
+      border: 1px solid #ddd/*no*/;
       height: 76px;
       margin-bottom: 30px;
       position: relative;
@@ -294,14 +299,14 @@ body{
   }
   .login-list {
     .account-ul {
-      border: 1px solid $border1;
+      border: 1px solid $border1/*no*/;
       border-radius: 10px;
       text-align: left;
       max-height: 250px;
       overflow: auto;
       li {
         margin-left: 10px;
-        border-bottom: 1px solid $border1;
+        border-bottom: 1px solid $border1/*no*/;
         &:last-child{
           border-bottom: none;
         }

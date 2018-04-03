@@ -1,7 +1,9 @@
 import { RandomUtil,setCookie } from "@/utils/randomUtil.js"
 import { getPublickeyUrl, APIs } from './requestUrl'
-import JSEncrypt from 'JSEncrypt'
+import JSEncrypt from 'jsencrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt ,getCookie} from "@/utils/randomUtil.js"
+import Toast from '../components/toast';
+
 let config = {
     TOKEN: 1
 }
@@ -57,10 +59,16 @@ const getPostData = (url ,params,dataBack, errBack) => {
     let randomKey=getCookie('randomKey');
     PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
         if(res.data.code == 18){
-            alert('用户token过期，请返回首页重新登录');
+            Toast({
+              message: '用户token过期，请返回首页重新登录',
+              duration: 3000
+            });
             window.location.href = '/';
         }else if(res.data.code != 0 && errorCodeObj.includes(res.data.code)){
-            alert(res.data.msg);
+            Toast({
+              message: res.data.msg,
+              duration: 3000
+            });
         }
         if (dataBack) {
             console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
@@ -68,7 +76,7 @@ const getPostData = (url ,params,dataBack, errBack) => {
             if(errorCodeObj.includes(res.data.code)){
               code = res.data.code;
             }
-            dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code);
+            dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
         }
     }, (err) => {
         if (errBack) {
@@ -88,7 +96,7 @@ function setHeaders(token, singnResult, moreHeader) {
     //设置请求头配置，用来传递签名
     let headersSet = {
         'X-APP-ID': 791000351,
-        // 'X-APP-ID': 791000070,
+        //'X-APP-ID': 791000070,
         //'X-APP-ID': 791000071,
         //'X-APP-ID': 1017,//
         //'X-APP-ID': 1000,

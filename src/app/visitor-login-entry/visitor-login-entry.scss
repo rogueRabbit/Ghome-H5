@@ -19,6 +19,7 @@
         width: 40%;
         height: 80px;
         display: inline-block;
+        font-size: 26px;
         &.left-button {
           background-color: $red;
           margin-left: 5%;
@@ -29,7 +30,7 @@
         &.right-button {
           float: right;
           margin-right: 5%;
-          border: 1px solid $border2;
+          border: 1px solid $border2/*no*/;
           background-color: $white;
           border-radius: 10px;
         }

@@ -51,7 +51,7 @@ export default {
 			};
 			getPostData(APIs.getGuestLoginUrl(), params, (res) => {
 				let resData = res;
-				if (resData.realInfo_status == 1) {
+				if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
 					//实名认证
 					this.$router.push({
 						name: 'realName', query: {

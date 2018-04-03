@@ -25,7 +25,7 @@
 					<!--/.普通图片验证码-->
 					<!--阿里验证码-->
 					<div v-if="riskData.imagecodeType==2">
-						<iframe ref="previewIframe" :src="riskData.checkCodeUrl" class="ali-iframe" id="ali-iframe"  @load="loaded"></iframe>
+						<iframe ref="previewIframe" :src="replaceUrl(riskData.checkCodeUrl)" class="ali-iframe" id="ali-iframe"  @load="loaded" v-show="showIframe"></iframe>
 					</div>
 					<!--/.阿里验证码-->
 				</div>
@@ -38,7 +38,9 @@
 <script>
 import './risk-management.scss';
 import { getPostData } from '@/api/ghhttp.js'
-import { APIs } from '@/api/requestUrl'
+import { APIs } from '@/api/requestUrl';
+import Toast from '../../components/toast';
+
 export default {
 	name: "riskManagement",
 	props: {
@@ -68,26 +70,13 @@ export default {
 			checkCode: '',
 			outInfo: 0,
       imageType: '',
+      showIframe: false
 		}
 	},
 	mounted: function () {
 
-	  this.imageType = this.riskData.imagecodeType;
 
 	},
-
-  watch: {
-
-    imageType(newV, oldV){
-
-      if(newV == 2){
-        this.setIframeStyle();
-      }
-
-    },
-
-
-  },
 
 	methods: {
 
@@ -119,15 +108,22 @@ export default {
 					type: 4,
 					voiceMsg: this.voiceMsg
 				};
-				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode) => {
+				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode, responseMessage) => {
 					console.log(responseCode);
 
 					if (this.riskData.imagecodeType == 1) {//图片验证码
 						if (data.nextAction == 0 && responseCode == 0) {
 							this.$emit('closeRiskDialog', 0);
 						} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
-							alert('短信发送太频繁');
+              Toast({
+                message: responseMessage,
+                duration: 3000
+              })
 						} else {//输入错误
+              Toast({
+                message: responseMessage,
+                duration: 3000
+              })
 							this.refreshImage();
 						}
 					} else if (this.riskData.imagecodeType == 2) {//阿里验证码
@@ -227,7 +223,14 @@ export default {
 
     loaded(){
 
-      const vm = this.$refs.previewIframe.contentWindow.vm;
+      const vm = this.$refs.previewIframe.contentWindow.document;
+      vm.getElementsByClassName('container')[0].style.width = 'auto';
+      vm.getElementsByClassName('ali-bg')[0].style.width = '200px';
+      vm.getElementsByClassName('ali-bg')[0].style.height = '145px';
+      vm.getElementsByClassName('ali-bg')[0].style.backgroundSize = '100%';
+      vm.getElementsByClassName('ln')[0].style.padding = '0';
+
+      this.showIframe = true;
 
     },
 
@@ -235,7 +238,14 @@ export default {
 
       return document.getElementById(id).contentWindow.document;
 
+    },
+
+    replaceUrl(url){
+
+		  return url.replace('http://login.sdo.com/', '');
+
     }
+
 	}
 }
 </script>

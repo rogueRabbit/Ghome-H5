@@ -18,11 +18,11 @@ module.exports = {
           '^/v1':'/v1'
         }
       },
-      '/sdo/Login':{
+      '/sdo':{
         target:'http://login.sdo.com',
         changeOrigin:true,
         pathRewrite:{
-          '^/sdo/Login':'/sdo/Login'
+          '^/sdo':'/sdo'
         }
       }
     },
@@ -65,12 +65,12 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../dist/h5/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../dist/h5'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: 'http://mgame.sdo.com/h5/',
 
     /**
      * Source Maps

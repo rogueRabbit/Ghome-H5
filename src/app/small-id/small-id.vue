@@ -84,7 +84,7 @@ export default {
 				getPostData(APIs.smallAccountLogin(), params, (res) => {
 					let resData = res;
 					//判断实名
-					if (resData.realInfo_status == 1) {
+					if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
 						//实名认证
 						this.$router.push({
 							name: 'realName', query: {

@@ -58,6 +58,7 @@
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage } from '../../utils/Tools';
     import mobileHome from '@/components/mobile-home/mobile-home';
+    import Toast from '../../components/toast';
     /* eslint-disable */
     export default {
         name: "MsgLogin",
@@ -222,7 +223,10 @@
                     setLocalStorage('phone', this.phone);
                     setLocalStorage('areaCode', this.areaCode);
                 } else {
-                    alert('请输入正确手机号');
+                    Toast({
+                      message: '请输入正确手机号码',
+                      duration: 3000
+                    })
                 }
             },
             showTimeCount() {
@@ -335,7 +339,7 @@
                                     });
                                 } else {
                                     //表示没有小号，判断是否需要实名认证
-                                    if (resData.realInfo_status == 1) {
+                                    if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
                                         //实名认证
                                         this.$router.push({
                                             name: 'realName', query: {
@@ -365,7 +369,11 @@
                         });
                     }
                 } else {
-                    alert('手机格式不正确');
+                    // alert('手机格式不正确');
+                    Toast({
+                      message: '手机号码格式不正确',
+                      duration: 3000
+                    })
                 }
             },
             sendVoiceCode() {
@@ -373,7 +381,10 @@
                 if (this.isPoneAvailable(this.phone)) {
                     this.showVoice = true;
                 } else {
-                    alert('请输入正确手机号');
+                    Toast({
+                      message: '请输入正确手机号码',
+                      duration: 3000
+                    })
                 }
             },
             //语音验证码中需要出现风控的情况
