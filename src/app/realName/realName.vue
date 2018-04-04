@@ -55,142 +55,186 @@
 </template>
 
 <script>
-	import { getPostData } from '@/api/ghhttp.js'
-	import { APIs } from '@/api/requestUrl'
-	import './realName.scss'
-	import Close from '@/components/close/close'
-	import Loading from '@/components/loading/'
-	import Toast from '@/components/toast';
-	/* eslint-disable */
-	export default {
-		name: "RealName",
-		data() {
-			return {
-				content: '按照文化部《网络游戏管理暂行办法》的相关要求，网络游戏用户需要使用有效的身份证件进行实名注册才能登录游戏；身份证信息只能提交一次不可修改，请谨慎填写。',
-				AlertContent: '您的身份证信息仅用于实名补填，我们不会将此信息用于其他任何场景。',
-				showIntroAlert: 0,
-				isMust: 1,
-				name: '',
-				idcard: '',
-				smgData: '',
-				userData: '',
-				showApp: 1,
-				showCloseStatus: 0
+import { getPostData } from '@/api/ghhttp.js'
+import { APIs } from '@/api/requestUrl'
+import './realName.scss'
+import Close from '@/components/close/close'
+import Loading from '@/components/loading/'
+import Toast from '@/components/toast';
+import { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage } from '../../utils/Tools';
+/* eslint-disable */
+export default {
+	name: "RealName",
+	data() {
+		return {
+			content: '按照文化部《网络游戏管理暂行办法》的相关要求，网络游戏用户需要使用有效的身份证件进行实名注册才能登录游戏；身份证信息只能提交一次不可修改，请谨慎填写。',
+			AlertContent: '您的身份证信息仅用于实名补填，我们不会将此信息用于其他任何场景。',
+			showIntroAlert: 0,
+			isMust: 1,
+			name: '',
+			idcard: '',
+			smgData: '',
+			userData: '',
+			showApp: 1,
+			showCloseStatus: 0
 
-			};
-		},
-		created: function () { },
-		ready() {
-		},
-		mounted: function () {
-			if (this.$route.query.smgData) {
-				this.smgData = JSON.parse(this.$route.query.smgData);
-			}
-			if (this.$route.query.userData) {
-				this.userData = JSON.parse(this.$route.query.userData);
-			}
-			if (this.userData && this.userData.realInfo_force == 1) {
-				//必须进行激活
-				this.isMust = 1;
-			} else if (this.userData && this.userData.realInfo_force == 0) {
-				this.isMust = 0;
-			}
-		},
-		components: { Close },
-		methods: {
-			goBack() {
-				window.history.go(-1);
-			},
-			closeIntro(index) {
-				if (index == 0) {
-					this.showIntroAlert = 0;
-				} else {
-					this.showIntroAlert = 1;
-				}
-			},
-			gotoNext(index) {
-				if (index == 1) {
-					//实名认证
-					let params = {
-						idcard: this.idcard,
-						name: this.name
-					};
-					if (this.isRealName(this.name) != true) {
-						Toast({
-							message: '真实姓名填写有误',
-							duration: 3000
-						});
-					} else if (this.isCard(this.idcard) != true) {
-						Toast({
-							message: '身份证号填写有误',
-							duration: 3000
-						});
-					} else {
-						let loadingTest = Loading(
-							{
-								message: '',
-								duration: 10
-							}
-						);
-						getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
-							console.log(data);
-							loadingTest.close();
-							//判断是否需要激活
-							if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
-								this.$router.push({
-									name: 'activeuser', query: {
-										userData: this.$route.query.userData,
-										smgData: this.$route.query.smgData,
-										phone: this.$route.query.phone
-									}
-								});
-							} else {
-								//进入游戏
-							}
-						});
-					}
-				} else {
-					//跳过实名认证直接进入激活界面
-					console.log(this.userData != '' && this.userData.activation == 1);
-					if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
-						this.$router.push({
-							name: 'activeuser', query: {
-								userData: this.$route.query.userData,
-								smgData: this.$route.query.smgData,
-								phone: this.$route.query.phone
-							}
-						});
-					} else {
-						//不需要激活直接进入游戏
-					}
-				}
-			},
-			isRealName(name) {
-				let regName = /^[\u4e00-\u9fa5]{2,4}$/;
-				if (regName.test(name)) {
-					return true;
-				} else {
-					return false;
-				}
-			},
-			isCard(card) {
-				let regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-				if (regIdNo.test(card)) {
-					return true;
-				} else {
-					return false;
-				}
-			},
-			closeLogin() {
-				this.showApp = 0;
-				this.showCloseStatus = 0;
-			},
-			closeAlert() {
-				this.showCloseStatus = 1;
-			},
-			closeBtn() {
-				this.showCloseStatus = 0;
-			}
+		};
+	},
+	created: function () { },
+	ready() {
+	},
+	mounted: function () {
+		if (this.$route.query.smgData) {
+			this.smgData = JSON.parse(this.$route.query.smgData);
 		}
-	};
+		if (this.$route.query.userData) {
+			this.userData = JSON.parse(this.$route.query.userData);
+		}
+		if (this.userData && this.userData.realInfo_force == 1) {
+			//必须进行激活
+			this.isMust = 1;
+		} else if (this.userData && this.userData.realInfo_force == 0) {
+			this.isMust = 0;
+		}
+	},
+	components: { Close },
+	methods: {
+		goBack() {
+			window.history.go(-1);
+		},
+		closeIntro(index) {
+			if (index == 0) {
+				this.showIntroAlert = 0;
+			} else {
+				this.showIntroAlert = 1;
+			}
+
+			let source = this.getUrlParam(window.location.href, 'from');
+			if(source == 'pay'){
+
+      }
+
+		},
+		gotoNext(index) {
+			if (index == 1) {
+				//实名认证
+				let params = {
+					idcard: this.idcard,
+					name: this.name
+				};
+				if (this.isRealName(this.name) != true) {
+					Toast({
+						message: '真实姓名填写有误',
+						duration: 3000
+					});
+				} else if (this.isCard(this.idcard) != true) {
+					Toast({
+						message: '身份证号填写有误',
+						duration: 3000
+					});
+				} else {
+					let loadingTest = Loading(
+						{
+							message: '',
+							duration: 10
+						}
+					);
+					getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
+						console.log(data);
+						loadingTest.close();
+						//判断是否需要激活
+						if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
+							this.$router.push({
+								name: 'activeuser', query: {
+									userData: this.$route.query.userData,
+									smgData: this.$route.query.smgData,
+									phone: this.$route.query.phone
+								}
+							});
+						} else {
+							//进入游戏
+							if (getSessionStorage('gameUserList')) {
+								let gameList = JSON.parse(getSessionStorage('gameUserList'));
+								gameList.push({
+									userid: this.userData.userid,
+									ticket: this.userData.ticket,
+									autokey: this.userData.autokey
+								});
+								setSessionStorage('gameUserList', JSON.stringify(gameList));
+							} else {
+								let gameList = [];
+								gameList.push({
+									userid: this.userData.userid,
+									ticket: this.userData.ticket,
+									autokey: this.userData.autokey
+								});
+								setSessionStorage('gameUserList', JSON.stringify(gameList));
+							}
+							this.$router.push({ name: 'game' });
+						}
+					});
+				}
+			} else {
+				//跳过实名认证直接进入激活界面
+				console.log(this.userData != '' && this.userData.activation == 1);
+				if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
+					this.$router.push({
+						name: 'activeuser', query: {
+							userData: this.$route.query.userData,
+							smgData: this.$route.query.smgData,
+							phone: this.$route.query.phone
+						}
+					});
+				} else {
+					//不需要激活直接进入游戏
+					//进入游戏
+					if (getSessionStorage('gameUserList')) {
+						let gameList = JSON.parse(getSessionStorage('gameUserList'));
+						gameList.push({
+							userid: this.userData.userid,
+							ticket: this.userData.ticket,
+							autokey: this.userData.autokey
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					} else {
+						let gameList = [];
+						gameList.push({
+							userid: this.userData.userid,
+							ticket: this.userData.ticket,
+							autokey: this.userData.autokey
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					}
+					this.$router.push({ name: 'game' });
+				}
+			}
+		},
+		isRealName(name) {
+			let regName = /^[\u4e00-\u9fa5]{2,4}$/;
+			if (regName.test(name)) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		isCard(card) {
+			let regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+			if (regIdNo.test(card)) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		closeLogin() {
+			this.showApp = 0;
+			this.showCloseStatus = 0;
+		},
+		closeAlert() {
+			this.showCloseStatus = 1;
+		},
+		closeBtn() {
+			this.showCloseStatus = 0;
+		}
+	}
+};
 </script>

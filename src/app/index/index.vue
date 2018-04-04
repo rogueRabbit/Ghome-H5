@@ -75,7 +75,9 @@
     import { getPostData } from '@/api/ghhttp.js';
     import visitorLoginEntry from '../visitor-login-entry/visitor-login-entry'
     import Close from '@/components/close/close'
-    import Loading from '@/components/loading/'
+    import Loading from '@/components/loading/';
+    import Toast from '@/components/toast';
+
     /* eslint-disable */
     export default {
         name: "HomePage",
@@ -154,7 +156,6 @@
                     }
                 );
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
-                    console.log(data);
                     loadingTest.close();
                     this.is_show_risk = data.nextAction;
                     this.riskData['checkCodeGuid'] = data.checkCodeGuid;
@@ -188,7 +189,10 @@
                 if (this.isPoneAvailable(this.phone)) {
                     this.sendmess();
                 } else {
-                    alert('请输入正确手机号');
+                    Toast({
+                      message: '请输入正确手机号',
+                      duration: 3000
+                    })
                 }
             },
             isPoneAvailable(str) {

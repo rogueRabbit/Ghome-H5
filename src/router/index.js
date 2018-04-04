@@ -14,6 +14,7 @@ import RealName from '@/app/realName/realName'
 import LoginList from '@/app/login-list/login-list';
 import ActiveUser from '@/app/active-user/active-user'
 import NoRegister from '@/app/noRegister/noRegister'
+import Game from '@/app/game/game'
 Vue.use(Router)
 
 export default new Router({
@@ -82,6 +83,11 @@ export default new Router({
       path:'/noRegister',
       name: 'noRegister',
       component: NoRegister
+    },
+    {
+      path:'/game',
+      name: 'game',
+      component: Game
     }
   ]
 })
