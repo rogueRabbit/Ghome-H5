@@ -37,6 +37,7 @@
 	import { APIs } from '@/api/requestUrl'
 	import Close from '@/components/close/close'
 	import Loading from '@/components/loading/'
+	import { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage } from '@/utils/Tools';
 	/* eslint-disable */
 	export default {
 		name: "ActiveUser",
@@ -48,7 +49,8 @@
 				areaCode: '+86',
 				hasInput: 0,
 				showApp: 1,
-				showCloseStatus: 0
+				showCloseStatus: 0,
+				userData: JSON.parse(this.$route.query.userData)
 			};
 		},
 		components: { Close },
@@ -84,7 +86,24 @@
 				);
 				getPostData(APIs.getActivateCheckUrl(), params, (res) => {
 					loadingTest.close();
-					console.log(res);
+					if (getSessionStorage('gameUserList')) {
+						let gameList = JSON.parse(getSessionStorage('gameUserList'));
+						gameList.push({
+							userid: this.userData.userid,
+							ticket: this.userData.ticket,
+							autokey: this.userData.autokey
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					} else {
+						let gameList = [];
+						gameList.push({
+							userid: this.userData.userid,
+							ticket: this.userData.ticket,
+							autokey: this.userData.autokey
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					}
+					this.$router.push({ name: 'game' });
 				})
 			},
 
