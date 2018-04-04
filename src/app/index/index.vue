@@ -19,12 +19,13 @@
                     </div>
                 </div>
                 <transition name="threein">
-                    <ul class="third_type" v-if="showThree">
+                    <ul class="third_type" v-if="true">
                         <li class="cur" v-if="userType.daoyu_enable">
                             <i class="dy"></i>
                             <p>叨鱼</p>
                         </li>
-                        <li  v-if="userType.weibo_enable">
+                        <!--<li  v-if="userType.weibo_enable">-->
+                        <li>
                             <i class="wb"></i>
                             <p @click="weiboLogin">微博</p>
                         </li>
@@ -103,7 +104,8 @@
                 showUserAlert: false,//提醒用户勾选用户协议
                 guestData: '',
                 showApp: 1,
-                showCloseStatus: 0
+                showCloseStatus: 0,
+                redirect_url: 'http://mgame.sdo.com/h5/index.html'
             };
         },
         components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry, Close },
@@ -265,24 +267,28 @@
             },
             weiboLogin() {
 
-                if (WB2.checkedLogin()) {
-                    WB2.anyWhere(function (W) {
-                        W.parseCMD('/account/get_uid.json', function (oResult1, bStatus) {
-                            if (bStatus) {
-                                W.parseCMD('/users/show.json', function (oResult2, bStatus) {
-                                    if (bStatus) {
-                                        var args = {
-                                            openid: oResult2.id,
-                                            access_token: WB2.oauthData.access_token,
-                                            username: oResult2.name,
-                                            userHeadImg: oResult2.profile_image_url,
-                                        }
-                                    }
-                                }, { uid: oResult1.uid }, { method: 'get', cache_time: 30 });
-                            }
-                        }, {}, { method: 'get', cache_time: 30 });
-                    });
-                }
+                // if (WB2.checkedLogin()) {
+                //     WB2.anyWhere(function (W) {
+                //         W.parseCMD('/account/get_uid.json', function (oResult1, bStatus) {
+                //             if (bStatus) {
+                //                 W.parseCMD('/users/show.json', function (oResult2, bStatus) {
+                //                     if (bStatus) {
+                //                         var args = {
+                //                             openid: oResult2.id,
+                //                             access_token: WB2.oauthData.access_token,
+                //                             username: oResult2.name,
+                //                             userHeadImg: oResult2.profile_image_url,
+                //                         }
+                //                     }
+                //                 }, { uid: oResult1.uid }, { method: 'get', cache_time: 30 });
+                //             }
+                //         }, {}, { method: 'get', cache_time: 30 });
+                //     });
+                // }
+
+                let targetUrl = 'https://api.weibo.com/oauth2/authorize?scope=&client_id=2805679768&redirect_uri='+ encodeURIComponent(this.redirect_url);
+                window.open(targetUrl);
+
             }
         }
     };

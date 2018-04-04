@@ -91,6 +91,7 @@ export default {
 
         let checkCodeUrl = this.riskData.checkCodeUrl;
         this.appkey = this.getUrlParam(checkCodeUrl, 'appkey');
+        this.appkey = 'FFFF0000000001794A8B';
         this.scene = this.getUrlParam(checkCodeUrl, 'scene');
         this.createAliCode();
       }
