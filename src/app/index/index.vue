@@ -105,7 +105,8 @@
                 guestData: '',
                 showApp: 1,
                 showCloseStatus: 0,
-                redirect_url: 'http://mgame.sdo.com/h5/index.html'
+                redirect_url: 'http://mgame.sdo.com/h5/index.html#/thirdLoginMiddle',
+                weiboCode: ''
             };
         },
         components: { PwdLogin, riskManagement, UserProtocol, UserIsSelect, visitorLoginEntry, Close },
@@ -267,29 +268,11 @@
             },
             weiboLogin() {
 
-                // if (WB2.checkedLogin()) {
-                //     WB2.anyWhere(function (W) {
-                //         W.parseCMD('/account/get_uid.json', function (oResult1, bStatus) {
-                //             if (bStatus) {
-                //                 W.parseCMD('/users/show.json', function (oResult2, bStatus) {
-                //                     if (bStatus) {
-                //                         var args = {
-                //                             openid: oResult2.id,
-                //                             access_token: WB2.oauthData.access_token,
-                //                             username: oResult2.name,
-                //                             userHeadImg: oResult2.profile_image_url,
-                //                         }
-                //                     }
-                //                 }, { uid: oResult1.uid }, { method: 'get', cache_time: 30 });
-                //             }
-                //         }, {}, { method: 'get', cache_time: 30 });
-                //     });
-                // }
-
                 let targetUrl = 'https://api.weibo.com/oauth2/authorize?scope=&client_id=2805679768&redirect_uri='+ encodeURIComponent(this.redirect_url);
                 window.open(targetUrl);
 
-            }
+            },
+
         }
     };
 </script>
