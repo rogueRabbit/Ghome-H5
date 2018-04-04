@@ -4,6 +4,7 @@ import JSEncrypt from 'jsencrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt, getCookie } from "@/utils/randomUtil.js"
 import Toast from '../components/toast';
 import Loading from '@/components/loading/'
+import {getSessionStorage,setSessionStorage} from '@/utils/Tools';
 
 let config = {
     TOKEN: 1
@@ -62,7 +63,7 @@ const ghhttp = (callback) => {
             deviceidStr = '&deviceid=' + deviceid;
         }
     })
-    setCookie('randomKey', key);
+    setSessionStorage('randomKey', key);
     //handShakePostStr+='&deviceid='+encodeURI(deviceidStr);
     handShakePostStr += deviceidStr;
     handShakePostStr += '&reason=1';
@@ -98,7 +99,7 @@ const PostRequest = (url, header, params, callback, errback) => {
 
 const getPostData = (url, params, dataBack, errBack) => {
     if (getCookie('token') || window.token != '') {
-        let randomKey = getCookie('randomKey');
+        let randomKey = getSessionStorage('randomKey');
         PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
             if (res.data.code == 18) {
                 Toast({
