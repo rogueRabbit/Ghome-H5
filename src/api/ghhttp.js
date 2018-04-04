@@ -4,7 +4,7 @@ import JSEncrypt from 'jsencrypt'
 import { tripleDESToolEncrypt, tripleDESToolDecrypt, getCookie } from "@/utils/randomUtil.js"
 import Toast from '../components/toast';
 import Loading from '@/components/loading/'
-import {getSessionStorage,setSessionStorage} from '@/utils/Tools';
+import { getSessionStorage, setSessionStorage } from '@/utils/Tools';
 
 let config = {
     TOKEN: 1
@@ -45,7 +45,7 @@ const PublicKey = (token, callback) => {
                 setCookie('token', JSON.parse(returnData).token);
                 //commit('getToken', JSON.parse(returnData));
                 if (callback) {
-                    callback(JSON.parse(returnData).token,randomKey);
+                    callback(JSON.parse(returnData).token, randomKey);
                 }
             }
             //console.log(res);
@@ -128,35 +128,35 @@ const getPostData = (url, params, dataBack, errBack) => {
         });
     } else {
         let randomKey = window.randomKey;
-        PublicKey('', (newtoken,key) => {
-            setTimeout(() => {
-                PostRequest(url, setHeaders(newtoken, sign(key, params)), tripleDESToolEncrypt(key, postDataStr(params)), (res) => {
-                    if (res.data.code == 18) {
-                        Toast({
-                            message: '用户token过期，请返回首页重新登录',
-                            duration: 3000
-                        });
-                        window.location.href = '/';
-                    } else if (res.data.code != 0 && errorCodeObj.includes(res.data.code)) {
-                        Toast({
-                            message: res.data.msg,
-                            duration: 3000
-                        });
+        PublicKey('', (newtoken, key) => {
+
+            PostRequest(url, setHeaders(newtoken, sign(key, params)), tripleDESToolEncrypt(key, postDataStr(params)), (res) => {
+                if (res.data.code == 18) {
+                    Toast({
+                        message: '用户token过期，请返回首页重新登录',
+                        duration: 3000
+                    });
+                    window.location.href = '/';
+                } else if (res.data.code != 0 && errorCodeObj.includes(res.data.code)) {
+                    Toast({
+                        message: res.data.msg,
+                        duration: 3000
+                    });
+                }
+                if (dataBack) {
+                    console.log(JSON.parse(tripleDESToolDecrypt(key, res.data.data)));
+                    let code = 0;
+                    if (errorCodeObj.includes(res.data.code)) {
+                        code = res.data.code;
                     }
-                    if (dataBack) {
-                        console.log(JSON.parse(tripleDESToolDecrypt(key, res.data.data)));
-                        let code = 0;
-                        if (errorCodeObj.includes(res.data.code)) {
-                            code = res.data.code;
-                        }
-                        dataBack(JSON.parse(tripleDESToolDecrypt(key, res.data.data)), code, res.data.msg);
-                    }
-                }, (err) => {
-                    if (errBack) {
-                        errBack(err);
-                    }
-                });
-            }, 20);
+                    dataBack(JSON.parse(tripleDESToolDecrypt(key, res.data.data)), code, res.data.msg);
+                }
+            }, (err) => {
+                if (errBack) {
+                    errBack(err);
+                }
+            });
+
         });
     }
 }
