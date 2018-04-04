@@ -79,24 +79,31 @@ export default {
 	},
 	mounted: function () {
 
-	  this.imageType = this.riskData.imagecodeType;
+    this.initAliCode();
 
 	},
 
-  watch: {
+  updated: function () {
 
-    imageType(newV){
+    this.initAliCode();
 
-      if(newV==2){
-
-        let checkCodeUrl = this.riskData.checkCodeUrl;
-        this.appkey = this.getUrlParam(checkCodeUrl, 'appkey');
-        this.appkey = 'FFFF0000000001794A8B';
-        this.scene = this.getUrlParam(checkCodeUrl, 'scene');
-        this.createAliCode();
-      }
-    },
   },
+
+
+  // watch: {
+  //
+  //   imageType(newV){
+  //
+  //     if(newV==2){
+  //
+  //       let checkCodeUrl = this.riskData.checkCodeUrl;
+  //       this.appkey = this.getUrlParam(checkCodeUrl, 'appkey');
+  //       this.appkey = 'FFFF0000000001794A8B';
+  //       this.scene = this.getUrlParam(checkCodeUrl, 'scene');
+  //       this.createAliCode();
+  //     }
+  //   },
+  // },
 
 	methods: {
 
@@ -237,6 +244,20 @@ export default {
       };
 
       nc.init(nc_option);
+    },
+
+    initAliCode(){
+
+      this.imageType = this.riskData.imagecodeType;
+      if(this.imageType == 2){
+
+        let checkCodeUrl = this.riskData.checkCodeUrl;
+        this.appkey = this.getUrlParam(checkCodeUrl, 'appkey');
+        this.scene = this.getUrlParam(checkCodeUrl, 'scene');
+        this.createAliCode();
+
+      }
+
     }
 
 	}
