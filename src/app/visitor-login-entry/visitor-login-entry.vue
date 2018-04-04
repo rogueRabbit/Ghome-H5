@@ -88,11 +88,7 @@ export default {
 					guestData: JSON.stringify(this.GetGuestData)
 				}
 			});
-			// this.$router.push({ name: 'visitorUpgrade', query: { pageSource: 'visitor-login'} })
-
 		}
-
-
 	}
 }
 </script>

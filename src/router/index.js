@@ -13,7 +13,11 @@ import SmallId from '@/app/small-id/small-id'
 import RealName from '@/app/realName/realName'
 import LoginList from '@/app/login-list/login-list';
 import ActiveUser from '@/app/active-user/active-user'
-import NoRegister from '@/app/noRegister/noRegister'
+import NoRegister from '@/app/noRegister/noRegister';
+import JudgePayUrl  from '@/app/judge-pay-url/judge-pay-url';
+import PayVisitorEntry  from '@/app/pay-visitor-entry/pay-visitor-entry';
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -82,6 +86,16 @@ export default new Router({
       path:'/noRegister',
       name: 'noRegister',
       component: NoRegister
+    },
+    {
+      path:'/judgePayUrl',
+      name: 'judgePayUrl',
+      component: JudgePayUrl
+    },
+    {
+      path:'/payVisitorEntry',
+      name: 'payVisitorEntry',
+      component: PayVisitorEntry
     }
   ]
 })

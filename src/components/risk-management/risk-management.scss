@@ -34,12 +34,19 @@
           background-color: $background2;
         }
       }
-      .ali-iframe {
-        width: 480px;
-        height: 400px;
-        .ali-bg {
-          width: 100%;
-          height: 300px;
+      #alitest {
+        .nc_bg {
+          background: #c9242b;
+        }
+        .nc_scale {
+          .nc_iconfont {
+            font-weight: bold;
+            color: #c9242b;
+            font-size: 20px;
+            .btn_ok {
+              color: #76c61d;
+            }
+          }
         }
       }
     }

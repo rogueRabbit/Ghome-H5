@@ -2,7 +2,7 @@
     <div class="index_wrap" v-if="showApp">
         <div class="index_main" v-if="!showArea">
             <div class="header_bar">
-                <a class="back">
+                <a class="back" v-if="is_show_back">
                     <i class="icon_back" @click="goBack"></i>
                 </a>
                 <a class="close">
@@ -101,7 +101,8 @@
                 isGuestLogin: 0,
                 showApp: 1,
                 showCloseStatus: 0,
-                show_mobile_home: 0
+                show_mobile_home: 0,
+                is_show_back: true
             };
         },
         components: { PwdLogin, riskManagement, voiceCode, Close, mobileHome },
@@ -122,6 +123,9 @@
                 this.areaCode = getLocalStorage('areaCode');
             }
 
+            if (this.$route.query.pay) {
+                this.is_show_back = false;
+            }
         },
         watch: {
             msgCode(newV, oldV) {

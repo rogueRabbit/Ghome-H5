@@ -2,7 +2,7 @@
 	<div class="index_wrap realName" v-if="showApp">
 		<div class="index_main">
 			<div class="header_bar">
-				<a class="back">
+				<a class="back" v-if="is_show_back">
 					<i class="icon_back" @click="goBack"></i>
 				</a>
 				<a class="close">
@@ -75,8 +75,8 @@
 				smgData: '',
 				userData: '',
 				showApp: 1,
-				showCloseStatus: 0
-
+				showCloseStatus: 0,
+        is_show_back: true
 			};
 		},
 		created: function () { },
@@ -96,9 +96,9 @@
 				this.isMust = 0;
 			}
 
-			let source = this.getUrlParam(window.location.href, 'from');
-			if(source == 'pay'){
-
+			if(this.$route.query.from){
+			  this.is_show_back = false;
+			  this.isMust = true;
       }
 
 		},
@@ -141,18 +141,26 @@
 						getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
 							console.log(data);
 							loadingTest.close();
-							//判断是否需要激活
-							if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
-								this.$router.push({
-									name: 'activeuser', query: {
-										userData: this.$route.query.userData,
-										smgData: this.$route.query.smgData,
-										phone: this.$route.query.phone
-									}
-								});
-							} else {
-								//进入游戏
-							}
+
+              if(this.$route.query.from){//支付跳转过来需要实名
+                Toast({
+                  message: '恭喜您，实名认证成功，请重新发起充值！',
+                  duration: 3000
+                });
+              }else{
+                //判断是否需要激活
+                if (this.userData != '' && this.userData.activation == 1) {//1表示需要激活
+                  this.$router.push({
+                    name: 'activeuser', query: {
+                      userData: this.$route.query.userData,
+                      smgData: this.$route.query.smgData,
+                      phone: this.$route.query.phone
+                    }
+                  });
+                } else {
+                  //进入游戏
+                }
+              }
 						});
 					}
 				} else {

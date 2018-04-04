@@ -25,8 +25,11 @@
 					<!--/.普通图片验证码-->
 					<!--阿里验证码-->
 					<div v-if="riskData.imagecodeType==2">
-						<iframe ref="previewIframe" :src="replaceUrl(riskData.checkCodeUrl)" class="ali-iframe" id="ali-iframe"  @load="loaded" v-show="showIframe"></iframe>
-					</div>
+					  <div>
+              <img src="../../assets/img/ali_bg2.png">
+            </div>
+            <div id="alitest"></div>
+          </div>
 					<!--/.阿里验证码-->
 				</div>
 			</div>
@@ -40,7 +43,6 @@ import './risk-management.scss';
 import { getPostData } from '@/api/ghhttp.js'
 import { APIs } from '@/api/requestUrl';
 import Toast from '@/components/toast';
-
 export default {
 	name: "riskManagement",
 	props: {
@@ -70,13 +72,30 @@ export default {
 			checkCode: '',
 			outInfo: 0,
       imageType: '',
-      showIframe: false
+      loadingTest: '',
+      appkey: '',
+      scene: ''
 		}
 	},
 	mounted: function () {
 
+	  this.imageType = this.riskData.imagecodeType;
 
 	},
+
+  watch: {
+
+    imageType(newV){
+
+      if(newV==2){
+
+        let checkCodeUrl = this.riskData.checkCodeUrl;
+        this.appkey = this.getUrlParam(checkCodeUrl, 'appkey');
+        this.scene = this.getUrlParam(checkCodeUrl, 'scene');
+        this.createAliCode();
+      }
+    },
+  },
 
 	methods: {
 
@@ -109,8 +128,6 @@ export default {
 					voiceMsg: this.voiceMsg
 				};
 				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode, responseMessage) => {
-					console.log(responseCode);
-
 					if (this.riskData.imagecodeType == 1) {//图片验证码
 						if (data.nextAction == 0 && responseCode == 0) {
 							this.$emit('closeRiskDialog', 0);
@@ -129,10 +146,17 @@ export default {
 					} else if (this.riskData.imagecodeType == 2) {//阿里验证码
 						if (data.nextAction == 0 && responseCode == 0) {
 							this.$emit('closeRiskDialog', 0);
-						}
+						}else {
+              Toast({
+                message: responseMessage,
+                duration: 3000
+              });
+            }
 					}
 				}, (err) => {
-					this.refreshImage();
+          if (this.riskData.imagecodeType == 1){
+            this.refreshImage();
+          }
 				})
 			}
 		},
@@ -176,43 +200,33 @@ export default {
 
 		},
 
-    setIframeStyle(){
+    getUrlParam(url, name) {
 
-
-
-
-      console.log(document.getElementById('ali-iframe').contentWindow.document)
-      //console.log(document.getElementById("ali-iframe").contentWindow.document)
-      // console.log(this.getIframe("ali-iframe").getElementsByClassName('container'));
-      // this.getIframe("ali-iframe").getElementsByClassName('container').style.backgroundColor = '#ff0000';
-      // console.log(this.$refs.previewIframe.contentWindow.document);
-
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      var r = url.slice(url.indexOf("?")).substr(1).match(reg);
+      if (r != null)
+        return unescape(decodeURIComponent(r[2]));
+      return null;
 
     },
 
-    loaded(){
+    createAliCode(){
 
-      const vm = this.$refs.previewIframe.contentWindow.document;
-      vm.getElementsByClassName('container')[0].style.width = 'auto';
-      vm.getElementsByClassName('ali-bg')[0].style.width = '200px';
-      vm.getElementsByClassName('ali-bg')[0].style.height = '145px';
-      vm.getElementsByClassName('ali-bg')[0].style.backgroundSize = '100%';
-      vm.getElementsByClassName('ln')[0].style.padding = '0';
+      var nc = new noCaptcha();
+      var nc_token = [this.appkey, (new Date()).getTime(), Math.random()].join(':');
+		  var nc_option = {
+        renderTo: '#alitest',
+        appkey: this.appkey,
+        scene: this.scene,
+        nc_token: nc_token,
+        callback: (data) => {
+          console.log(JSON.stringify(data));
+          this.outInfo = data;
+          this.VerificationCode();
+        }
+      };
 
-      this.showIframe = true;
-
-    },
-
-    getIframe(id){
-
-      return document.getElementById(id).contentWindow.document;
-
-    },
-
-    replaceUrl(url){
-
-		  return url.replace('http://login.sdo.com/', '');
-
+      nc.init(nc_option);
     }
 
 	}

@@ -17,7 +17,6 @@
           clientWidth = maxwidth/dpr;
       }
       if(isAndroid || isIos){
-        console.log(1)
         docEl.style.fontSize = parseInt(100 * (clientWidth / 750)) + 'px';
       }else{
         docEl.style.fontSize='60px'
