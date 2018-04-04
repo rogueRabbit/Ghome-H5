@@ -127,6 +127,7 @@ export default {
 					type: 4,
 					voiceMsg: this.voiceMsg
 				};
+				console.log(param);
 				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode, responseMessage) => {
 					if (this.riskData.imagecodeType == 1) {//图片验证码
 						if (data.nextAction == 0 && responseCode == 0) {
@@ -220,8 +221,16 @@ export default {
         scene: this.scene,
         nc_token: nc_token,
         callback: (data) => {
-          console.log(JSON.stringify(data));
-          this.outInfo = data;
+
+          let submit_data = {
+            challenge: nc_token,
+            password: 'alitest',
+            seccode: data.csessionid,
+            validate: data.sig
+          };
+
+          this.outInfo = JSON.stringify(submit_data);
+          console.log('this.outInfo'+this.outInfo);
           this.VerificationCode();
         }
       };

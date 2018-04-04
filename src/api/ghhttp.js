@@ -174,7 +174,7 @@ function setHeaders(token, singnResult, moreHeader) {
         //'X-APP-ID': 791000070,
         //'X-APP-ID': 791000071,
         //'X-APP-ID': 1017,//
-        'X-APP-ID': 1000,
+        // 'X-APP-ID': 1000,
         'X-TOKEN': token,
         'X-SIGNATURE': singnResult,
         'X-HTTP-ENGINE': 'android',
