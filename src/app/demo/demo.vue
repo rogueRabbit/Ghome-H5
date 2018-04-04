@@ -169,13 +169,8 @@
         ready() {
         },
         mounted: function () {
-           
-            Loading(
-                {
-                    message: '图片格式不支持',
-                    duration: 10000
-                }
-            );
+            let url = encodeURI('http://localhost:8082/#/demo');
+           //window.location.href ="https://open.weixin.qq.com/connect/qrconnect?appid=wx4b5f6da6126099ec&redirect_uri="+url+"&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect";
         },
         methods: {
             getMsg(index) {
@@ -193,6 +188,8 @@
                 });
             },
             goLogin() {
+                let url = encodeURIComponent('http://localhost:8082/#/demo');
+                window.location.href ="https://open.weixin.qq.com/connect/qrconnect?appid=wx4b5f6da6126099ec&redirect_uri="+url+"&response_type=code&scope=snsapi_login";
                 if (this.select == 1) {
                     this.showlist = 1;
                 } else {

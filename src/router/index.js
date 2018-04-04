@@ -16,7 +16,7 @@ import ActiveUser from '@/app/active-user/active-user'
 import NoRegister from '@/app/noRegister/noRegister';
 import JudgePayUrl  from '@/app/judge-pay-url/judge-pay-url';
 import PayVisitorEntry  from '@/app/pay-visitor-entry/pay-visitor-entry';
-
+import Game from '@/app/game/game'
 
 Vue.use(Router)
 
@@ -93,9 +93,14 @@ export default new Router({
       component: JudgePayUrl
     },
     {
-      path:'/payVisitorEntry',
+      path: '/payVisitorEntry',
       name: 'payVisitorEntry',
       component: PayVisitorEntry
+    },
+    {
+      path:'/game',
+      name: 'game',
+      component: Game
     }
   ]
 })

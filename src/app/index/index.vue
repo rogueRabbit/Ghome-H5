@@ -156,7 +156,6 @@
                     }
                 );
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data) => {
-                    console.log(data);
                     loadingTest.close();
                     this.is_show_risk = data.nextAction;
                     this.riskData['checkCodeGuid'] = data.checkCodeGuid;

@@ -1,7 +1,7 @@
-import { RandomUtil,setCookie } from "@/utils/randomUtil.js"
+import { RandomUtil, setCookie } from "@/utils/randomUtil.js"
 import { getPublickeyUrl, APIs } from './requestUrl'
 import JSEncrypt from 'jsencrypt'
-import { tripleDESToolEncrypt, tripleDESToolDecrypt ,getCookie} from "@/utils/randomUtil.js"
+import { tripleDESToolEncrypt, tripleDESToolDecrypt, getCookie } from "@/utils/randomUtil.js"
 import Toast from '../components/toast';
 import Loading from '@/components/loading/'
 
@@ -13,6 +13,46 @@ const errorCodeObj = [1023, 12, 1, 2, 3, 54, 94];
 
 let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
+window.randomKey = '';
+window.token = '';
+window.deviceid = 10000;
+let resetkey_count = 0;
+//登录加密操作
+const PublicKey = (token, callback) => {
+    ghhttp((handShakePostStr, res, key) => {
+        let headers = {
+            'X-APP-ID': deviceid,
+            'X-TOKEN': token
+        };
+        randomKey = key;
+        let encrypt = new JSEncrypt();
+        let rsaPublic = res.data.data.key;
+        encrypt.setPublicKey(rsaPublic);
+        //let data=encryptedString(rsaPublic,handShakePostStr,'OHDave')
+        //console.log(data);
+        //let key=new RSAKeyPair(rsaPublic,10001,handShakePostStr);
+        //console.log(key);
+        let rsaStr = encrypt.encrypt(handShakePostStr);
+        let params = {
+            'signature': rsaStr,
+            'timestamp': new Date().getTime()
+        };
+        PostRequest(APIs.getHandShakeUrl(), headers, rsaStr, (res) => {
+            if (res.data.code != null && res.data.code == 0) {
+                let returnData = tripleDESToolDecrypt(key, res.data.data);
+                window.token = JSON.parse(returnData).token;
+                setCookie('token', JSON.parse(returnData).token);
+                //commit('getToken', JSON.parse(returnData));
+                if (callback) {
+                    callback(JSON.parse(returnData).token,randomKey);
+                }
+            }
+            //console.log(res);
+        }, (err) => {
+            console.log(err);
+        })
+    });
+}
 const ghhttp = (callback) => {
     let key = RandomUtil();
     let deviceidStr = '&deviceid=' + deviceid;
@@ -22,7 +62,7 @@ const ghhttp = (callback) => {
             deviceidStr = '&deviceid=' + deviceid;
         }
     })
-    setCookie('randomKey',key);
+    setCookie('randomKey', key);
     //handShakePostStr+='&deviceid='+encodeURI(deviceidStr);
     handShakePostStr += deviceidStr;
     handShakePostStr += '&reason=1';
@@ -56,34 +96,68 @@ const PostRequest = (url, header, params, callback, errback) => {
     });
 }
 
-const getPostData = (url ,params,dataBack, errBack) => {
-    let randomKey=getCookie('randomKey');
-    PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
-        if(res.data.code == 18){
-            Toast({
-              message: '用户token过期，请返回首页重新登录',
-              duration: 3000
-            });
-            window.location.href = '/';
-        }else if(res.data.code != 0 && errorCodeObj.includes(res.data.code)){
-            Toast({
-              message: res.data.msg,
-              duration: 3000
-            });
-        }
-        if (dataBack) {
-            console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
-            let code = 0;
-            if(errorCodeObj.includes(res.data.code)){
-              code = res.data.code;
+const getPostData = (url, params, dataBack, errBack) => {
+    if (getCookie('token') || window.token != '') {
+        let randomKey = getCookie('randomKey');
+        PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
+            if (res.data.code == 18) {
+                Toast({
+                    message: '用户token过期，请返回首页重新登录',
+                    duration: 3000
+                });
+                window.location.href = '/';
+            } else if (res.data.code != 0 && errorCodeObj.includes(res.data.code)) {
+                Toast({
+                    message: res.data.msg,
+                    duration: 3000
+                });
             }
-            dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
-        }
-    }, (err) => {
-        if (errBack) {
-            errBack(err);
-        }
-    });
+            if (dataBack) {
+                console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+                let code = 0;
+                if (errorCodeObj.includes(res.data.code)) {
+                    code = res.data.code;
+                }
+                dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
+            }
+        }, (err) => {
+            if (errBack) {
+                errBack(err);
+            }
+        });
+    } else {
+        let randomKey = window.randomKey;
+        PublicKey('', (newtoken,key) => {
+            setTimeout(() => {
+                PostRequest(url, setHeaders(newtoken, sign(key, params)), tripleDESToolEncrypt(key, postDataStr(params)), (res) => {
+                    if (res.data.code == 18) {
+                        Toast({
+                            message: '用户token过期，请返回首页重新登录',
+                            duration: 3000
+                        });
+                        window.location.href = '/';
+                    } else if (res.data.code != 0 && errorCodeObj.includes(res.data.code)) {
+                        Toast({
+                            message: res.data.msg,
+                            duration: 3000
+                        });
+                    }
+                    if (dataBack) {
+                        console.log(JSON.parse(tripleDESToolDecrypt(key, res.data.data)));
+                        let code = 0;
+                        if (errorCodeObj.includes(res.data.code)) {
+                            code = res.data.code;
+                        }
+                        dataBack(JSON.parse(tripleDESToolDecrypt(key, res.data.data)), code, res.data.msg);
+                    }
+                }, (err) => {
+                    if (errBack) {
+                        errBack(err);
+                    }
+                });
+            }, 20);
+        });
+    }
 }
 
 function getRequestCommonHeader() {
@@ -100,21 +174,21 @@ function setHeaders(token, singnResult, moreHeader) {
         //'X-APP-ID': 791000070,
         //'X-APP-ID': 791000071,
         //'X-APP-ID': 1017,//
-        // 'X-APP-ID': 1000,
-        'X-TOKEN': getCookie('token'),
+        'X-APP-ID': 1000,
+        'X-TOKEN': token,
         'X-SIGNATURE': singnResult,
         'X-HTTP-ENGINE': 'android',
         'X-PROMOTERID': 'android',
         'X-CHANNEL': 'A1',
         'X-CHANNEL-INFO': '',
         'X-DEVICEID': deviceid,
-        'X-APP-VERSION':'7.02.0',
-        'X-PLATFORM':2,
-        'X-AREA':'231',
-        'X-SDK-VERSION':'2.2.0',
+        'X-APP-VERSION': '7.02.0',
+        'X-PLATFORM': 2,
+        'X-AREA': '231',
+        'X-SDK-VERSION': '2.2.0',
         'X-FLOW-ID': '1',
-        'Charsert':'UTF-8',
-        'X-DeviceType':'pc'
+        'Charsert': 'UTF-8',
+        'X-DeviceType': 'pc'
     };
     if (moreHeader) {
         for (let i in moreHeader) {

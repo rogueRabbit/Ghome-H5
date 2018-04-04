@@ -56,7 +56,7 @@
     import voiceCode from '../../components/voice-code/voice-code';
     import { country } from './country.js'
     import Close from '@/components/close/close';
-    import { getLocalStorage, setLocalStorage } from '../../utils/Tools';
+    import { getLocalStorage, setLocalStorage ,getSessionStorage,setSessionStorage} from '../../utils/Tools';
     import mobileHome from '@/components/mobile-home/mobile-home';
     import Toast from '@/components/toast';
     import Loading from '@/components/loading/'
@@ -372,6 +372,24 @@
                                             });
                                         } else {
                                             //直接进入游戏
+                                            if(getSessionStorage('gameUserList')){
+                                                let gameList=JSON.parse(getSessionStorage('gameUserList'));
+                                                gameList.push({
+                                                    userid:resData.userid,
+                                                    ticket:resData.ticket,
+                                                    autokey:resData.autokey
+                                                });
+                                                setSessionStorage('gameUserList',JSON.stringify(gameList));
+                                            }else{
+                                                let gameList=[];
+                                                gameList.push({
+                                                    userid:resData.userid,
+                                                    ticket:resData.ticket,
+                                                    autokey:resData.autokey
+                                                });
+                                                setSessionStorage('gameUserList',JSON.stringify(gameList));
+                                            }
+                                            this.$router.push({ name: 'game'});
                                         }
                                     }
                                 }

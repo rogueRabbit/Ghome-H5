@@ -204,15 +204,7 @@
 			},
 			closeBtn() {
 				this.showCloseStatus = 0;
-			},
-      getUrlParam(url, name){
-
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        var r = url.slice(url.indexOf("?")).substr(1).match(reg);
-        if (r != null)
-        return unescape(decodeURIComponent(r[2]));
-        return null;
-      }
+			}
 		}
 	};
 </script>
