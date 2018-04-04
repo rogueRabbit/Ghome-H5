@@ -30,8 +30,10 @@
               }
             );
 
-            this.weiboCode = this.$route.query.code;
-            this.thirdLogin();
+			this.weiboCode = this.$route.query.code;
+			setTimeout(()=>{
+				this.thirdLogin();
+			},2000);
           }
 
         },
