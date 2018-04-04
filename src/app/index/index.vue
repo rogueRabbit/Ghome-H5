@@ -131,7 +131,7 @@
                         this.showOther = 1;
                         this.showThree = 0;
                     }else{
-                        this.showThree = 1;
+                        this.showThree = 0;
                         this.showOther = 0;
                     }
                     console.log(this.userType);
