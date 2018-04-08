@@ -14,13 +14,13 @@
 					<h3>游客升级</h3>
 					<p class="prompt">
 						您输入的账号目前已有角色，我们会为您的手机号：
-						<span class="phone">{{$route.query.phone}}</span>下关联一个账号，您可以为这个账号进行备注，以供自己辨识。
+						<span class="phone">{{$route.query.phone}}</span>下关联一个子账号，您可以为这个子账号进行备注，以供自己辨识。
 					</p>
 					<div class="remarks">
 						<input type="text" v-model="note" />
 					</div>
 					<div class="btns next-action">
-						<a class="btn" @click="confirmRemarks">确定</a>
+						<a class="btn" @click="confirmRemarks" :class="hasInput?'':'disabledClick'">确定</a>
 					</div>
 				</div>
 			</div>
@@ -37,6 +37,8 @@
 	import { getPostData } from '@/api/ghhttp.js';
 	import { APIs } from '@/api/requestUrl'
 	import Close from '@/components/close/close'
+	import Loading from '@/components/loading/'
+	import Toast from '@/components/toast';
 	export default {
 		name: "visitor-upgrade",
 		data() {
@@ -48,12 +50,18 @@
 				phone: this.$route.query.phone,
 				message: '',
 				showApp: 1,
-				showCloseStatus: 0
+				showCloseStatus: 0,
+				hasInput: 0
 			}
 		},
 		watch: {
 			note(newV) {
 				this.message = newV;
+				if (newV != '') {
+					this.hasInput = 1;
+				} else {
+					this.hasInput = 0;
+				}
 			}
 		},
 		components: {
@@ -64,7 +72,36 @@
 
 		},
 		methods: {
-
+			getByteLen(val) {
+				var len = 0;
+				let ChinaNum = 0;
+				for (var i = 0; i < val.length; i++) {
+					var a = val.charAt(i);
+					if (a.match(/[^\x00-\xff]/ig) != null) {
+						len += 2;
+						ChinaNum++;
+					}
+					else {
+						len += 1;
+					}
+				}
+				if (ChinaNum > 7) {
+					return false;
+				} else if (len > 19) {
+					return false;
+				} else {
+					return true;
+				}
+			},
+			checkUsername(username) {
+				//正则表达式
+				var reg = new RegExp("^[#_A-Za-z0-9\u4e00-\u9fa5]+$");
+				if (!reg.test(username)) {
+					return false;
+				} else {
+					return true;
+				}
+			},
 			goBack() {
 
 				this.$router.push({ name: 'HomePage', params: {} })
@@ -81,12 +118,34 @@
 					subDesc: this.note,
 					upgrade_ticket: this.userData.ticket
 				};
-				getPostData(APIs.getGuestUpgradeUrl(), guestParams, (data) => {
-					let resData = data;
-					this.guestData = data;
-					this.is_success = 1;
-				});
-
+				if (this.hasInput == 1) {
+					if (this.checkUsername(this.note)) {
+						if (this.getByteLen(this.note)) {
+							let loadingTest = Loading(
+								{
+									message: '',
+									duration: 10
+								}
+							);
+							getPostData(APIs.getGuestUpgradeUrl(), guestParams, (data) => {
+								let resData = data;
+								loadingTest.close();
+								this.guestData = data;
+								this.is_success = 1;
+							});
+						} else {
+							Toast({
+								message: '小号备注名过长',
+								duration: 3000
+							})
+						}
+					} else {
+						Toast({
+							message: '备注名格式错误，仅支持中英文数字_以及#',
+							duration: 3000
+						})
+					}
+				}
 			},
 
 			closeBindSuccessDialog() {
@@ -98,11 +157,11 @@
 						name: 'noRegister', query: {
 							userid: this.userData.userid,
 							deviceid: deviceid,
-							userData: JSON.stringify( this.userData),
-							isGuestLogin:1
+							userData: JSON.stringify(this.userData),
+							isGuestLogin: 1
 						}
 					});
-				}else{
+				} else {
 					//结束
 				}
 

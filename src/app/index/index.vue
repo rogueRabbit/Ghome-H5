@@ -49,7 +49,7 @@
 
         <!-- 用户协议start -->
         <UserProtocol v-if="showUserPro" @hideUserAlert="hideUserAlert"></UserProtocol>
-        <UserIsSelect v-if="showUserAlert" @closeUserAlert='closeUserAlert' @selectUserPro="selectUserPro"></UserIsSelect>
+        <UserIsSelect v-if="showUserAlert" @closeUserAlert='closeUserAlert' @selectUserPro="selectUserPro" @showUserAlertClick="showUserAlertClick"></UserIsSelect>
         <!-- 用户协议end -->
 
         <!--风控组件-->
@@ -130,10 +130,10 @@
                     if (this.userType.display_thirdaccout == 0 && this.userType.guest_enable == 0) {
                         this.showNumber = 0;
                     }
-                    if(this.userType.display_thirdaccout == 0&&(mock.daoyu_enable||mock.weibo_enable||mock.weixin_enable)){
+                    if (this.userType.display_thirdaccout == 0 && (mock.daoyu_enable || mock.weibo_enable || mock.weixin_enable)) {
                         this.showOther = 1;
                         this.showThree = 0;
-                    }else{
+                    } else {
                         this.showThree = 0;
                         this.showOther = 0;
                     }
@@ -193,8 +193,8 @@
                     this.sendmess();
                 } else {
                     Toast({
-                      message: '请输入正确手机号',
-                      duration: 3000
+                        message: '请输入正确手机号',
+                        duration: 3000
                     })
                 }
             },
@@ -233,10 +233,14 @@
                     supportAutoLogin: 1
                 };
                 console.log(params);
-                getPostData(APIs.getGuestLoginUrl(), params, (data1) => {
-                    this.showVisitor = true;
-                    this.guestData = data1;
-                })
+                if (this.select == 0) {
+                    this.showUserAlert = 1;
+                } else {
+                    getPostData(APIs.getGuestLoginUrl(), params, (data1) => {
+                        this.showVisitor = true;
+                        this.guestData = data1;
+                    })
+                }
             },
 
             closeVisitorDialog() {
@@ -268,7 +272,7 @@
             },
             weiboLogin() {
 
-                let targetUrl = 'https://api.weibo.com/oauth2/authorize?scope=&client_id=2805679768&redirect_uri='+ encodeURIComponent(this.redirect_url);
+                let targetUrl = 'https://api.weibo.com/oauth2/authorize?scope=&client_id=2805679768&redirect_uri=' + encodeURIComponent(this.redirect_url);
                 window.open(targetUrl);
 
             },

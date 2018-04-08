@@ -10,7 +10,7 @@
                 <div class="content">
                     进入游戏前，请先阅读并同意：
                     <br>
-                    <span>《服务条款及隐私政策》</span>
+                    <span @click="showUserDetail">《服务条款及隐私政策》</span>
                 </div>
                 <div class="btnStyle">
                     <button class="clickStyle left" @click="selectUserPro(1)">立即勾选</button>
@@ -49,6 +49,9 @@
                 }else{
                     this.$emit('selectUserPro',0);
                 }
+            },
+            showUserDetail(){
+                this.$emit('showUserAlertClick');
             }
         }
     };
