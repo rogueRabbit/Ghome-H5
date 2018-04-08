@@ -48,6 +48,8 @@
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
     import Toast from '@/components/toast';
+    import riskManagement from '../../components/risk-management/risk-management';
+
 
     export default {
         name: "forget-password",
@@ -76,7 +78,8 @@
         },
         components: {
           mobileHome,
-          Close
+          Close,
+          riskManagement
         },
         mounted: function(){
 
@@ -105,8 +108,6 @@
           targetSecond(){
 
             if(isPoneAvailable(this.phone)){
-              // this.$router.push({name: 'forgetPasswordSecond', query:{}});
-              // setLocalStorage('phone', this.phone);
               this.sendmess();
             }else{
               Toast({
