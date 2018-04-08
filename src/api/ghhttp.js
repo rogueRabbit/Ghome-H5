@@ -84,14 +84,32 @@ const ghhttp = (callback) => {
 
 const PostRequest = (url, header, params, callback, errback) => {
     //params 加密参数 header请求头配置
+    let timeStart = new Date().valueOf();
+    let loadingTest = Loading(
+        {
+            message: '',
+            duration: 10
+        }
+    );
     $http({
         url: url,
         method: 'post',
         headers: header,
         data: params
     }).then((res) => {
+        loadingTest.close();
+        if (window.sdoReport) {
+            window.sdoReport({
+                b_business: 'GHOME_h5',
+                d_interface: url,
+                b_return_code: res.data.code,
+                b_retrun_msg: encodeURIComponent(res.data.msg),
+                d_duration: (new Date()).valueOf() - timeStart
+            });
+        }
         callback(res)
     }).catch((err) => {
+        loadingTest.close();
         errback(err);
         console.log(err);
     });
@@ -101,26 +119,37 @@ const getPostData = (url, params, dataBack, errBack) => {
     if (getCookie('token') || window.token != '') {
         let randomKey = getSessionStorage('randomKey');
         PostRequest(url, setHeaders(getCookie('token'), sign(randomKey, params)), tripleDESToolEncrypt(randomKey, postDataStr(params)), (res) => {
-            if (res.data.code == 18) {
-                Toast({
-                    message: '用户token过期，请返回首页重新登录',
-                    duration: 3000
-                });
-                window.location.href = '/';
-            } else if (res.data.code != 0 && !errorCodeObj.includes(res.data.code)) {
-                Toast({
-                    message: res.data.msg,
-                    duration: 3000
-                });
-            }
-            if (dataBack) {
-                console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
-                // let code = 0;
-                // if (errorCodeObj.includes(res.data.code)) {
-                //     code = res.data.code;
-                // }
-              let code  = res.data.code;
-              dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
+            if (res.data.code != 0) {
+                if (res.data.code == 18) {
+                    Toast({
+                        message: '用户token过期，请返回首页重新登录',
+                        duration: 3000
+                    });
+                    window.location.href = '/';  
+                }  
+                if (errorCodeObj.includes(res.data.code)) {
+                    Toast({
+                        message: res.data.msg,
+                        duration: 3000
+                    });
+                    if (dataBack) {
+                        console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+                        let code = res.data.code;
+                        dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
+                    }
+                }else{
+                    Toast({
+                        message: res.data.msg,
+                        duration: 3000
+                    });
+                    return;
+                }
+            }else{
+                if (dataBack) {
+                    console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
+                    let code = res.data.code;
+                    dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
+                }
             }
         }, (err) => {
             if (errBack) {

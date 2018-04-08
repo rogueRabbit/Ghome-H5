@@ -134,15 +134,15 @@
 							deviceid: deviceid,
 							password: this.loginPassword
 						};
-						let loadingTest = Loading(
+						/* let loadingTest = Loading(
 							{
 								message: '',
 								duration: 10
 							}
-						);
+						); */
 						getPostData(APIs.getSetPasswordUrl(), params, (data) => {
 							//游客重置密码结束，直接进入游戏
-							loadingTest.close();
+							//loadingTest.close();
 						});
 					} else {
 						//正常用户登录流程
@@ -151,18 +151,18 @@
 							deviceid: deviceid,
 							password: this.loginPassword
 						};
-						let loadingTest = Loading(
+						/* let loadingTest = Loading(
 							{
 								message: '',
 								duration: 10
 							}
-						);
+						); */
 						getPostData(APIs.getSetPasswordUrl(), params, (data) => {
 							//测试用start
                             /* resData.hasExtendAccs = 0;
                             resData.realInfo_status = 1 */
 							//测试数据结束end
-							loadingTest.close();
+							//loadingTest.close();
 							if (resData.hasExtendAccs == 1) {
 								//有小号进入小号选择界面
 								this.$router.push({

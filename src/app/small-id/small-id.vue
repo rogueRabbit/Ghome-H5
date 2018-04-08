@@ -70,14 +70,14 @@ export default {
 				deviceid: this.$route.query.deviceid,
 				userId: this.$route.query.userid
 			};
-			let loadingTest = Loading(
+			/* let loadingTest = Loading(
 				{
 					message: '',
 					duration: 10
 				}
-			);
+			); */
 			getPostData(APIs.querySmallAccount(), params, (data) => {
-				loadingTest.close();
+				//loadingTest.close();
 				this.dataList = data.extendAccs.map((item) => {
 					item.select = 0;
 					return item;
@@ -91,15 +91,15 @@ export default {
 				phone: this.selectSmallId.accname
 			};
 			if (this.isSlectId == true) {
-				let loadingTest = Loading(
+				/* let loadingTest = Loading(
 					{
 						message: '',
 						duration: 10
 					}
-				);
+				); */
 				getPostData(APIs.smallAccountLogin(), params, (res) => {
 					let resData = res;
-					loadingTest.close();
+					//loadingTest.close();
 					//判断实名
 					if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
 						//实名认证
