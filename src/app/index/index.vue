@@ -19,13 +19,12 @@
                     </div>
                 </div>
                 <transition name="threein">
-                    <ul class="third_type" v-if="true">
+                    <ul class="third_type" v-if="showThree">
                         <li class="cur" v-if="userType.daoyu_enable">
                             <i class="dy"></i>
                             <p>叨鱼</p>
                         </li>
-                        <!--<li  v-if="userType.weibo_enable">-->
-                        <li>
+                        <li  v-if="userType.weibo_enable">
                             <i class="wb"></i>
                             <p @click="weiboLogin">微博</p>
                         </li>
