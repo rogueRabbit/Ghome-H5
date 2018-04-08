@@ -188,14 +188,14 @@
                 if (index) {
                     params.voiceMsg = 1;
                 }
-                let loadingTest = Loading(
+                /* let loadingTest = Loading(
                     {
                         message: '',
                         duration: 10
                     }
-                );
+                ); */
                 getPostData(APIs.getRequestSmsCodeUrl(), params, (data, resCode) => {
-                    loadingTest.close();
+                    //loadingTest.close();
                     if (resCode == 0) {
                         if (data.nextAction != 8) {
                             this.timeNumber = 60;

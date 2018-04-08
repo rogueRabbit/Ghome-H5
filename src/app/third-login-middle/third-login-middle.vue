@@ -23,12 +23,12 @@
           //微博授权后，url会携带code
           if(this.$route.query.code){
 
-            this.loadingTest = Loading(
+            /* this.loadingTest = Loading(
               {
                 message: '',
                 duration: 10
               }
-            );
+            ); */
 
 			this.weiboCode = this.$route.query.code;
 			setTimeout(()=>{
@@ -48,7 +48,7 @@
             };
 
             getPostData(APIs.getThirdAccountTicketLogin(), params, (data) => {
-              this.loadingTest.close();
+              //this.loadingTest.close();
               let resData = data;
               if (resData.noPassword == 1) {
                 //新注册的用户，到注册界面设置密码

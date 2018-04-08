@@ -78,14 +78,14 @@
 				let params = {
 					activation: this.activeCode
 				};
-				let loadingTest = Loading(
+				/* let loadingTest = Loading(
 					{
 						message: '',
 						duration: 10
 					}
-				);
+				); */
 				getPostData(APIs.getActivateCheckUrl(), params, (res) => {
-					loadingTest.close();
+					//loadingTest.close();
 					if (getSessionStorage('gameUserList')) {
 						let gameList = JSON.parse(getSessionStorage('gameUserList'));
 						gameList.push({

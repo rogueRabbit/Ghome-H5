@@ -132,15 +132,14 @@
               duration: 3000
             });
           } else {
-            let loadingTest = Loading(
+            /* let loadingTest = Loading(
               {
                 message: '',
                 duration: 10
               }
-            );
+            ); */
             getPostData(APIs.getFillRealInfoUrl(), params, (data) => {
-              console.log(data);
-              loadingTest.close();
+              //loadingTest.close();
 
               if(this.$route.query.from){//支付跳转过来需要实名
                 Toast({

@@ -121,15 +121,15 @@
 				if (this.hasInput == 1) {
 					if (this.checkUsername(this.note)) {
 						if (this.getByteLen(this.note)) {
-							let loadingTest = Loading(
+							/* let loadingTest = Loading(
 								{
 									message: '',
 									duration: 10
 								}
-							);
+							); */
 							getPostData(APIs.getGuestUpgradeUrl(), guestParams, (data) => {
 								let resData = data;
-								loadingTest.close();
+								//loadingTest.close();
 								this.guestData = data;
 								this.is_success = 1;
 							});
