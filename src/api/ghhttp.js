@@ -117,7 +117,7 @@ const getPostData = (url, params, dataBack, errBack) => {
                     duration: 3000
                 });
                 window.location.href = '/';
-            } else if (res.data.code != 0 && errorCodeObj.includes(res.data.code)) {
+            } else if (res.data.code != 0 && !errorCodeObj.includes(res.data.code)) {
                 Toast({
                     message: res.data.msg,
                     duration: 3000
@@ -125,11 +125,12 @@ const getPostData = (url, params, dataBack, errBack) => {
             }
             if (dataBack) {
                 console.log(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)));
-                let code = 0;
-                if (errorCodeObj.includes(res.data.code)) {
-                    code = res.data.code;
-                }
-                dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
+                // let code = 0;
+                // if (errorCodeObj.includes(res.data.code)) {
+                //     code = res.data.code;
+                // }
+              let code  = res.data.code;
+              dataBack(JSON.parse(tripleDESToolDecrypt(randomKey, res.data.data)), code, res.data.msg);
             }
         }, (err) => {
             if (errBack) {

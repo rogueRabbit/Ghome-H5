@@ -43,8 +43,8 @@
 
             //微信 company_id=300, QQ company_id=301, 微博 company_id=302
             let params = {
-              third_ticket: this.weiboCode,
-              company_id: 302
+              company_id: 302,
+              third_ticket: this.weiboCode
             };
 
             getPostData(APIs.getThirdAccountTicketLogin(), params, (data) => {

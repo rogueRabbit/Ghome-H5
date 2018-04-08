@@ -42,8 +42,8 @@
 <script>
     import { APIs } from '@/api/requestUrl';
     import { getPostData } from '@/api/ghhttp.js';
-    import riskManagement from '../../components/risk-management/risk-management';
-    import voiceCode from '../../components/voice-code/voice-code';
+    import riskManagement from '@/components/risk-management/risk-management';
+    import voiceCode from '@/components/voice-code/voice-code';
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage, isPoneAvailable, removeStorage } from '../../utils/Tools';
     import Toast from '@/components/toast';

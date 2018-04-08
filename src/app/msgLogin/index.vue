@@ -56,7 +56,7 @@
     import voiceCode from '../../components/voice-code/voice-code';
     import { country } from './country.js'
     import Close from '@/components/close/close';
-    import { getLocalStorage, setLocalStorage ,getSessionStorage,setSessionStorage} from '../../utils/Tools';
+    import { getLocalStorage, setLocalStorage ,getSessionStorage,setSessionStorage, isPoneAvailable} from '../../utils/Tools';
     import mobileHome from '@/components/mobile-home/mobile-home';
     import Toast from '@/components/toast';
     import Loading from '@/components/loading/'
@@ -228,7 +228,7 @@
             },
             getSmsCode() {
                 //获取短信验证码
-                if (this.isPoneAvailable(this.phone)) {
+                if (isPoneAvailable(this.phone)) {
                     this.sendmess();
                     setLocalStorage('phone', this.phone);
                     setLocalStorage('areaCode', this.areaCode);
@@ -243,14 +243,6 @@
                 this.timeNumber--;
                 if (this.timeNumber > 0) {
                     setTimeout(this.showTimeCount, 1000);
-                }
-            },
-            isPoneAvailable(str) {
-                let myreg = /^[1][3,4,5,7,8][0-9]{9}(#[1-9]+)?$/;
-                if (!myreg.test(str)) {
-                    return false;
-                } else {
-                    return true;
                 }
             },
             //关闭风控验证码的弹框及后续操作
@@ -303,7 +295,7 @@
                     smscode: this.msgCode,
                 };
                 //登录游戏
-                if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
+                if (this.hasInput == 1 && isPoneAvailable(this.phone)) {
                     setLocalStorage('phone', this.phone);
                     if (this.isGuestLogin == 1) {
                         //游客掉该接口登录，接口不一样
@@ -397,7 +389,6 @@
                         });
                     }
                 } else {
-                    // alert('手机格式不正确');
                     Toast({
                         message: '手机号码格式不正确',
                         duration: 3000
@@ -406,7 +397,7 @@
             },
             sendVoiceCode() {
 
-                if (this.isPoneAvailable(this.phone)) {
+                if (isPoneAvailable(this.phone)) {
                     this.showVoice = true;
                 } else {
                     Toast({
