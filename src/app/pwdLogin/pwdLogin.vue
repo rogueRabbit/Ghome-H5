@@ -50,7 +50,7 @@ import { APIs } from '@/api/requestUrl'
 import { country } from '../msgLogin/country.js'
 import riskManagement from '@/components/risk-management/risk-management';
 import Close from '@/components/close/close';
-import { getLocalStorage, setLocalStorage ,getSessionStorage,setSessionStorage} from '../../utils/Tools';
+import { getLocalStorage, setLocalStorage ,getSessionStorage,setSessionStorage, isPoneAvailable} from '../../utils/Tools';
 import mobileHome from '@/components/mobile-home/mobile-home';
 import Loading from '@/components/loading/'
 import Toast from '@/components/toast';
@@ -169,7 +169,7 @@ export default {
 				phone: this.phone,
 				supportPic: 1
 			};
-			if (this.hasInput == 1 && this.isPoneAvailable(this.phone)) {
+			if (this.hasInput == 1 && isPoneAvailable(this.phone)) {
 				setLocalStorage('phone', this.phone);
 				if (this.isGuestLogin == 1) {
 					let loadingTest = Loading(
@@ -178,9 +178,12 @@ export default {
 							duration: 10
 						}
 					);
-					getPostData(APIs.getAuthUrl(), params, (data) => {
+					getPostData(APIs.getAuthUrl(), params, (data, responseCode) => {
+            loadingTest.close();
+					  if(responseCode!=0){
+					    return;
+            }
 						let resData = data;
-						loadingTest.close();
 						this.resData = data;
 						this.is_show_risk = data.nextAction;
 						this.riskData['checkCodeGuid'] = data.checkCodeGuid;
@@ -208,9 +211,12 @@ export default {
 							duration: 10
 						}
 					);
-					getPostData(APIs.getLoginUrl(), params, (data) => {
+					getPostData(APIs.getLoginUrl(), params, (data, responseCode) => {
+            loadingTest.close();
+            if(responseCode!=0){
+              return;
+            }
 						let resData = data;
-						loadingTest.close();
 						//测试用start
 						/* resData.hasExtendAccs = 0;
 						resData.realInfo_status = 1 */
@@ -274,7 +280,7 @@ export default {
 				}
 			} else {
 				Toast({
-					message: '手机格式不正确',
+					message: '手机号码格式不正确',
 					duration: 3000
 				});
 			}
@@ -301,14 +307,6 @@ export default {
 				this.riskData['phone'] = this.phone;
 				this.riskData['areaCode'] = this.areaCode;
 			});
-		},
-		isPoneAvailable(str) {
-			let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-			if (!myreg.test(str)) {
-				return false;
-			} else {
-				return true;
-			}
 		},
 		//点击忘记密码
 		gotoForgetPassword() {

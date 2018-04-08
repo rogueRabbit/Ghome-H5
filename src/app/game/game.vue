@@ -1,6 +1,6 @@
 <template>
     <div class="demo">
-        111
+        恭喜您，成功登录游戏，开始您的游戏之旅吧！
     </div>
 </template>
 
@@ -14,17 +14,17 @@
         name: "Game",
         data() {
             return {
-                
+
             };
         },
         created: function () { },
         ready() {
         },
         mounted: function () {
-           
+
         },
         methods: {
-            
+
         }
     };
 </script>

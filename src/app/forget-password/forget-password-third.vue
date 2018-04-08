@@ -95,9 +95,6 @@
               if(responseCode ==0){
 
                 let phone = this.areaCode + '-' + this.phone;
-                console.log('--'+this.resData.hasExtendAccs);
-                console.log('--'+this.resData.realInfo_status);
-                console.log('--'+this.resData.activation);
                 if (this.resData.hasExtendAccs == 1) {
                     //有小号进入小号选择界面
                     this.$router.push({
