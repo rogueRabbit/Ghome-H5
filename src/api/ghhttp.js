@@ -84,12 +84,22 @@ const ghhttp = (callback) => {
 
 const PostRequest = (url, header, params, callback, errback) => {
     //params 加密参数 header请求头配置
+    let timeStart =new Date().valueOf();
     $http({
         url: url,
         method: 'post',
         headers: header,
         data: params
     }).then((res) => {
+        if (window.sdoReport) {
+            window.sdoReport({
+                b_business: 'GHOME_h5',
+                d_interface: url,
+                b_return_code: res.data.code,
+                b_retrun_msg: encodeURIComponent(res.data.msg),
+                d_duration: (new Date()).valueOf() - timeStart
+            });
+        }
         callback(res)
     }).catch((err) => {
         errback(err);
