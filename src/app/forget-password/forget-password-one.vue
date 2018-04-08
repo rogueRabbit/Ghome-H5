@@ -44,11 +44,11 @@
 <script>
     import { APIs } from '@/api/requestUrl';
     import { getPostData } from '@/api/ghhttp.js';
-    import mobileHome from '../../components/mobile-home/mobile-home';
+    import mobileHome from '@/components/mobile-home/mobile-home';
     import Close from '@/components/close/close';
     import { getLocalStorage, setLocalStorage, isPoneAvailable } from '../../utils/Tools';
     import Toast from '@/components/toast';
-    import riskManagement from '../../components/risk-management/risk-management';
+    import riskManagement from '@/components/risk-management/risk-management';
 
 
     export default {
