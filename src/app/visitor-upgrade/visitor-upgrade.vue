@@ -162,7 +162,24 @@
 						}
 					});
 				} else {
-          //直接进入游戏
+					//直接进入游戏
+					if (getSessionStorage('gameUserList')) {
+						let gameList = JSON.parse(getSessionStorage('gameUserList'));
+						let userData = JSON.parse(this.$route.query.userData);
+						gameList.push({
+							userid: userData.userid,
+							ticket: userData.ticket
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					} else {
+						let gameList = [];
+						gameList.push({
+							userid: userData.userid,
+							ticket: userData.ticket
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					}
+					this.$router.push({ name: 'game' });
 				}
 			},
 			closeLogin() {

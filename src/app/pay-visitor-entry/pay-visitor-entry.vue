@@ -24,83 +24,100 @@
 </template>
 
 <script>
-    import Close from '@/components/close/close';
-    import { getPostData } from '@/api/ghhttp.js'
-    import { APIs } from '@/api/requestUrl'
-    export default {
-        name: "pay-visitor-entry",
-        data() {
-          return {
-            showApp: 1,
-            showCloseStatus: 0,
-            GetGuestData: ''
-          };
-        },
-        components: { Close },
-        methods: {
+  import Close from '@/components/close/close';
+  import { getPostData } from '@/api/ghhttp.js'
+  import { APIs } from '@/api/requestUrl'
+  export default {
+    name: "pay-visitor-entry",
+    data() {
+      return {
+        showApp: 1,
+        showCloseStatus: 0,
+        GetGuestData: ''
+      };
+    },
+    components: { Close },
+    methods: {
 
-          closeLogin() {
-            this.showApp = 0;
-            this.showCloseStatus = 0;
-          },
-          closeAlert() {
-            this.showCloseStatus = 1;
-          },
-          closeBtn() {
-            this.showCloseStatus = 0;
-          },
+      closeLogin() {
+        this.showApp = 0;
+        this.showCloseStatus = 0;
+      },
+      closeAlert() {
+        this.showCloseStatus = 1;
+      },
+      closeBtn() {
+        this.showCloseStatus = 0;
+      },
 
-          //直接点击进入游戏
-          directLogin() {
-            let params = {
-              deviceid: deviceid,
-              supportAutoLogin: 1
-            };
-            getPostData(APIs.getGuestLoginUrl(), params, (res) => {
-              let resData = res;
-              if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
-                //实名认证
-                this.$router.push({
-                  name: 'realName', query: {
-                    userid: resData.userid,
-                    deviceid: params.deviceid,
-                    userData: JSON.stringify(resData),
-                    smgData: JSON.stringify(this.riskData),
-                    phone: params.phone
-                  }
-                });
-              } else {
-                //不需要实名情况下判断是否需要激活
-                if (resData.activation == 1) {
-                  //需要激活
-                  this.$router.push({
-                    name: 'activeuser', query: {
-                      userData: JSON.stringify(resData),
-                      phone: params.phone
-                    }
-                  });
-                } else {
-                  //直接进入游戏
-                }
-              }
-            })
-          },
-
-          //点击立即绑定
-          immediatelyBind() {
-
+      //直接点击进入游戏
+      directLogin() {
+        let params = {
+          deviceid: deviceid,
+          supportAutoLogin: 1
+        };
+        getPostData(APIs.getGuestLoginUrl(), params, (res) => {
+          let resData = res;
+          if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
+            //实名认证
             this.$router.push({
-              name: 'msgLogin', query: {
-                pageSource: 'visitor-login',
-                guestData: JSON.stringify(this.GetGuestData)
+              name: 'realName', query: {
+                userid: resData.userid,
+                deviceid: params.deviceid,
+                userData: JSON.stringify(resData),
+                smgData: JSON.stringify(this.riskData),
+                phone: params.phone
               }
             });
+          } else {
+            //不需要实名情况下判断是否需要激活
+            if (resData.activation == 1) {
+              //需要激活
+              this.$router.push({
+                name: 'activeuser', query: {
+                  userData: JSON.stringify(resData),
+                  phone: params.phone
+                }
+              });
+            } else {
+              //直接进入游戏
+              if (getSessionStorage('gameUserList')) {
+                let gameList = JSON.parse(getSessionStorage('gameUserList'));
+                gameList.push({
+                  userid: resData.userid,
+                  ticket: resData.ticket,
+                  autokey: resData.autokey
+                });
+                setSessionStorage('gameUserList', JSON.stringify(gameList));
+              } else {
+                let gameList = [];
+                gameList.push({
+                  userid: resData.userid,
+                  ticket: resData.ticket,
+                  autokey: resData.autokey
+                });
+                setSessionStorage('gameUserList', JSON.stringify(gameList));
+              }
+              this.$router.push({ name: 'game' });
+            }
           }
+        })
+      },
 
-        }
+      //点击立即绑定
+      immediatelyBind() {
+
+        this.$router.push({
+          name: 'msgLogin', query: {
+            pageSource: 'visitor-login',
+            guestData: JSON.stringify(this.GetGuestData)
+          }
+        });
+      }
+
     }
+  }
 </script>
 
 <style scoped>
-
 </style>

@@ -41,6 +41,10 @@
 		<!--国家区号-->
 		<mobile-home v-show="show_mobile_home" v-on:closeMobileHome="closeMobileHome" :areaCodeTest="areaCode"></mobile-home>
 		<!--/.国家区号-->
+
+		<!--账号绑定成功-->
+		<success-nextaction v-if="is_success" v-on:closeBindSuccessDialog="closeBindSuccessDialog" :phone="phone"></success-nextaction>
+		<!--/.账号绑定成功-->
 	</div>
 </template>
 
@@ -54,6 +58,7 @@
 	import mobileHome from '@/components/mobile-home/mobile-home';
 	import Loading from '@/components/loading/'
 	import Toast from '@/components/toast';
+	import successNextaction from '@/components/bind-success-nextaction/bind-success-nextaction';
 	/* eslint-disable */
 	export default {
 		name: "PwdLogin",
@@ -86,10 +91,12 @@
 				resData: '',
 				showApp: 1,
 				showCloseStatus: 0,
-				show_mobile_home: 0
+				show_mobile_home: 0,
+				is_success: false,
+				guestLoginData: ''
 			};
 		},
-		components: { riskManagement, Close, mobileHome },
+		components: { riskManagement, Close, mobileHome, successNextaction },
 		created: function () { },
 		ready() {
 		},
@@ -172,18 +179,12 @@
 				if (this.hasInput == 1 && isPoneAvailable(this.phone)) {
 					setLocalStorage('phone', this.phone);
 					if (this.isGuestLogin == 1) {
-						/* let loadingTest = Loading(
-							{
-								message: '',
-								duration: 10
-							}
-						); */
 						getPostData(APIs.getAuthUrl(), params, (data, responseCode) => {
-							//loadingTest.close();
 							if (responseCode != 0) {
 								return;
 							}
 							let resData = data;
+							this.guestLoginData = data;
 							this.resData = data;
 							this.is_show_risk = data.nextAction;
 							this.riskData['checkCodeGuid'] = data.checkCodeGuid;
@@ -193,26 +194,18 @@
 							this.riskData['sdg_width'] = data.sdg_width;
 							this.riskData['phone'] = this.phone;
 							if (this.is_show_risk != 8) {
-								this.$router.push({
-									name: 'visitorUpgrade', query: {
-										userid: resData.userid,
-										deviceid: params.deviceid,
-										phone: params.phone,
-										userData: JSON.stringify(resData),
-										guestData: this.$route.query.guestData
-									}
-								});
+								let guestParams = {
+									deviceid: window.deviceid,
+									group: 'game',
+									guestId: JSON.parse(this.$route.query.guestData).guestId,
+									guestType: 1,
+									upgrade_ticket: resData.ticket
+								};
+								this.guestUpdate(guestParams, resData, params);
 							}
 						})
 					} else {
-						/* let loadingTest = Loading(
-							{
-								message: '',
-								duration: 10
-							}
-						); */
 						getPostData(APIs.getLoginUrl(), params, (data, responseCode) => {
-							//loadingTest.close();
 							if (responseCode != 0) {
 								return;
 							}
@@ -283,6 +276,60 @@
 						message: '手机号码格式不正确',
 						duration: 3000
 					});
+				}
+			},
+			guestUpdate(guestParams, resData, params) {
+				getPostData(APIs.getGuestUpgradeUrl(), guestParams, (data) => {
+					if (data.nextAction == 1) {
+						this.$router.push({
+							name: 'visitorUpgrade', query: {
+								userid: resData.userid,
+								deviceid: params.deviceid,
+								phone: params.phone,
+								userData: JSON.stringify(resData),
+								guestData: this.$route.query.guestData
+							}
+						});
+					} else if (data.nextAction == 100) {
+						this.guestUpdate(guestParams, resData, params);
+					} else {
+						//不需要备注
+						this.is_success = true;
+					}
+				});
+			},
+			closeBindSuccessDialog() {
+
+				this.is_success = false;
+				//判断是否需要设置密码
+				if (this.guestLoginData.noPassword == 1) {
+					this.$router.push({
+						name: 'noRegister', query: {
+							userid: this.guestLoginData.userid,
+							deviceid: deviceid,
+							userData: JSON.stringify(this.guestLoginData),
+							isGuestLogin: 1
+						}
+					});
+				} else {
+					//直接进入游戏
+					if (getSessionStorage('gameUserList')) {
+						let gameList = JSON.parse(getSessionStorage('gameUserList'));
+						let userData = JSON.parse(this.$route.query.userData);
+						gameList.push({
+							userid: userData.userid,
+							ticket: userData.ticket
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					} else {
+						let gameList = [];
+						gameList.push({
+							userid: userData.userid,
+							ticket: userData.ticket
+						});
+						setSessionStorage('gameUserList', JSON.stringify(gameList));
+					}
+					this.$router.push({ name: 'game' });
 				}
 			},
 			sendmess(index) {
