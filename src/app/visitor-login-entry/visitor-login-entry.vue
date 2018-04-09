@@ -21,78 +21,94 @@
 </template>
 
 <script>
-import { getPostData } from '@/api/ghhttp.js'
-import { APIs } from '@/api/requestUrl'
-import './visitor-login-entry.scss';
-export default {
-	name: "visitor-login-entry",
-	data() {
-		return {
-			GetGuestData: ''
-		}
-	},
-	props: ['guestData'],
-	mounted: function () {
-		this.GetGuestData = this.guestData;
-	},
-	methods: {
-
-		closeVisitorDialog() {
-
-			this.$emit('closeVisitorDialog');
-
+	import { getPostData } from '@/api/ghhttp.js'
+	import { APIs } from '@/api/requestUrl'
+	import './visitor-login-entry.scss';
+	import { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage } from '@/utils/Tools';
+	export default {
+		name: "visitor-login-entry",
+		data() {
+			return {
+				GetGuestData: ''
+			}
 		},
+		props: ['guestData'],
+		mounted: function () {
+			this.GetGuestData = this.guestData;
+		},
+		methods: {
 
-		//直接点击进入游戏
-		directLogin() {
-			let params = {
-				deviceid: deviceid,
-				supportAutoLogin: 1
-			};
-			getPostData(APIs.getGuestLoginUrl(), params, (res) => {
-				let resData = res;
-				if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
-					//实名认证
-					this.$router.push({
-						name: 'realName', query: {
-							userid: resData.userid,
-							deviceid: params.deviceid,
-							userData: JSON.stringify(resData),
-							smgData: JSON.stringify(this.riskData),
-							phone: params.phone
-						}
-					});
-				} else {
-					//不需要实名情况下判断是否需要激活
-					if (resData.activation == 1) {
-						//需要激活
+			closeVisitorDialog() {
+
+				this.$emit('closeVisitorDialog');
+
+			},
+
+			//直接点击进入游戏
+			directLogin() {
+				let params = {
+					deviceid: deviceid,
+					supportAutoLogin: 1
+				};
+				getPostData(APIs.getGuestLoginUrl(), params, (res) => {
+					let resData = res;
+					if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
+						//实名认证
 						this.$router.push({
-							name: 'activeuser', query: {
+							name: 'realName', query: {
+								userid: resData.userid,
+								deviceid: params.deviceid,
 								userData: JSON.stringify(resData),
+								smgData: JSON.stringify(this.riskData),
 								phone: params.phone
 							}
 						});
 					} else {
-						//直接进入游戏
+						//不需要实名情况下判断是否需要激活
+						if (resData.activation == 1) {
+							//需要激活
+							this.$router.push({
+								name: 'activeuser', query: {
+									userData: JSON.stringify(resData),
+									phone: params.phone
+								}
+							});
+						} else {
+							//直接进入游戏
+							if (getSessionStorage('gameUserList')) {
+								let gameList = JSON.parse(getSessionStorage('gameUserList'));
+								gameList.push({
+									userid: resData.guestId,
+									ticket: resData.ticket
+								});
+								setSessionStorage('gameUserList', JSON.stringify(gameList));
+							} else {
+								let gameList = [];
+								gameList.push({
+									userid: resData.guestId,
+									ticket: resData.ticket
+								});
+								setSessionStorage('gameUserList', JSON.stringify(gameList));
+							}
+							this.$router.push({ name: 'game' });
+						}
 					}
-				}
-			})
-		},
+				})
+			},
 
-		//点击立即绑定
-		immediatelyBind() {
+			//点击立即绑定
+			immediatelyBind() {
 
-			this.$router.push({
-				name: 'msgLogin', query: {
-					pageSource: 'visitor-login',
-					guestData: JSON.stringify(this.GetGuestData)
-				}
-			});
+				this.$router.push({
+					name: 'msgLogin', query: {
+						pageSource: 'visitor-login',
+						guestData: JSON.stringify(this.GetGuestData)
+					}
+				});
+			}
 		}
 	}
-}
 </script>
 
 <style scoped>
-
 </style>
