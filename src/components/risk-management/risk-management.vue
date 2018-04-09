@@ -138,29 +138,13 @@ export default {
 				console.log(param);
 				getPostData(APIs.getCheckCodeSendSmsUrl(), param, (data, responseCode, responseMessage) => {
 					if (this.riskData.imagecodeType == 1) {//图片验证码
-						if (data.nextAction == 0 && responseCode == 0) {
+						if (data.nextAction == 0) {
 							this.$emit('closeRiskDialog', 0);
-						} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
-              Toast({
-                message: responseMessage,
-                duration: 3000
-              });
-						} else {//输入错误
-              Toast({
-                message: responseMessage,
-                duration: 3000
-              });
-							this.refreshImage();
 						}
 					} else if (this.riskData.imagecodeType == 2) {//阿里验证码
-						if (data.nextAction == 0 && responseCode == 0) {
+						if (data.nextAction == 0) {
 							this.$emit('closeRiskDialog', 0);
-						}else {
-              Toast({
-                message: responseMessage,
-                duration: 3000
-              });
-            }
+						}
 					}
 				}, (err) => {
           if (this.riskData.imagecodeType == 1){
@@ -178,22 +162,12 @@ export default {
 				password: this.checkCode,
 				supportPic: 0
 			};
-			getPostData(url, param, (data, responseCode, responseMessage) => {
-				console.log(responseCode);
-
+			getPostData(url, param, (data, responseCode) => {
 				if (this.riskData.imagecodeType == 1) {//图片验证码
 					if (data.nextAction == 0 && responseCode == 0) {
 						this.$emit('closeRiskDialog', 0);
-					} else if (data.nextAction == 0 && responseCode == 1023) {//短信发送太频繁
-            Toast({
-              message: responseMessage,
-              duration: 3000
-            });
-					} else {//输入错误
-						this.refreshImage();
 					}
 				} else if (this.riskData.imagecodeType == 2) {//阿里验证码
-
 					if (data.nextAction == 0 && responseCode == 0) {
 						this.$emit('closeRiskDialog', 0);
 					}

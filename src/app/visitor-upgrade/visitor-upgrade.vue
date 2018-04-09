@@ -162,9 +162,8 @@
 						}
 					});
 				} else {
-					//结束
+          //直接进入游戏
 				}
-
 			},
 			closeLogin() {
 				this.showApp = 0;

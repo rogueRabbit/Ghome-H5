@@ -34,50 +34,50 @@
 		methods: {
 
 			closeBindSuccessDialog() {
-				let params = {
-					deviceid: window.deviceid,
-					group: 'game',
-					phone: this.phone,
-					sms_new: 1,
-					sms_type: 4
-				};
-				if (this.guestData.hasExtendAccs == 1) {
-					//有小号进入小号选择界面
-					this.$router.push({
-						name: 'smallId', query: {
-							userid: this.guestData.userid,
-							deviceid: params.deviceid,
-							phone: params.phone
-						}
-					});
-				} else {
-					//表示没有小号，判断是否需要实名认证
-					if (this.guestData.realInfo_status == 1) {
-						//实名认证
-						this.$router.push({
-							name: 'realName', query: {
-								userid: this.guestData.userid,
-								deviceid: params.deviceid,
-								userData: JSON.stringify(this.guestData),
-								smgData: JSON.stringify(this.riskData),
-								phone: params.phone
-							}
-						});
-					} else {
-						//不需要实名情况下判断是否需要激活
-						if (this.guestData.activation == 1) {
-							//需要激活
-							this.$router.push({
-								name: 'activeuser', query: {
-									userData: JSON.stringify(this.guestData),
-									phone: params.phone
-								}
-							});
-						} else {
-							//直接进入游戏
-						}
-					}
-				}
+				// let params = {
+				// 	deviceid: window.deviceid,
+				// 	group: 'game',
+				// 	phone: this.phone,
+				// 	sms_new: 1,
+				// 	sms_type: 4
+				// };
+				// if (this.guestData.hasExtendAccs == 1) {
+				// 	//有小号进入小号选择界面
+				// 	this.$router.push({
+				// 		name: 'smallId', query: {
+				// 			userid: this.guestData.userid,
+				// 			deviceid: params.deviceid,
+				// 			phone: params.phone
+				// 		}
+				// 	});
+				// } else {
+				// 	//表示没有小号，判断是否需要实名认证
+				// 	if (this.guestData.realInfo_status == 1) {
+				// 		//实名认证
+				// 		this.$router.push({
+				// 			name: 'realName', query: {
+				// 				userid: this.guestData.userid,
+				// 				deviceid: params.deviceid,
+				// 				userData: JSON.stringify(this.guestData),
+				// 				smgData: JSON.stringify(this.riskData),
+				// 				phone: params.phone
+				// 			}
+				// 		});
+				// 	} else {
+				// 		//不需要实名情况下判断是否需要激活
+				// 		if (this.guestData.activation == 1) {
+				// 			//需要激活
+				// 			this.$router.push({
+				// 				name: 'activeuser', query: {
+				// 					userData: JSON.stringify(this.guestData),
+				// 					phone: params.phone
+				// 				}
+				// 			});
+				// 		} else {
+				// 			//直接进入游戏
+				// 		}
+				// 	}
+				// }
 				this.$emit('closeBindSuccessDialog');
 
 			}

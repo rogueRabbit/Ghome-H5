@@ -10,7 +10,7 @@ let config = {
     TOKEN: 1
 }
 
-const errorCodeObj = [1023, 12, 1, 2, 3, 54, 94];
+const errorCodeObj = [12, 1, 2, 3];
 
 let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];
@@ -125,8 +125,8 @@ const getPostData = (url, params, dataBack, errBack) => {
                         message: '用户token过期，请返回首页重新登录',
                         duration: 3000
                     });
-                    window.location.href = '/';  
-                }  
+                    window.location.href = '/';
+                }
                 if (errorCodeObj.includes(res.data.code)) {
                     Toast({
                         message: res.data.msg,
