@@ -85,6 +85,7 @@
 
           },
           count_time(newV) {
+            this.$emit('getTimeLine',newV);
             if (newV == 0) {
               this.count_time = '';
               this.show_count_down = false;

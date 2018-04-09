@@ -38,7 +38,8 @@
         <!--/.风控组件-->
 
         <!--语音验证码-->
-        <voice-code v-if="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"></voice-code>
+        <voice-code v-show="showVoice" v-bind:areaCode="areaCode" v-bind:phone="phone" v-on:closeVoiceDialog="closeVoiceDialog" v-on:showRiskDialog="showRiskDialog"
+            @getTimeLine="getTimeLine"></voice-code>
         <!--/.语音验证码-->
         <Close @closeClick="closeLogin" v-if="showCloseStatus" @closeBtn="closeBtn"></Close>
 
@@ -108,7 +109,8 @@
                 show_mobile_home: 0,
                 is_show_back: true,
                 is_success: false,
-                guestLoginData: ''//游客输入验证码登录后数据
+                guestLoginData: '',//游客输入验证码登录后数据
+                timeChange: 0//倒计时时间
             };
         },
         components: { PwdLogin, riskManagement, voiceCode, Close, mobileHome, successNextaction },
@@ -301,104 +303,106 @@
                     smscode: this.msgCode,
                 };
                 //登录游戏
-                if (this.hasInput == 1 && isPoneAvailable(this.phone)) {
-                    setLocalStorage('phone', this.phone);
-                    if (this.isGuestLogin == 1) {
-                        //游客掉该接口登录，接口不一样
-                        getPostData(APIs.smsAuth(), params, (data1) => {
-                            let resData = data1;
-                            this.guestLoginData = data1;
-                            let guestParams = {
-                                deviceid: window.deviceid,
-                                group: 'game',
-                                guestId: JSON.parse(this.$route.query.guestData).guestId,
-                                guestType: 1,
-                                upgrade_ticket: resData.ticket
-                            };
-                            this.guestUpdate(guestParams, resData, params);
-                        })
-                    } else {
-                        //正常用户登录流程
-                        getPostData(APIs.smsLogin(), params, (data) => {
-                            let resData = data;
-                            //测试用start
-                            /* resData.hasExtendAccs = 0;
-                            resData.realInfo_status = 1 */
-                            //测试数据结束end
-                            if (resData.noPassword == 1) {
-                                //新注册的用户，到注册界面设置密码
-                                this.$router.push({
-                                    name: 'noRegister', query: {
-                                        userid: resData.userid,
-                                        deviceid: params.deviceid,
-                                        userData: JSON.stringify(resData),
-                                        phone: params.phone
-                                    }
-                                });
-                            } else {
-                                if (resData.hasExtendAccs == 1) {
-                                    //有小号进入小号选择界面
+                if (this.hasInput == 1) {
+                    if (isPoneAvailable(this.phone)) {
+                        setLocalStorage('phone', this.phone);
+                        if (this.isGuestLogin == 1) {
+                            //游客掉该接口登录，接口不一样
+                            getPostData(APIs.smsAuth(), params, (data1) => {
+                                let resData = data1;
+                                this.guestLoginData = data1;
+                                let guestParams = {
+                                    deviceid: window.deviceid,
+                                    group: 'game',
+                                    guestId: JSON.parse(this.$route.query.guestData).guestId,
+                                    guestType: 1,
+                                    upgrade_ticket: resData.ticket
+                                };
+                                this.guestUpdate(guestParams, resData, params);
+                            })
+                        } else {
+                            //正常用户登录流程
+                            getPostData(APIs.smsLogin(), params, (data) => {
+                                let resData = data;
+                                //测试用start
+                                /* resData.hasExtendAccs = 0;
+                                resData.realInfo_status = 1 */
+                                //测试数据结束end
+                                if (resData.noPassword == 1) {
+                                    //新注册的用户，到注册界面设置密码
                                     this.$router.push({
-                                        name: 'smallId', query: {
+                                        name: 'noRegister', query: {
                                             userid: resData.userid,
                                             deviceid: params.deviceid,
+                                            userData: JSON.stringify(resData),
                                             phone: params.phone
                                         }
                                     });
                                 } else {
-                                    //表示没有小号，判断是否需要实名认证
-                                    if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
-                                        //实名认证
+                                    if (resData.hasExtendAccs == 1) {
+                                        //有小号进入小号选择界面
                                         this.$router.push({
-                                            name: 'realName', query: {
+                                            name: 'smallId', query: {
                                                 userid: resData.userid,
                                                 deviceid: params.deviceid,
-                                                userData: JSON.stringify(resData),
-                                                smgData: JSON.stringify(this.riskData),
                                                 phone: params.phone
                                             }
                                         });
                                     } else {
-                                        //不需要实名情况下判断是否需要激活
-                                        if (resData.activation == 1) {
-                                            //需要激活
+                                        //表示没有小号，判断是否需要实名认证
+                                        if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
+                                            //实名认证
                                             this.$router.push({
-                                                name: 'activeuser', query: {
+                                                name: 'realName', query: {
+                                                    userid: resData.userid,
+                                                    deviceid: params.deviceid,
                                                     userData: JSON.stringify(resData),
+                                                    smgData: JSON.stringify(this.riskData),
                                                     phone: params.phone
                                                 }
                                             });
                                         } else {
-                                            //直接进入游戏
-                                            if (getSessionStorage('gameUserList')) {
-                                                let gameList = JSON.parse(getSessionStorage('gameUserList'));
-                                                gameList.push({
-                                                    userid: resData.userid,
-                                                    ticket: resData.ticket,
-                                                    autokey: resData.autokey
+                                            //不需要实名情况下判断是否需要激活
+                                            if (resData.activation == 1) {
+                                                //需要激活
+                                                this.$router.push({
+                                                    name: 'activeuser', query: {
+                                                        userData: JSON.stringify(resData),
+                                                        phone: params.phone
+                                                    }
                                                 });
-                                                setSessionStorage('gameUserList', JSON.stringify(gameList));
                                             } else {
-                                                let gameList = [];
-                                                gameList.push({
-                                                    userid: resData.userid,
-                                                    ticket: resData.ticket,
-                                                    autokey: resData.autokey
-                                                });
-                                                setSessionStorage('gameUserList', JSON.stringify(gameList));
+                                                //直接进入游戏
+                                                if (getSessionStorage('gameUserList')) {
+                                                    let gameList = JSON.parse(getSessionStorage('gameUserList'));
+                                                    gameList.push({
+                                                        userid: resData.userid,
+                                                        ticket: resData.ticket,
+                                                        autokey: resData.autokey
+                                                    });
+                                                    setSessionStorage('gameUserList', JSON.stringify(gameList));
+                                                } else {
+                                                    let gameList = [];
+                                                    gameList.push({
+                                                        userid: resData.userid,
+                                                        ticket: resData.ticket,
+                                                        autokey: resData.autokey
+                                                    });
+                                                    setSessionStorage('gameUserList', JSON.stringify(gameList));
+                                                }
+                                                this.$router.push({ name: 'game' });
                                             }
-                                            this.$router.push({ name: 'game' });
                                         }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    } else {
+                        Toast({
+                            message: '手机号码格式不正确',
+                            duration: 3000
+                        })
                     }
-                } else {
-                    Toast({
-                        message: '手机号码格式不正确',
-                        duration: 3000
-                    })
                 }
             },
             guestUpdate(guestParams, resData, params) {
@@ -501,6 +505,9 @@
             },
             closeBtn() {
                 this.showCloseStatus = 0;
+            },
+            getTimeLine(time) {
+                this.timeChange = time;
             }
 
         }
