@@ -173,7 +173,7 @@
 					deviceid: deviceid,
 					group: "game",
 					password: this.loginPassword,
-					phone: this.phone,
+					phone: this.areaCode +"-"+ this.phone,
 					supportPic: 1
 				};
 				if (this.hasInput == 1 && isPoneAvailable(this.phone)) {

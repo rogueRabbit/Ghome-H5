@@ -185,7 +185,7 @@
             },
             sendmess(index) {
                 let params = {
-                    phone: this.areaCode + this.phone,
+                    phone: this.areaCode +"-"+ this.phone,
                     sms_new: 1,
                     supportPic: 2,
                     type: 4,
