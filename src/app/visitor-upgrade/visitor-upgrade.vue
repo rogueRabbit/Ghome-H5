@@ -39,6 +39,7 @@
 	import Close from '@/components/close/close'
 	import Loading from '@/components/loading/'
 	import Toast from '@/components/toast';
+	import { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage } from '@/utils/Tools';
 	export default {
 		name: "visitor-upgrade",
 		data() {
@@ -69,7 +70,7 @@
 			Close
 		},
 		mounted: function () {
-
+			this.note = this.$route.query.subDesc;
 		},
 		methods: {
 			getByteLen(val) {

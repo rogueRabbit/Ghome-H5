@@ -173,7 +173,7 @@
 					deviceid: deviceid,
 					group: "game",
 					password: this.loginPassword,
-					phone: this.areaCode +"-"+ this.phone,
+					phone: this.areaCode + "-" + this.phone,
 					supportPic: 1
 				};
 				if (this.hasInput == 1 && isPoneAvailable(this.phone)) {
@@ -287,7 +287,8 @@
 								deviceid: params.deviceid,
 								phone: params.phone,
 								userData: JSON.stringify(resData),
-								guestData: this.$route.query.guestData
+								guestData: this.$route.query.guestData,
+								subDesc: data.subDesc
 							}
 						});
 					} else if (data.nextAction == 100) {
@@ -295,6 +296,22 @@
 					} else {
 						//不需要备注
 						this.is_success = true;
+						if (getSessionStorage('gameUserList')) {
+							let gameList = JSON.parse(getSessionStorage('gameUserList'));
+							gameList.push({
+								userid: resData.userid,
+								ticket: resData.ticket
+							});
+							setSessionStorage('gameUserList', JSON.stringify(gameList));
+						} else {
+							let gameList = [];
+							gameList.push({
+								userid: resData.userid,
+								ticket: resData.ticket
+							});
+							setSessionStorage('gameUserList', JSON.stringify(gameList));
+						}
+						this.$router.push({ name: 'game' });
 					}
 				});
 			},

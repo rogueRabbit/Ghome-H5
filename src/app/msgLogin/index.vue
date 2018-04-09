@@ -108,7 +108,7 @@
                 show_mobile_home: 0,
                 is_show_back: true,
                 is_success: false,
-                guestLoginData:''//游客输入验证码登录后数据
+                guestLoginData: ''//游客输入验证码登录后数据
             };
         },
         components: { PwdLogin, riskManagement, voiceCode, Close, mobileHome, successNextaction },
@@ -185,7 +185,7 @@
             },
             sendmess(index) {
                 let params = {
-                    phone: this.areaCode +"-"+ this.phone,
+                    phone: this.areaCode + "-" + this.phone,
                     sms_new: 1,
                     supportPic: 2,
                     type: 4,
@@ -410,7 +410,8 @@
                                 deviceid: params.deviceid,
                                 phone: params.phone,
                                 userData: JSON.stringify(resData),
-                                guestData: this.$route.query.guestData
+                                guestData: this.$route.query.guestData,
+                                subDesc: data.subDesc
                             }
                         });
                     } else if (data.nextAction == 100) {
@@ -418,6 +419,23 @@
                     } else {
                         //不需要备注
                         this.is_success = true;
+                        //直接进入游戏
+                        if (getSessionStorage('gameUserList')) {
+                            let gameList = JSON.parse(getSessionStorage('gameUserList'));
+                            gameList.push({
+                                userid: resData.userid,
+                                ticket: resData.ticket
+                            });
+                            setSessionStorage('gameUserList', JSON.stringify(gameList));
+                        } else {
+                            let gameList = [];
+                            gameList.push({
+                                userid: resData.userid,
+                                ticket: resData.ticket
+                            });
+                            setSessionStorage('gameUserList', JSON.stringify(gameList));
+                        }
+                        this.$router.push({ name: 'game' });
                     }
                 });
             },
