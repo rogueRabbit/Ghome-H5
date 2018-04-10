@@ -1,5 +1,5 @@
 @import '../index/reset.scss';
-.demo {
+.game {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -10,5 +10,12 @@
   padding: 20px;
   font-size: 20px;
   color: $white;
-
+  .getticket{
+    padding: 10px;
+    margin: 10px;
+  }
+  .userDetail{
+    position: fixed;
+    top:50px;
+  }
 }
