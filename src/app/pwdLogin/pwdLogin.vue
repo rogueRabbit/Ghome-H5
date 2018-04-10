@@ -213,62 +213,74 @@
 							//测试用start
 							/* resData.hasExtendAccs = 0;
 							resData.realInfo_status = 1 */
-							//测试数据结束end
-							if (resData.hasExtendAccs == 1) {
-								//有小号进入小号选择界面
-								this.$router.push({
-									name: 'smallId', query: {
-										userid: resData.userid,
-										deviceid: params.deviceid,
-										phone: params.phone
-									}
-								});
-							} else {
-								//表示没有小号，判断是否需要实名认证
-								if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
-									//实名认证
-									this.$router.push({
-										name: 'realName', query: {
-											userid: resData.userid,
-											deviceid: params.deviceid,
-											userData: JSON.stringify(resData),
-											smgData: JSON.stringify(this.riskData),
-											phone: params.phone
-										}
-									});
-								} else {
-									//不需要实名情况下判断是否需要激活
-									if (resData.activation == 1) {
-										//需要激活
-										this.$router.push({
-											name: 'activeuser', query: {
-												userData: JSON.stringify(resData),
-												phone: params.phone
-											}
-										});
-									} else {
-										//直接进入游戏
-										if (getSessionStorage('gameUserList')) {
-											let gameList = JSON.parse(getSessionStorage('gameUserList'));
-											gameList.push({
-												userid: resData.userid,
-												ticket: resData.ticket,
-												autokey: resData.autokey
-											});
-											setSessionStorage('gameUserList', JSON.stringify(gameList));
-										} else {
-											let gameList = [];
-											gameList.push({
-												userid: resData.userid,
-												ticket: resData.ticket,
-												autokey: resData.autokey
-											});
-											setSessionStorage('gameUserList', JSON.stringify(gameList));
-										}
-										this.$router.push({ name: 'game' });
-									}
-								}
-							}
+
+              this.is_show_risk = data.nextAction;
+              this.riskData['checkCodeGuid'] = data.checkCodeGuid;
+              this.riskData['checkCodeUrl'] = data.checkCodeUrl;
+              this.riskData['imagecodeType'] = data.imagecodeType;
+              this.riskData['sdg_height'] = data.sdg_height;
+              this.riskData['sdg_width'] = data.sdg_width;
+              this.riskData['phone'] = this.phone;
+              this.riskData['areaCode'] = this.areaCode;
+
+              if (this.is_show_risk != 8) {
+                //测试数据结束end
+                if (resData.hasExtendAccs == 1) {
+                  //有小号进入小号选择界面
+                  this.$router.push({
+                    name: 'smallId', query: {
+                      userid: resData.userid,
+                      deviceid: params.deviceid,
+                      phone: params.phone
+                    }
+                  });
+                } else {
+                  //表示没有小号，判断是否需要实名认证
+                  if (resData.has_realInfo == 0 && resData.realInfo_status == 1) {
+                    //实名认证
+                    this.$router.push({
+                      name: 'realName', query: {
+                        userid: resData.userid,
+                        deviceid: params.deviceid,
+                        userData: JSON.stringify(resData),
+                        smgData: JSON.stringify(this.riskData),
+                        phone: params.phone
+                      }
+                    });
+                  } else {
+                    //不需要实名情况下判断是否需要激活
+                    if (resData.activation == 1) {
+                      //需要激活
+                      this.$router.push({
+                        name: 'activeuser', query: {
+                          userData: JSON.stringify(resData),
+                          phone: params.phone
+                        }
+                      });
+                    } else {
+                      //直接进入游戏
+                      if (getSessionStorage('gameUserList')) {
+                        let gameList = JSON.parse(getSessionStorage('gameUserList'));
+                        gameList.push({
+                          userid: resData.userid,
+                          ticket: resData.ticket,
+                          autokey: resData.autokey
+                        });
+                        setSessionStorage('gameUserList', JSON.stringify(gameList));
+                      } else {
+                        let gameList = [];
+                        gameList.push({
+                          userid: resData.userid,
+                          ticket: resData.ticket,
+                          autokey: resData.autokey
+                        });
+                        setSessionStorage('gameUserList', JSON.stringify(gameList));
+                      }
+                      this.$router.push({ name: 'game' });
+                    }
+                  }
+                }
+              }
 						});
 					}
 				} else {

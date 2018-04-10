@@ -118,7 +118,7 @@
 
           getSmsCode() {
             //获取短信验证码
-            if(this.isPoneAvailable(this.phone)){
+            if(isPoneAvailable(this.phone)){
               this.sendmess();
             }else{
               Toast({
@@ -127,16 +127,6 @@
               });
             }
           },
-
-          isPoneAvailable(str) {
-            let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-            if (!myreg.test(str)) {
-              return false;
-            } else {
-              return true;
-            }
-          },
-
           sendmess() {
             let params = {
               phone: this.phone,

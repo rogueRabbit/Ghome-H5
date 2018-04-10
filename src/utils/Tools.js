@@ -19,12 +19,14 @@ const setSessionStorage = function(name, val){
   sessionStorage.setItem(name, JSON.stringify(val))
 };
 const isPoneAvailable =  function (str) {
-  let myreg = /^[1][3,4,5,7,8][0-9]{9}(#[1-9]+)?$/;
-  if (!myreg.test(str)) {
-    return false;
-  } else {
-    return true;
-  }
+  // let myreg = /^[1][3,4,5,7,8][0-9]{9}(#[1-9]+)?$/;
+  // if (!myreg.test(str)) {
+  //   return false;
+  // } else {
+  //   return true;
+  // }
+  return str!='' ? true: false;
+
 };
 
 export {

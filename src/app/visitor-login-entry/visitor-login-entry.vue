@@ -8,7 +8,7 @@
 					</a>
 				</div>
 				<div class="title">
-					当前为游客z账号，为了您游戏便捷及账号安全，请尽快绑定为正式游戏账号。
+					当前为游客账号，为了您游戏便捷及账号安全，请尽快绑定为正式游戏账号。
 				</div>
 				<div class="button-group">
 					<button class="option-button left-button" @click="directLogin">进入游戏</button>

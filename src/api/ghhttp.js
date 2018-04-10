@@ -10,7 +10,7 @@ let config = {
     TOKEN: 1
 }
 
-const errorCodeObj = [12, 1, 2, 3];
+const errorCodeObj = [12];
 
 let APIfun = APIs;
 let su = navigator.userAgent.toLowerCase(), mb = ['ipad', 'iphone os', 'midp', 'rv:1.2.3.4', 'ucweb', 'android', 'windows ce', 'windows mobile', 'Windows NT'];

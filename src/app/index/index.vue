@@ -2,9 +2,6 @@
     <div class="index_wrap" v-if="showApp">
         <div class="index_main">
             <div class="header_bar">
-                <a class="back">
-                    <i class="icon_back" @click="goBack"></i>
-                </a>
                 <a class="close">
                     <i class="icon_close" @click="closeAlert"></i>
                 </a>
@@ -77,6 +74,7 @@
     import Close from '@/components/close/close'
     import Loading from '@/components/loading/';
     import Toast from '@/components/toast';
+    import { isPoneAvailable } from '../../utils/Tools';
 
     /* eslint-disable */
     export default {
@@ -188,21 +186,13 @@
             },
             getSmsCode() {
                 //获取短信验证码
-                if (this.isPoneAvailable(this.phone)) {
+                if (isPoneAvailable(this.phone)) {
                     this.sendmess();
                 } else {
                     Toast({
                         message: '请输入正确手机号',
                         duration: 3000
                     })
-                }
-            },
-            isPoneAvailable(str) {
-                let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-                if (!myreg.test(str)) {
-                    return false;
-                } else {
-                    return true;
                 }
             },
             closeRiskDialog() {
