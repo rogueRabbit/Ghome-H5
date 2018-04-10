@@ -92,6 +92,9 @@ const APIs = {
     getTicketUrl() {
         return domin + "/v1/open/getticket2";
     },
+    getTicketUrl2() {
+        return domin + "/v1/open/getticket";
+    },
     getErrorCodeUrl() {
         return domin + "/v1/basic/getcode";
     },
